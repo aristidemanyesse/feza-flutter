@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/model/UtilisateurModel.dart';
-import 'package:yebhofon/provider/UtilisateurProvider.dart';
 import 'package:yebhofon/screens/landingScreen.dart';
 import 'package:csshadow/csshadow.dart';
 import 'package:yebhofon/screens/sentOTPScreen.dart';
@@ -48,6 +46,8 @@ class _LoginScreen extends State<LoginScreen> {
   //   print(utilisateurs);
   //   // test();
   // }
+
+  // String imei = await ImeiPlugin.getImei();
 
   @override
   void dispose() {

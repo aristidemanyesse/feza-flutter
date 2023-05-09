@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/model/UtilisateurModel.dart';
+import 'package:yebhofon/models/UtilisateurModel.dart';
 import 'package:yebhofon/schemas/UtilisateurSchema.dart';
 import 'package:yebhofon/webservice/apiservice.dart';
 

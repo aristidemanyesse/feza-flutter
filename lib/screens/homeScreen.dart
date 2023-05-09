@@ -1,13 +1,78 @@
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:yebhofon/screens/menuScreen.dart';
 import 'package:yebhofon/screens/searchPage.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:yebhofon/widgets/bounceAnimation.dart';
+import 'package:yebhofon/widgets/searchedMedicamentListDialog.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
 import '../widgets/customNavBar.dart';
 import '../widgets/searchBar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
   static const routeName = "/homeScreen";
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool home = true;
+  final List<String> _options = [
+    'Option 1',
+    'Option 2',
+    'Option 3',
+    'Option 4',
+    'Option 5',
+  ];
+
+  GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
+  late TextEditingController _textFieldController;
+  late List<String> _suggestions;
+  late AutoCompleteTextField<String> _textField;
+  late String _selectedOption;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedOption = '';
+    _textFieldController = TextEditingController();
+    _suggestions = [
+      'Option 1',
+      'Option 2',
+      'Option 3',
+      'Option 4',
+      'Option 5',
+    ];
+    _textField = AutoCompleteTextField(
+      key: key,
+      controller: _textFieldController,
+      itemBuilder: (context, suggestion) {
+        return ListTile(
+          title: Text(suggestion),
+        );
+      },
+      itemFilter: (suggestion, query) {
+        return suggestion.toLowerCase().contains(query.toLowerCase());
+      },
+      itemSorter: (a, b) {
+        return a.compareTo(b);
+      },
+      suggestions: _suggestions,
+      decoration: InputDecoration(
+        hintText: 'Champ de saisie avec suggestions',
+        border: OutlineInputBorder(),
+      ),
+      itemSubmitted: (selectedOption) {
+        setState(() {
+          _selectedOption = selectedOption;
+        });
+      },
+    );
+  }
 
   Future<String> getCodeBar(context) async {
     String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
@@ -28,184 +93,222 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          SafeArea(
-            child: Container(
-              height: Helper.getScreenHeight(context),
-              width: Helper.getScreenWidth(context),
-              child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Image.asset(
-                                    Helper.getAssetName("pharma.png", "icons"),
-                                    width: 40,
-                                  ),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  Text(
-                                    "Bonjour ",
-                                    style:
-                                        Helper.getTheme(context).headlineSmall,
-                                  ),
-                                  Text(
-                                    "Shadrak !",
-                                    style: Helper.getTheme(context)
-                                        .headlineSmall
-                                        ?.copyWith(
-                                            color: AppColor.blue,
-                                            fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
-                              child: Text("Circonscription actuelle"),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: SizedBox(
-                                  width: 150,
-                                  child: DropdownButton(
-                                    value: "Port-Bouet",
-                                    items: [
-                                      DropdownMenuItem(
-                                        child: Text("Port-Bouet"),
-                                        value: "Port-Bouet",
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text("Marcory"),
-                                        value: "Marcory",
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text("Koumassi"),
-                                        value: "Koumassi",
-                                      ),
-                                    ],
-                                    icon: Image.asset(
-                                      Helper.getAssetName(
-                                          "dropdown_filled.png", "virtual"),
-                                    ),
-                                    style:
-                                        Helper.getTheme(context).headlineMedium,
-                                    onChanged: (_) {},
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      Center(
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 10),
-                                      child: SearchBar(
-                                        title: "Recherher médicaments...",
-                                        onEditionComplete: () {
-                                          Navigator.of(context)
-                                              .pushNamed(SearchPage.routeName);
-                                        },
-                                      )),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(15)),
-                                      border: Border.all(
-                                          color: AppColor.secondary, width: 2)),
-                                  child: GestureDetector(
-                                    child: Icon(Icons.file_open_rounded),
-                                    onTap: () {
-                                      this.getScanList(context);
-                                    },
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(15)),
-                                      border: Border.all(
-                                          color: AppColor.secondary, width: 2)),
-                                  child: GestureDetector(
-                                    child: Icon(Icons.barcode_reader),
-                                    onTap: () {
-                                      this.getCodeBar(context);
-                                    },
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: Helper.getScreenHeight(context) * 0.1,
-                            ),
-                            Container(
-                              margin: EdgeInsets.all(20),
-                              child: Text(
-                                "Saisissez le médicament que vous recherchez\n ou appuyer sur @ pour scanner votre ordonnance ou le code barre du medicament",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(height: 1.5),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ]),
+      body: Stack(children: [
+        Container(
+          height: Helper.getScreenHeight(context),
+          width: double.infinity,
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 50,
               ),
-            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        Helper.getAssetName("pharma.png", "icons"),
+                        width: 35,
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        "Bonjour ",
+                        style: Helper.getTheme(context).headlineSmall,
+                      ),
+                      Text(
+                        "Shadrak !",
+                        style: Helper.getTheme(context).headlineSmall?.copyWith(
+                            color: AppColor.blue, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(right: 12),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(MenuScreen.routeName);
+                      },
+                      child: Icon(
+                        Icons.menu,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      child: Text("Circonscription actuelle"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: SizedBox(
+                          width: 150,
+                          child: DropdownButton(
+                            value: "Port-Bouet",
+                            items: [
+                              DropdownMenuItem(
+                                child: Text("Port-Bouet"),
+                                value: "Port-Bouet",
+                              ),
+                              DropdownMenuItem(
+                                child: Text("Marcory"),
+                                value: "Marcory",
+                              ),
+                              DropdownMenuItem(
+                                child: Text("Koumassi"),
+                                value: "Koumassi",
+                              ),
+                            ],
+                            icon: Image.asset(
+                              Helper.getAssetName(
+                                  "dropdown_filled.png", "virtual"),
+                            ),
+                            style: Helper.getTheme(context).headlineMedium,
+                            onChanged: (_) {},
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: _textField),
+                        ),
+                        SizedBox(height: 16),
+                        Text('Option sélectionnée : $_selectedOption'),
+                        Container(
+                          margin: EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              border: Border.all(
+                                  color: AppColor.secondary, width: 2)),
+                          child: GestureDetector(
+                            child: Icon(Icons.file_open_rounded),
+                            onTap: () {
+                              this.getScanList(context);
+                            },
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              border: Border.all(
+                                  color: AppColor.secondary, width: 2)),
+                          child: GestureDetector(
+                            child: Icon(Icons.barcode_reader),
+                            onTap: () {
+                              this.getCodeBar(context);
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Center(
+                    child: Container(
+                  margin: EdgeInsets.all(20),
+                  // child: Text(
+                  //   "Saisissez le médicament que vous recherchez\n ou appuyer sur @ pour scanner votre ordonnance ou le code barre du medicament",
+                  //   textAlign: TextAlign.center,
+                  //   style: TextStyle(height: 1.5),
+                  // ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Ligne(title: "Paracetamol 500mg"),
+                        Ligne(title: "Panadol Advence 500mg"),
+                        Ligne(title: "Toussifan Verfec"),
+                        Ligne(title: "Novalgin 3000"),
+                        Ligne(title: "Novalgin 3000"),
+                        Ligne(title: "Amoxiline 1000mg"),
+                        Ligne(title: "Clamoxyl Enfant/Nourrisson"),
+                      ],
+                    ),
+                  ),
+                )),
+              ),
+              SizedBox(
+                height: Helper.getScreenHeight(context) * 0.05,
+              )
+            ],
           ),
-          Positioned(
-            bottom: 0,
+        ),
+        Positioned(
+            bottom: 15,
             left: 0,
-            child: CustomNavBar(
-              home: true,
-            ),
-          )
-        ],
-      ),
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                      color: AppColor.blue,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.search,
+                        size: 24,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "Rechercher",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ))
+      ]),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

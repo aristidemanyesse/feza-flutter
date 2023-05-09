@@ -1,99 +1,54 @@
-// To parse this JSON data, do
-//
-//     final ProduitModel = ProduitModelFromJson(jsonString);
-
-import 'dart:convert';
-
-ProduitModel produitModelFromJson(String str) =>
-    ProduitModel.fromJson(json.decode(str));
-
-String produitModelToJson(ProduitModel data) => json.encode(data.toJson());
-
 class ProduitModel {
   ProduitModel({
-    this.status,
-    this.message,
-    this.result,
-  });
-
-  int? status;
-  String? message;
-  List<Result>? result;
-
-  factory ProduitModel.fromJson(Map<String, dynamic> json) => ProduitModel(
-        status: json["status"],
-        message: json["message"],
-        result:
-            List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "status": status,
-        "message": message,
-        "result": List<dynamic>.from(result!.map((x) => x.toJson())),
-      };
-}
-
-class Result {
-  Result({
     this.id,
-    this.fullname,
-    this.email,
-    this.password,
-    this.mobileNumber,
+    this.name,
+    this.description,
+    this.codebarre,
+    this.onlyOrdonnance,
     this.image,
-    this.backgroundImage,
     this.type,
-    this.status,
-    this.deviceToken,
-    this.date,
-    this.createdAt,
-    this.updatedAt,
+    this.deleted,
+    this.protected,
+    this.createAt,
+    this.updateAt,
   });
 
   int? id;
-  String? fullname;
-  String? email;
-  String? password;
-  String? mobileNumber;
+  String? name;
+  String? description;
+  String? codebarre;
+  String? onlyOrdonnance;
   String? image;
-  String? backgroundImage;
   int? type;
-  int? status;
-  String? deviceToken;
-  String? date;
-  String? createdAt;
-  String? updatedAt;
+  bool? deleted;
+  bool? protected;
+  String? createAt;
+  String? updateAt;
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
-        id: json["id"],
-        fullname: json["fullname"],
-        email: json["email"],
-        password: json["password"],
-        mobileNumber: json["mobile_number"],
-        image: json["image"],
-        backgroundImage: json["background_image"],
-        type: json["type"],
-        status: json["status"],
-        deviceToken: json["device_token"],
-        date: json["date"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
-      );
+  factory ProduitModel.fromJson(Map<String, dynamic> json) => ProduitModel(
+      id: json["id"],
+      name: json["name"],
+      description: json["description"],
+      codebarre: json["codebarre"],
+      onlyOrdonnance: json["onlyOrdonnance"],
+      image: json["image"],
+      type: json["type"],
+      deleted: json["deleted"],
+      protected: json["protected"],
+      createAt: json["createAt"],
+      updateAt: json["updateAt"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "fullname": fullname,
-        "email": email,
-        "password": password,
-        "mobile_number": mobileNumber,
+        "name": name,
+        "description": description,
+        "codebarre": codebarre,
+        "onlyOrdonnance": onlyOrdonnance,
         "image": image,
-        "background_image": backgroundImage,
         "type": type,
-        "status": status,
-        "device_token": deviceToken,
-        "date": date,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
+        "deleted": deleted,
+        "protected": protected,
+        "createAt": createAt,
+        "updateAt": updateAt
       };
 }

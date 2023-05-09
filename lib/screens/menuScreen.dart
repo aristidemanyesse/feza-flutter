@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yebhofon/const/colors.dart';
 import 'package:yebhofon/screens/dessertScreen.dart';
 import 'package:yebhofon/screens/pharmaciesGarde.dart';
+import 'package:yebhofon/screens/profileScreen.dart';
 import 'package:yebhofon/utils/helper.dart';
 import 'package:yebhofon/widgets/customNavBar.dart';
 import 'package:yebhofon/widgets/menuCard.dart';
@@ -30,10 +31,10 @@ class MenuScreen extends StatelessWidget {
                 ),
                 MyLogo(),
                 SizedBox(
-                  height: Helper.getScreenHeight(context) * 0.1,
+                  height: Helper.getScreenHeight(context) * 0.05,
                 ),
                 SizedBox(
-                    height: Helper.getScreenHeight(context) * 0.4,
+                    height: Helper.getScreenHeight(context) * 0.5,
                     width: Helper.getScreenWidth(context),
                     child: Stack(
                       children: [
@@ -98,6 +99,31 @@ class MenuScreen extends StatelessWidget {
                                     ),
                                   ),
                                   name: "Conseils Santé",
+                                  subtitle: "25",
+                                ),
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .pushNamed(ProfileScreen.routeName);
+                                },
+                                child: MenuCard(
+                                  imageShape: ClipPath(
+                                    clipper: CustomDiamond(),
+                                    child: Container(
+                                      height: 80,
+                                      width: 80,
+                                      child: Image.asset(
+                                        Helper.getAssetName(
+                                            "advice.png", "icons"),
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                  name: "Mon compte",
                                   subtitle: "25",
                                 ),
                               ),

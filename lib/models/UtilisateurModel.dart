@@ -29,7 +29,8 @@ class UtilisateurModel {
   String? createAt;
   String? updateAt;
 
-  factory UtilisateurModel.fromJson(Map<String, dynamic> json) =>
+  static UtilisateurModel fromJson(
+          Map<String, dynamic> json) =>
       UtilisateurModel(
           id: json["id"],
           fullname: json["fullname"],

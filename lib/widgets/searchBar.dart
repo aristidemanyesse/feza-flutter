@@ -10,7 +10,7 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: 40,
       width: double.infinity,
       decoration: ShapeDecoration(
         shape: StadiumBorder(),
@@ -19,10 +19,11 @@ class SearchBar extends StatelessWidget {
       child: TextField(
         onEditingComplete: onEditionComplete,
         keyboardType: TextInputType.name,
+        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20)),
-            borderSide: BorderSide(color: AppColor.green, width: 1.0),
+            borderSide: BorderSide(color: AppColor.blue, width: 1.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -30,15 +31,15 @@ class SearchBar extends StatelessWidget {
           ),
           prefixIcon: Icon(
             Icons.search,
-            color: AppColor.green,
+            color: AppColor.blue,
           ),
           hintText: title,
           hintStyle: TextStyle(
             color: AppColor.placeholder,
-            fontSize: 20,
+            fontSize: 15,
           ),
           contentPadding: const EdgeInsets.only(
-            top: 13,
+            top: 15,
           ),
         ),
       ),
