@@ -3,25 +3,22 @@ import 'package:flutter/services.dart';
 import '../const/colors.dart';
 
 class CustomTextInput extends StatelessWidget {
-  final String _hintText;
-  final VoidCallback _onEditingComplete;
-  final ValueChanged<String?>? _onChanged;
-  final TextEditingController _controller;
-  final TextInputType _keyboard;
+  final String hintText;
+  final VoidCallback onEditingComplete;
+  final ValueChanged<String?> onChanged;
+  final TextEditingController controller;
+  final TextInputType keyboard;
+  final FocusNode myFocusNode;
 
   const CustomTextInput({
-    required String hintText,
-    required TextEditingController controller,
-    required VoidCallback onEditingComplete,
-    ValueChanged<String?>? onChanged,
-    TextInputType keyboard = TextInputType.text,
     Key? key,
-  })  : _hintText = hintText,
-        _onEditingComplete = onEditingComplete,
-        _onChanged = onChanged,
-        _controller = controller,
-        _keyboard = keyboard,
-        super(key: key);
+    required this.hintText,
+    required this.controller,
+    required this.onEditingComplete,
+    required this.myFocusNode,
+    required this.onChanged,
+    required this.keyboard,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +30,12 @@ class CustomTextInput extends StatelessWidget {
         shape: StadiumBorder(),
       ),
       child: TextField(
-        controller: _controller,
-        onEditingComplete: _onEditingComplete,
-        onChanged: _onChanged,
+        focusNode: myFocusNode,
+        controller: controller,
+        onEditingComplete: onEditingComplete,
+        onChanged: onChanged,
         textAlign: TextAlign.center,
-        keyboardType: _keyboard,
+        keyboardType: keyboard,
         inputFormatters: [
           LengthLimitingTextInputFormatter(14),
           _CreditCardNumberFormatter(),
@@ -45,7 +43,7 @@ class CustomTextInput extends StatelessWidget {
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: _hintText,
+          hintText: hintText,
           hintStyle: TextStyle(
             color: AppColor.placeholder,
           ),

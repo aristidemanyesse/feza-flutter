@@ -1,3 +1,4 @@
+import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
 import 'package:yebhofon/screens/loginScreen.dart';
 import 'package:yebhofon/widgets/myLogo.dart';
@@ -16,24 +17,35 @@ class LandingScreen extends StatelessWidget {
       child: Stack(
         children: [
           Align(
-              alignment: Alignment.topCenter,
+            alignment: Alignment.topCenter,
+            child: CsShadow(
+              clipper: CustomClipperAppBar(),
+              shadow: BoxShadow(
+                  color: AppColor.placeholder,
+                  offset: Offset(0, 15),
+                  blurRadius: 5.0,
+                  spreadRadius: 4),
               child: Container(
-                width: double.infinity,
-                height: Helper.getScreenHeight(context) * 0.45,
-                decoration: ShapeDecoration(
-                  color: AppColor.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  width: double.infinity,
+                  height: Helper.getScreenHeight(context) * 0.45,
+                  decoration: ShapeDecoration(
+                    color: AppColor.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                child: Image.asset(
-                  Helper.getAssetName("login_bg.png", "virtual"),
-                  fit: BoxFit.cover,
-                ),
-              )),
+                  child: Image.asset(
+                    Helper.getAssetName("login_bg.png", "virtual"),
+                    fit: BoxFit.cover,
+                  )),
+            ),
+          ),
           Align(
             alignment: Alignment.center,
-            child: MyLogo(),
+            child: Image.asset(
+              Helper.getAssetName("MealMonkeyLogo.png", "virtual"),
+              height: 200,
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,

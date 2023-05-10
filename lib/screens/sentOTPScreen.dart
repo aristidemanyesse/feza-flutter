@@ -17,9 +17,13 @@ class SendOTPScreen extends StatefulWidget {
 
 class _SendOTPScreen extends State<SendOTPScreen> {
   final _focusNode1 = FocusNode();
+  final myController1 = TextEditingController();
   final _focusNode2 = FocusNode();
+  final myController2 = TextEditingController();
   final _focusNode3 = FocusNode();
+  final myController3 = TextEditingController();
   final _focusNode4 = FocusNode();
+  final myController4 = TextEditingController();
 
   @override
   void dispose() {
@@ -28,6 +32,20 @@ class _SendOTPScreen extends State<SendOTPScreen> {
     _focusNode3.dispose();
     _focusNode4.dispose();
     super.dispose();
+  }
+
+  bool checkOTP() {
+    if (this.myController1.text.length != 1 ||
+        this.myController2.text.length != 1 ||
+        this.myController3.text.length != 1 ||
+        this.myController4.text.length != 1) {
+      return false;
+    }
+    return true;
+  }
+
+  dynamic validation() {
+    Navigator.of(context).pushNamed(HomeScreen.routeName);
   }
 
   @override
@@ -122,25 +140,17 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           OTPInput(
+                            controller: myController1,
                             onChanged: (value) {
-                              print("$value");
-                              if (value?.length == 1) {
+                              if (value.length == 1) {
                                 FocusScope.of(context).nextFocus();
                               }
                             },
                           ),
                           OTPInput(
+                            controller: myController2,
                             onChanged: (value) {
-                              if (value?.length == 1) {
-                                FocusScope.of(context).nextFocus();
-                              } else {
-                                FocusScope.of(context).previousFocus();
-                              }
-                            },
-                          ),
-                          OTPInput(
-                            onChanged: (value) {
-                              if (value?.length == 1) {
+                              if (value.length == 1) {
                                 FocusScope.of(context).nextFocus();
                               } else {
                                 FocusScope.of(context).previousFocus();
@@ -148,8 +158,19 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                             },
                           ),
                           OTPInput(
+                            controller: myController3,
                             onChanged: (value) {
-                              if (value?.length == 1) {
+                              if (value.length == 1) {
+                                FocusScope.of(context).nextFocus();
+                              } else {
+                                FocusScope.of(context).previousFocus();
+                              }
+                            },
+                          ),
+                          OTPInput(
+                            controller: myController4,
+                            onChanged: (value) {
+                              if (value.length == 1) {
                                 FocusScope.of(context).unfocus();
                               } else {
                                 FocusScope.of(context).previousFocus();
@@ -165,10 +186,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                         height: 50,
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushReplacementNamed(HomeScreen.routeName);
-                          },
+                          onPressed: checkOTP() ? validation : null,
                           child: Text("Continuer"),
                         ),
                       ),

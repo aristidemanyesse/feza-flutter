@@ -1,9 +1,11 @@
+import 'package:yebhofon/models/TypeProduitModel.dart';
+
 class ProduitModel {
   ProduitModel({
     this.id,
-    this.name,
-    this.description,
-    this.codebarre,
+    required this.name,
+    required this.description,
+    required this.codebarre,
     this.onlyOrdonnance,
     this.image,
     this.type,
@@ -13,13 +15,13 @@ class ProduitModel {
     this.updateAt,
   });
 
-  int? id;
-  String? name;
-  String? description;
-  String? codebarre;
-  String? onlyOrdonnance;
+  String? id;
+  String name;
+  String description;
+  String codebarre;
+  bool? onlyOrdonnance;
   String? image;
-  int? type;
+  TypeProduitModel? type;
   bool? deleted;
   bool? protected;
   String? createAt;
@@ -32,7 +34,7 @@ class ProduitModel {
       codebarre: json["codebarre"],
       onlyOrdonnance: json["onlyOrdonnance"],
       image: json["image"],
-      type: json["type"],
+      type: TypeProduitModel.fromJson(json["type"]),
       deleted: json["deleted"],
       protected: json["protected"],
       createAt: json["createAt"],
@@ -45,7 +47,7 @@ class ProduitModel {
         "codebarre": codebarre,
         "onlyOrdonnance": onlyOrdonnance,
         "image": image,
-        "type": type,
+        "type": type?.toJson(),
         "deleted": deleted,
         "protected": protected,
         "createAt": createAt,

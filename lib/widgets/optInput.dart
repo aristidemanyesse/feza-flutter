@@ -4,11 +4,10 @@ import 'package:yebhofon/const/colors.dart';
 
 class OTPInput extends StatelessWidget {
   final FocusNode focusNode = FocusNode();
-  final ValueChanged<String>? _onChanged;
+  final ValueChanged<String> onChanged;
+  final TextEditingController controller;
 
-  OTPInput({Key? key, required ValueChanged<String?>? onChanged})
-      : _onChanged = onChanged,
-        super(key: key);
+  OTPInput({Key? key, required this.controller, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,8 @@ class OTPInput extends StatelessWidget {
       ),
       child: TextField(
         keyboardType: TextInputType.number,
-        onChanged: _onChanged,
+        controller: controller,
+        onChanged: onChanged,
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 35),
         textInputAction: TextInputAction.next,

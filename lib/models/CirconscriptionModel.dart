@@ -3,7 +3,7 @@ import 'package:yebhofon/models/BaseModel.dart';
 class CirconscriptionModel extends BaseModel {
   CirconscriptionModel({
     this.id,
-    this.name,
+    required this.name,
     this.geometryJson,
     this.deleted,
     this.protected,
@@ -12,7 +12,7 @@ class CirconscriptionModel extends BaseModel {
   });
 
   String? id;
-  String? name;
+  String name;
   String? geometryJson;
   bool? deleted;
   bool? protected;
