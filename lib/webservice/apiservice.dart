@@ -40,9 +40,13 @@ final QueryOptions options = QueryOptions(
 // }
 
 class ApiService {
+  // static const BASE_URL = "http://192.168.43.117:8005/";
+  static const BASE_URL = "http://192.168.1.39:8005/";
+  static const GRAPH_URL = BASE_URL + "graphql/";
+
   static Future<Map<String, dynamic>?> request(
       String query, Map<String, dynamic> variables) async {
-    final HttpLink httpLink = HttpLink('http://192.168.1.14:8005/graphql/');
+    final HttpLink httpLink = HttpLink(GRAPH_URL);
 
     final GraphQLClient client = GraphQLClient(
       cache: GraphQLCache(),

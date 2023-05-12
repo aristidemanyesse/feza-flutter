@@ -1,12 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:yebhofon/const/colors.dart';
+import 'package:yebhofon/models/ResponseModel.dart';
+import 'package:yebhofon/models/UtilisateurModel.dart';
+import 'package:yebhofon/provider/UtilisateurProvider.dart';
 import 'package:yebhofon/screens/sentOTPScreen.dart';
 import '../utils/helper.dart';
 
 class ConfirmNumberDialog extends StatelessWidget {
   final String number;
+  late String uniq;
 
   ConfirmNumberDialog(this.number);
+
+  Future<void> userRegistration(BuildContext context, String number) async {
+    number = number.replaceAll(" ", "");
+    uniq = await UtilisateurProvider.getUniqID();
+    List<UtilisateurModel> users =
+        await UtilisateurProvider.all({"contact": number});
+    if (users.isEmpty) {
+      UtilisateurModel user = new UtilisateurModel(contact: number, imei: uniq);
+      Map<String, dynamic> variables = user.toJson();
+      variables["circonscription"] = "7c6a9402-cf80-46d9-8151-5befa42abc52";
+      ResponseModel response = await UtilisateurProvider.create(variables);
+      if (response.ok) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(SendOTPScreen.routeName,
+            arguments: {"user": response.data, "numero": number});
+      } else {
+        Fluttertoast.showToast(
+          msg: response.message!,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+    } else {
+      UtilisateurModel user = users[0];
+      Navigator.of(context).pop();
+      Navigator.of(context).pushNamed(SendOTPScreen.routeName,
+          arguments: {"user": user, "numero": number});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +49,7 @@ class ConfirmNumberDialog extends StatelessWidget {
           height: Helper.getScreenHeight(context) * 0.28,
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
+              borderRadius: BorderRadius.circular(20),
               color: Colors.white.withOpacity(0.85)),
           child: Container(
             child: Column(
@@ -72,10 +105,7 @@ class ConfirmNumberDialog extends StatelessWidget {
                       ),
                       child: TextButton(
                           onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pushNamed(
-                                SendOTPScreen.routeName,
-                                arguments: {"numero": number});
+                            userRegistration(context, number);
                           },
                           child: Text(
                             "C'est bien mon numéro !",
@@ -88,41 +118,5 @@ class ConfirmNumberDialog extends StatelessWidget {
             ),
           ),
         ));
-  }
-}
-
-class Ligne extends StatelessWidget {
-  final String title;
-  final bool active;
-
-  Ligne({required this.title, required this.active});
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Icon(active ? Icons.check_circle_outline : Icons.close,
-              size: 15, color: active ? AppColor.green : Colors.red),
-          SizedBox(
-            width: 20,
-          ),
-          Text(
-            this.title,
-            style: TextStyle(
-              fontWeight: active ? FontWeight.w600 : FontWeight.normal,
-              fontSize: 12.5,
-              color: active ? Colors.black : Colors.grey,
-              decoration:
-                  active ? TextDecoration.none : TextDecoration.lineThrough,
-              decorationThickness: 2.0,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

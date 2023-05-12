@@ -1,7 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:yebhofon/models/UtilisateurModel.dart';
+import 'package:yebhofon/provider/UtilisateurProvider.dart';
+import 'package:yebhofon/screens/homeScreen.dart';
 import 'package:yebhofon/screens/introScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/helper.dart';
 
@@ -15,11 +19,29 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    _timer = Timer(Duration(milliseconds: 4000), () {
-      Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
-      // Navigator.of(context).pushReplacementNamed(LandingScreen.routeName);
+    _timer = Timer(Duration(milliseconds: 3000), () {
+      checkUser();
     });
     super.initState();
+  }
+
+  Future<void> checkUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+    String uniq = await UtilisateurProvider.getUniqID();
+    if (userId != null) {
+      List<UtilisateurModel> users =
+          await UtilisateurProvider.all({"id": userId, "imei": uniq});
+      if (users.isEmpty) {
+        Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
+      } else {
+        UtilisateurModel user = users[0];
+        Navigator.of(context)
+            .pushNamed(HomeScreen.routeName, arguments: {"user": user});
+      }
+    } else {
+      Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
+    }
   }
 
   @override

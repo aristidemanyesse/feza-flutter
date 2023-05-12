@@ -25,6 +25,24 @@ class ProduitSchema {
 }
   """;
 
+  static const String SPECIFIC_ALL = r"""
+query ($produits: [String]!) {
+  searchProduits(produits: $produits) {
+     id
+      name
+      description
+      codebarre
+      onlyOrdonnance
+      image
+      type {
+        id
+        name
+        etiquette
+      }
+  }
+}
+  """;
+
   static const String GET_ONE = """
     query{
       countries(filter:{currency:{eq:"EGP"}}){

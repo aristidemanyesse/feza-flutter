@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
+import 'package:yebhofon/schemas/ProduitInOfficineSchema.dart';
 import 'package:yebhofon/schemas/ProduitSchema.dart';
 import 'package:yebhofon/webservice/apiservice.dart';
 
-class ProduitProvider extends ChangeNotifier {
+class ProduitInOfficineProvider extends ChangeNotifier {
   late List<ProduitModel> produits;
 
   static Future<List<ProduitModel>> all(Map<String, dynamic> variables) async {
@@ -17,17 +18,12 @@ class ProduitProvider extends ChangeNotifier {
     return produits;
   }
 
-  static Future<List<ProduitModel>> specificAll(
+  static Future<List<dynamic>> searchProduitsAvialableInOfficine(
       Map<String, dynamic> variables) async {
-    dynamic datas =
-        await ApiService.request(ProduitSchema.SPECIFIC_ALL, variables);
-    dynamic list = datas["searchProduits"];
-    List<ProduitModel> produits = [];
-    for (var jsonTask in list) {
-      ProduitModel item = ProduitModel.fromJson(jsonTask);
-      produits.add(item);
-    }
-    return produits;
+    dynamic datas = await ApiService.request(
+        ProduitInOfficineSchema.SEARCH_PRODUITS_AVIALABLE_IN_OFFICINE,
+        variables);
+    return datas["searchProduitsAvialableInOfficine"];
   }
 
   Future<void> one(String userid) async {

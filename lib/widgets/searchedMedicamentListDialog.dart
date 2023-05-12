@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:yebhofon/const/colors.dart';
+import 'package:yebhofon/models/ProduitModel.dart';
+import 'package:yebhofon/screens/searchPage.dart';
+import 'package:yebhofon/widgets/ligneProduitAvialable.dart';
 import 'package:yebhofon/widgets/searchBar.dart';
 import '../utils/helper.dart';
 
 class SearchedMedicamentListDialog extends StatelessWidget {
+  final List<ProduitModel> initialProduits;
+
+  SearchedMedicamentListDialog({required this.initialProduits});
+
   Future<String> getCodeBar() async {
     String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
         "#ff6666", "Annuler", false, ScanMode.DEFAULT);
@@ -123,14 +130,9 @@ class SearchedMedicamentListDialog extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
-                      children: [
-                        Ligne(title: "Paracetamol 500mg"),
-                        Ligne(title: "Panadol Advence 500mg"),
-                        Ligne(title: "Toussifan Verfec"),
-                        Ligne(title: "Novalgin 3000"),
-                        Ligne(title: "Amoxiline 1000mg"),
-                        Ligne(title: "Clamoxyl Enfant/Nourrisson"),
-                      ],
+                      children: initialProduits.map((item) {
+                        return LigneSearched(title: item.name);
+                      }).toList(),
                     ),
                   ),
                 ),
@@ -155,6 +157,9 @@ class SearchedMedicamentListDialog extends StatelessWidget {
                           TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.of(context)
+                                    .pushNamed(SearchPage.routeName);
                               },
                               child: Text(
                                 "Refaire la recherche",
@@ -169,42 +174,5 @@ class SearchedMedicamentListDialog extends StatelessWidget {
             ),
           ),
         ));
-  }
-}
-
-class Ligne extends StatelessWidget {
-  String title = "";
-
-  Ligne({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Icon(Icons.edit_attributes, size: 19, color: AppColor.placeholder),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: Text(
-              this.title,
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          GestureDetector(
-            child: Icon(Icons.close, color: Colors.red),
-            onTap: () {},
-          )
-        ],
-      ),
-    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
+import 'package:yebhofon/webservice/apiservice.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
@@ -9,7 +10,7 @@ class SuggestionItemCard extends StatelessWidget {
   final String image;
 
   SuggestionItemCard({required this.produit})
-      : image = "http://192.168.1.14:8005/" + produit.image!;
+      : image = ApiService.BASE_URL + produit.image!;
 
   @override
   Widget build(BuildContext context) {

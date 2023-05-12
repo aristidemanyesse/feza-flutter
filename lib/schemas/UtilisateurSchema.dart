@@ -27,11 +27,55 @@ class UtilisateurSchema {
 }
   """;
 
-  static const String GET_ONE = """
-    query{
-      countries(filter:{currency:{eq:"EGP"}}){
+  static const String CREATE = r"""
+    mutation ($contact: String!, $imei: String!, $circonscription: ID!) {
+  createUtilisateur(
+    newUtilisateur: {contact: $contact, imei: $imei, circonscription: $circonscription}
+  ) {
+    ok
+    errors {
+      field
+      messages
+    }
+    utilisateur {
+      id
+      fullname
+      contact
+      imei
+      createdAt
+      image
+      isValide
+      otp
+      geometryJson
+      circonscription {
+        id
         name
       }
     }
+  }
+}
+  """;
+
+  static const String UPDATE = r"""
+mutation ($id:UUID!, $contact: String!, $imei: String!, $circonscription: ID!) {
+  updateUtilisateur(
+    newUtilisateur: {id:$id, contact: $contact, imei: $imei, circonscription: $circonscription}
+  ) {
+    ok
+    errors {
+      field
+      messages
+    }
+    utilisateur {
+      id
+      contact
+      imei
+      circonscription {
+        id
+        name
+      }
+    }
+  }
+}
   """;
 }

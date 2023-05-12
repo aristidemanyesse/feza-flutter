@@ -1,23 +1,36 @@
-class UtilisateurSchema {
+class OfficineSchema {
   static const String ALL = r"""
-    query($otp:String , $circonscription:UUID){
-      searchUtilisateur(deleted: false, otp: $otp, circonscription_Id:$circonscription){
-        results{
+    query ($id: UUID, $circonscription: UUID, $type: UUID, $name: String, $ic_name: String) {
+      searchOfficine(
+        deleted: false
+        id: $id
+        circonscription_Id: $circonscription
+        type_Id: $type
+        name_Iexact: $name
+        name_Icontains: $ic_name
+      ) {
+        results {
           id
-          fullname
+          name
           contact
-          createdAt
-          image
-          isValide
-          otp
+          contact2
+          localisation
           geometryJson
-          circonscription{
+          type {
+            id
+            name
+            etiquette
+          }
+          image
+          image2
+          image3
+          circonscription {
             id
             name
           }
         }
       }
-}
+    }
   """;
 
   static const String GET_ONE = """

@@ -6,6 +6,7 @@ class UtilisateurModel {
     this.fullname,
     this.contact,
     this.otp,
+    this.imei,
     this.isValide,
     this.geometryJson,
     this.circonscription,
@@ -18,8 +19,9 @@ class UtilisateurModel {
 
   String? id;
   String? fullname;
-  int? contact;
-  int? otp;
+  String? contact;
+  String? otp;
+  String? imei;
   bool? isValide;
   String? geometryJson;
   CirconscriptionModel? circonscription;
@@ -36,6 +38,7 @@ class UtilisateurModel {
           fullname: json["fullname"],
           contact: json["contact"],
           otp: json["otp"],
+          imei: json["imei"],
           isValide: json["isValide"],
           geometryJson: json["geometryJson"],
           circonscription:
@@ -51,6 +54,7 @@ class UtilisateurModel {
         "fullname": fullname,
         "contact": contact,
         "otp": otp,
+        "imei": imei,
         "isValide": isValide,
         "geometryJson": geometryJson,
         "image": image,

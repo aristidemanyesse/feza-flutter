@@ -1,14 +1,19 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yebhofon/models/CirconscriptionModel.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
+import 'package:yebhofon/models/ResponseModel.dart';
+import 'package:yebhofon/models/UtilisateurModel.dart';
 import 'package:yebhofon/provider/CirconscriptionProvider.dart';
 import 'package:yebhofon/provider/ProduitProvider.dart';
+import 'package:yebhofon/provider/UtilisateurProvider.dart';
 import 'package:yebhofon/screens/menuScreen.dart';
-import 'package:yebhofon/screens/searchPage.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:yebhofon/screens/searchPage.dart';
 import 'package:yebhofon/widgets/SuggestionItemCard.dart';
-import 'package:yebhofon/widgets/searchedMedicamentListDialog.dart';
+import 'package:yebhofon/widgets/circonscriptionChoicesDialog.dart';
+import 'package:yebhofon/widgets/selectCirconscriptionBloc.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
@@ -22,13 +27,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool home = true;
+  UtilisateurModel? user;
+  late String? circonscriptionActuelle;
 
   GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
   late TextEditingController _textFieldController = new TextEditingController();
   late List<ProduitModel> _produits = [];
-  late List<CirconscriptionModel> _circonscriptions = [];
   late AutoCompleteTextField<String> _textField;
   late List<String> _selectedOptions = [];
+  late List<String> _selectedOptionsID = [];
   late List<String> _nomsProduits = [];
 
   @override
@@ -76,11 +83,22 @@ class _HomeScreenState extends State<HomeScreen> {
       itemSubmitted: (selectedOption) {
         setState(() {
           _selectedOptions.add(selectedOption);
+          selectedOptionsID();
         });
       },
     );
-
     getData();
+  }
+
+  void selectedOptionsID() async {
+    _selectedOptionsID = [];
+    for (var text in _selectedOptions) {
+      ProduitModel produitTrouve =
+          _produits.firstWhere((produit) => produit.name == text);
+      _selectedOptionsID.add(produitTrouve.id!);
+    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('produits', _selectedOptionsID);
   }
 
   Future<void> getData() async {
@@ -91,11 +109,13 @@ class _HomeScreenState extends State<HomeScreen> {
         _textField.updateSuggestions(_nomsProduits);
       });
     });
-
-    CirconscriptionProvider.all({}).then((datas) {
-      setState(() {
-        _circonscriptions = datas;
-      });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+    String uniq = await UtilisateurProvider.getUniqID();
+    List<UtilisateurModel> users =
+        await UtilisateurProvider.all({"id": userId, "imei": uniq});
+    setState(() {
+      user = users[0];
     });
   }
 
@@ -151,7 +171,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: Helper.getTheme(context).headlineSmall,
                         ),
                         Text(
-                          "Shadrak !",
+                          user?.fullname ?? "",
+                          style: Helper.getTheme(context)
+                              .headlineSmall
+                              ?.copyWith(
+                                  color: AppColor.blue,
+                                  fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          " !",
                           style: Helper.getTheme(context)
                               .headlineSmall
                               ?.copyWith(
@@ -188,33 +216,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         child: Text("Circonscription actuelle"),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: SizedBox(
-                            width: 150,
-                            child: DropdownButton(
-                              value: "Port-Bouet",
-                              items: _circonscriptions.map((item) {
-                                return DropdownMenuItem(
-                                  child: Text(item.name),
-                                  value: item.id,
-                                );
-                              }).toList(),
-                              icon: Image.asset(
-                                Helper.getAssetName(
-                                    "dropdown_filled.png", "virtual"),
-                              ),
-                              style: Helper.getTheme(context).headlineMedium,
-                              onChanged: (value) {
-                                print(value);
-                              },
-                            ),
-                          ),
-                        ),
+                      SizedBox(
+                        height: 10,
                       ),
+                      SelectCirconscriptionBloc(),
                     ],
                   ),
                 ),
@@ -301,6 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         onTap: () {
                                           setState(() {
                                             _selectedOptions.remove(text);
+                                            selectedOptionsID();
                                           });
                                         },
                                         child: Icon(
@@ -323,402 +329,49 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          Positioned(
-              bottom: 15,
-              left: 0,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    decoration: BoxDecoration(
-                        color: AppColor.blue,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.search,
-                          size: 24,
-                          color: Colors.white,
+          (_selectedOptions.length > 0)
+              ? Positioned(
+                  bottom: 15,
+                  left: 0,
+                  right: 0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(SearchPage.routeName);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 10),
+                          decoration: BoxDecoration(
+                              color: AppColor.blue,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.search,
+                                size: 24,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Rechercher",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              )
+                            ],
+                          ),
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Rechercher",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ))
+                      )
+                    ],
+                  ))
+              : Container()
         ]),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
-    );
-  }
-}
-
-class RecentItemCard extends StatelessWidget {
-  const RecentItemCard({
-    Key? key,
-    required String name,
-    required Image image,
-  })  : _name = name,
-        _image = image,
-        super(key: key);
-
-  final String _name;
-  final Image _image;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            width: 80,
-            height: 80,
-            child: _image,
-          ),
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: Container(
-            height: 100,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _name,
-                  style: Helper.getTheme(context)
-                      .headlineMedium
-                      ?.copyWith(color: AppColor.primary),
-                ),
-                Row(
-                  children: [
-                    Text("Cafe"),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Text(
-                        ".",
-                        style: TextStyle(
-                          color: AppColor.blue,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text("Western Food"),
-                    SizedBox(
-                      width: 20,
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Image.asset(
-                      Helper.getAssetName("star_filled.png", "virtual"),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "4.9",
-                      style: TextStyle(
-                        color: AppColor.blue,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Text('(124) Ratings')
-                  ],
-                )
-              ],
-            ),
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class LastSearchItem extends StatelessWidget {
-  const LastSearchItem({
-    Key? key,
-    required String name,
-    required Image image,
-  })  : _name = name,
-        _image = image,
-        super(key: key);
-
-  final String _name;
-  final Image _image;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 20),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-              width: 60,
-              height: 50,
-              child: _image,
-            ),
-          ),
-          SizedBox(width: 15),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _name,
-                style: Helper.getTheme(context)
-                    .labelMedium
-                    ?.copyWith(color: AppColor.primary),
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Text("Cafe"),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0),
-                    child: Text(
-                      ".",
-                      style: TextStyle(
-                        color: AppColor.blue,
-                        fontWeight: FontWeight.w200,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text("Western Food"),
-                ],
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class MostPopularCard extends StatelessWidget {
-  const MostPopularCard({
-    Key? key,
-    required String name,
-    required Image image,
-  })  : _name = name,
-        _image = image,
-        super(key: key);
-
-  final String _name;
-  final Image _image;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            width: 300,
-            height: 200,
-            child: _image,
-          ),
-        ),
-        SizedBox(height: 10),
-        Text(
-          _name,
-          style: Helper.getTheme(context)
-              .headlineMedium
-              ?.copyWith(color: AppColor.primary),
-        ),
-        Row(
-          children: [
-            Text("Cafe"),
-            SizedBox(
-              width: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 5.0),
-              child: Text(
-                ".",
-                style: TextStyle(
-                  color: AppColor.blue,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text("Western Food"),
-            SizedBox(
-              width: 20,
-            ),
-            Image.asset(
-              Helper.getAssetName("star_filled.png", "virtual"),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Text(
-              "4.9",
-              style: TextStyle(
-                color: AppColor.blue,
-              ),
-            )
-          ],
-        )
-      ],
-    );
-  }
-}
-
-class RestaurantCard extends StatelessWidget {
-  const RestaurantCard({
-    Key? key,
-    required String name,
-    required Image image,
-  })  : _image = image,
-        _name = name,
-        super(key: key);
-
-  final String _name;
-  final Image _image;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 270,
-      width: double.infinity,
-      child: Column(
-        children: [
-          SizedBox(height: 200, width: double.infinity, child: _image),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      _name,
-                      style: Helper.getTheme(context).displaySmall,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  children: [
-                    Image.asset(
-                      Helper.getAssetName("star_filled.png", "virtual"),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "4.9",
-                      style: TextStyle(
-                        color: AppColor.blue,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text("(124 ratings)"),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text("Cafe"),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Text(
-                        ".",
-                        style: TextStyle(
-                          color: AppColor.blue,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text("Western Food"),
-                  ],
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class CategoryCard extends StatelessWidget {
-  const CategoryCard({
-    Key? key,
-    required Image image,
-    required String name,
-  })  : _image = image,
-        _name = name,
-        super(key: key);
-
-  final String _name;
-  final Image _image;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            width: 100,
-            height: 100,
-            child: _image,
-          ),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        Text(
-          _name,
-          style: Helper.getTheme(context)
-              .headlineMedium
-              ?.copyWith(color: AppColor.primary, fontSize: 16),
-        ),
-      ],
     );
   }
 }

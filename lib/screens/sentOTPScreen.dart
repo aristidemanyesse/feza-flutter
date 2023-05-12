@@ -1,13 +1,15 @@
 import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:yebhofon/models/UtilisateurModel.dart';
+import 'package:yebhofon/provider/UtilisateurProvider.dart';
 import 'package:yebhofon/screens/homeScreen.dart';
 import 'package:yebhofon/screens/landingScreen.dart';
 import 'package:yebhofon/widgets/myLogo.dart';
 import 'package:yebhofon/widgets/optInput.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SendOTPScreen extends StatefulWidget {
   static const routeName = "/sendOTP";
@@ -25,6 +27,11 @@ class _SendOTPScreen extends State<SendOTPScreen> {
   final _focusNode4 = FocusNode();
   final myController4 = TextEditingController();
 
+  late String code;
+  late String uniq;
+  late UtilisateurModel user;
+  late String numero;
+
   @override
   void dispose() {
     _focusNode1.dispose();
@@ -40,12 +47,45 @@ class _SendOTPScreen extends State<SendOTPScreen> {
         this.myController3.text.length != 1 ||
         this.myController4.text.length != 1) {
       return false;
+    } else {
+      code = this.myController1.text +
+          this.myController2.text +
+          this.myController3.text +
+          this.myController4.text;
+      return true;
     }
-    return true;
   }
 
-  dynamic validation() {
-    Navigator.of(context).pushNamed(HomeScreen.routeName);
+  Future<void> validation() async {
+    print(user.otp);
+    if (user.otp.toString() == code) {
+      uniq = await UtilisateurProvider.getUniqID();
+      if (user.imei == uniq) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', user.id!);
+        Navigator.of(context)
+            .pushNamed(HomeScreen.routeName, arguments: {"user": user});
+      } else {
+        //TODO faire un dialog pour l'avertir que son compte sera deconnecté des autres téléphones if si oui on continue, si non, on reste la
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', user.id!);
+        Navigator.of(context).pushNamed(HomeScreen.routeName);
+      }
+    } else {
+      setState(() {
+        this.myController1.clear();
+        this.myController2.clear();
+        this.myController3.clear();
+        this.myController4.clear();
+      });
+      Fluttertoast.showToast(
+          msg: "Le code OTP n'est pas le bon",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 14.0);
+    }
   }
 
   @override
@@ -53,7 +93,10 @@ class _SendOTPScreen extends State<SendOTPScreen> {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
 
-    final numero = arguments["numero"];
+    setState(() {
+      numero = arguments["numero"];
+      user = arguments["user"];
+    });
 
     return Scaffold(
       body: SafeArea(
@@ -115,7 +158,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                         height: 20,
                       ),
                       Text(
-                        'On verifie que c\'est vous!',
+                        "On verifie que c'est vous!",
                         style: Helper.getTheme(context).titleLarge,
                         textAlign: TextAlign.center,
                       ),

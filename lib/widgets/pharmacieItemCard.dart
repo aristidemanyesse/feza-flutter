@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:yebhofon/models/OfficineModel.dart';
+import 'package:yebhofon/models/ProduitModel.dart';
 import 'package:yebhofon/widgets/avialableMedicamentListDialog.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class PharmacieItemCard extends StatelessWidget {
-  final String name;
-  final String lieu;
+  final OfficineModel officine;
+  final List<ProduitModel> initialProduits;
+  final List<ProduitModel> produits;
   final String distance;
   final String ratio;
-  final String circonscription;
 
   PharmacieItemCard(
-      {required this.name,
-      required this.lieu,
+      {required this.officine,
+      required this.produits,
+      required this.initialProduits,
       required this.distance,
-      required this.ratio,
-      required this.circonscription});
+      required this.ratio});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class PharmacieItemCard extends StatelessWidget {
                       width: 5,
                     ),
                     Text(
-                      name,
+                      officine.name!,
                       style: Helper.getTheme(context)
                           .headlineMedium
                           ?.copyWith(color: AppColor.primary, fontSize: 14),
@@ -56,7 +58,7 @@ class PharmacieItemCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "$lieu",
+                            officine.localisation!,
                             style: TextStyle(fontSize: 12),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -83,7 +85,7 @@ class PharmacieItemCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  "$ratio ",
+                                  "$ratio/${initialProduits.length}",
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
@@ -127,7 +129,11 @@ class PharmacieItemCard extends StatelessWidget {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return AvialableMedicamentListDialog();
+                return AvialableMedicamentListDialog(
+                    officine: officine,
+                    produits: produits,
+                    ratio: "$ratio/${initialProduits.length}",
+                    initialProduits: initialProduits);
               },
             );
           },
