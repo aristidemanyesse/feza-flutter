@@ -14,10 +14,13 @@ class SearchPageBackground extends StatefulWidget {
   static const routeName = "/SearchPageBackground";
   final List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines;
   final List<ProduitModel> initialProduits;
-  const SearchPageBackground(
+  late List<double> position = [0, 0];
+
+  SearchPageBackground(
       {Key? key,
       required this.tableauxOfficines,
-      required this.initialProduits})
+      required this.initialProduits,
+      required this.position})
       : super(key: key);
 
   @override
@@ -26,8 +29,7 @@ class SearchPageBackground extends StatefulWidget {
 
 class _SearchPageBackgroundState extends State<SearchPageBackground> {
   final PopupController _popupLayerController = PopupController();
-  Position? position;
-  LatLng center = LatLng(0, 0);
+  LatLng center = LatLng(5.307600, -3.972112);
 
   List<Marker> allMarkers = [
     // Marker(
@@ -72,25 +74,27 @@ class _SearchPageBackgroundState extends State<SearchPageBackground> {
   // }
 
   Future<void> getPosition() async {
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      position = await Geolocator.getLastKnownPosition();
-      print("L'utilisateur a refusé l'accès à la localisation");
-    } else {
-      position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-    }
-    setState(() {
-      center = LatLng(position!.latitude, position!.longitude);
+    // center = LatLng(widget.position[0], widget.position[1]);
+    for (var item in widget.tableauxOfficines) {
+      OfficineModel officine = item.keys.first;
       allMarkers.add(
         Marker(
           width: 45,
           height: 45,
-          point: center,
+          point: LatLng(officine.lat!, officine.lon!),
           builder: (context) => PharmacieMapPin(),
         ),
       );
-    });
+    }
+    allMarkers.add(
+      Marker(
+        width: 45,
+        height: 45,
+        point: LatLng(widget.position[0], widget.position[1]),
+        builder: (context) => MyPinInMap(),
+      ),
+    );
+    setState(() {});
   }
 
   @override
@@ -117,7 +121,7 @@ class _SearchPageBackgroundState extends State<SearchPageBackground> {
                       child: FlutterMap(
                         options: MapOptions(
                           center: center,
-                          zoom: 14,
+                          zoom: 12,
                         ),
                         children: [
                           TileLayer(

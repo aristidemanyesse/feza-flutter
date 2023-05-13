@@ -21,7 +21,6 @@ class CirconscriptionChoicesDialog extends StatefulWidget {
 
 class _CirconscriptionChoicesDialogState
     extends State<CirconscriptionChoicesDialog> {
-  late String circonscription;
   late List<CirconscriptionModel> circonscriptions = [];
   late List<CirconscriptionModel> _circonscriptions = [];
 

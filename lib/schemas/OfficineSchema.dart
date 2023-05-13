@@ -16,6 +16,8 @@ class OfficineSchema {
           contact2
           localisation
           geometryJson
+          lat
+          lon
           type {
             id
             name

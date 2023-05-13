@@ -1,16 +1,122 @@
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yebhofon/const/colors.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
+import 'package:yebhofon/models/UtilisateurModel.dart';
+import 'package:yebhofon/provider/ProduitProvider.dart';
+import 'package:yebhofon/provider/UtilisateurProvider.dart';
 import 'package:yebhofon/screens/searchPage.dart';
+import 'package:yebhofon/widgets/SuggestionItemCard.dart';
 import 'package:yebhofon/widgets/ligneProduitAvialable.dart';
 import 'package:yebhofon/widgets/searchBar.dart';
 import '../utils/helper.dart';
 
-class SearchedMedicamentListDialog extends StatelessWidget {
+class SearchedMedicamentListDialog extends StatefulWidget {
+  const SearchedMedicamentListDialog({Key? key, required this.initialProduits})
+      : super(key: key);
+  static const routeName = "/rearchedMedicamentListDialog";
   final List<ProduitModel> initialProduits;
 
-  SearchedMedicamentListDialog({required this.initialProduits});
+  @override
+  State<SearchedMedicamentListDialog> createState() =>
+      _SearchedMedicamentListDialogState();
+}
+
+class _SearchedMedicamentListDialogState
+    extends State<SearchedMedicamentListDialog> {
+  _SearchedMedicamentListDialogState();
+
+  GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
+  UtilisateurModel? user;
+  late TextEditingController _textFieldController = new TextEditingController();
+  late List<ProduitModel> _produits = [];
+  late AutoCompleteTextField<String> _textField;
+  late List<String> _selectedOptions = [];
+  late List<String> _selectedOptionsID = [];
+  late List<String> _nomsProduits = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _textField = AutoCompleteTextField(
+      key: key,
+      controller: _textFieldController,
+      itemBuilder: (context, item) {
+        ProduitModel produitTrouve =
+            _produits.firstWhere((produit) => produit.name == item);
+        return SuggestionItemCard(produit: produitTrouve);
+      },
+      itemFilter: (suggestion, query) {
+        return suggestion.toLowerCase().contains(query.toLowerCase());
+      },
+      itemSorter: (a, b) {
+        return a.compareTo(b);
+      },
+      keyboardType: TextInputType.name,
+      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+      suggestions: _nomsProduits,
+      decoration: InputDecoration(
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(40)),
+          borderSide: BorderSide(color: AppColor.blue, width: 1.0),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(40)),
+          borderSide: BorderSide(color: AppColor.secondary, width: 1.0),
+        ),
+        prefixIcon: Icon(
+          Icons.search,
+          color: AppColor.blue,
+        ),
+        hintText: "Rechercher médicament...",
+        hintStyle: TextStyle(
+          color: AppColor.placeholder,
+          fontSize: 15,
+        ),
+        contentPadding: const EdgeInsets.only(
+          top: 10,
+        ),
+      ),
+      itemSubmitted: (selectedOption) {
+        setState(() {
+          _selectedOptions.add(selectedOption);
+          selectedOptionsID();
+        });
+      },
+    );
+    getData();
+  }
+
+  void selectedOptionsID() async {
+    _selectedOptionsID = [];
+    for (var text in _selectedOptions) {
+      ProduitModel produitTrouve =
+          _produits.firstWhere((produit) => produit.name == text);
+      _selectedOptionsID.add(produitTrouve.id!);
+    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('produits', _selectedOptionsID);
+  }
+
+  Future<void> getData() async {
+    ProduitProvider.all({}).then((datas) {
+      setState(() {
+        _produits = datas;
+        _nomsProduits = _produits.map((produit) => produit.name).toList();
+        _textField.updateSuggestions(_nomsProduits);
+      });
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+    String uniq = await UtilisateurProvider.getUniqID();
+    List<UtilisateurModel> users =
+        await UtilisateurProvider.all({"id": userId, "imei": uniq});
+    setState(() {
+      user = users[0];
+    });
+  }
 
   Future<String> getCodeBar() async {
     String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
@@ -72,12 +178,7 @@ class SearchedMedicamentListDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: SearchBar(
-                        title: "Recherher médicaments...",
-                        onEditionComplete: () {
-                          // Navigator.of(context).pushNamed(SearchPage.routeName);
-                        },
-                      ),
+                      child: _textField,
                     ),
                     SizedBox(
                       width: 10,
@@ -130,7 +231,7 @@ class SearchedMedicamentListDialog extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
-                      children: initialProduits.map((item) {
+                      children: widget.initialProduits.map((item) {
                         return LigneSearched(title: item.name);
                       }).toList(),
                     ),

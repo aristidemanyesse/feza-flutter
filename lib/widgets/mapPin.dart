@@ -7,7 +7,18 @@ class PharmacieMapPin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      Helper.getAssetName("pharmacie.png", "icons"),
+      Helper.getAssetName("pharmacy.png", "icons"),
+    );
+  }
+}
+
+class MyPinInMap extends StatelessWidget {
+  MyPinInMap();
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      Helper.getAssetName("loc.png", "icons"),
     );
   }
 }

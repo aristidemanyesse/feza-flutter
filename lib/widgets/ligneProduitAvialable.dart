@@ -65,7 +65,7 @@ class LigneSearched extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            child: Icon(Icons.close, color: Colors.red),
+            child: Icon(Icons.delete_forever, color: Colors.red),
             onTap: () {},
           )
         ],

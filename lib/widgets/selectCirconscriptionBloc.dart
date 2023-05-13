@@ -5,7 +5,7 @@ import 'package:yebhofon/provider/UtilisateurProvider.dart';
 import 'package:yebhofon/widgets/circonscriptionChoicesDialog.dart';
 
 class SelectCirconscriptionBloc extends StatefulWidget {
-  const SelectCirconscriptionBloc({Key? key}) : super(key: key);
+  SelectCirconscriptionBloc({Key? key}) : super(key: key);
 
   @override
   State<SelectCirconscriptionBloc> createState() =>
@@ -13,8 +13,9 @@ class SelectCirconscriptionBloc extends StatefulWidget {
 }
 
 class _SelectCirconscriptionBlocState extends State<SelectCirconscriptionBloc> {
-  late UtilisateurModel user;
   _SelectCirconscriptionBlocState();
+
+  late String circonscription = "";
 
   @override
   void initState() {
@@ -39,9 +40,9 @@ class _SelectCirconscriptionBlocState extends State<SelectCirconscriptionBloc> {
     String uniq = await UtilisateurProvider.getUniqID();
     List<UtilisateurModel> users =
         await UtilisateurProvider.all({"id": userId, "imei": uniq});
-    setState(() {
-      user = users[0];
-    });
+    UtilisateurModel user = users[0];
+    circonscription = user.circonscription!.name;
+    setState(() {});
   }
 
   @override
@@ -57,7 +58,7 @@ class _SelectCirconscriptionBlocState extends State<SelectCirconscriptionBloc> {
           child: Row(
             children: [
               Text(
-                user.circonscription!.name,
+                circonscription,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               SizedBox(

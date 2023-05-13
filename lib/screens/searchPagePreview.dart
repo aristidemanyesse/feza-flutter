@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yebhofon/const/colors.dart';
 import 'package:yebhofon/models/OfficineModel.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
+import 'package:yebhofon/models/UtilisateurModel.dart';
 import 'package:yebhofon/utils/helper.dart';
 import 'package:yebhofon/widgets/bounceAnimation.dart';
 import 'package:yebhofon/widgets/indicator.dart';

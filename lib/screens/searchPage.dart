@@ -14,7 +14,7 @@ import 'package:yebhofon/screens/searchPageExpanded.dart';
 import 'package:yebhofon/screens/searchPagePreview.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  SearchPage({Key? key}) : super(key: key);
   static const routeName = "/searchPage";
 
   @override
@@ -24,7 +24,9 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines = [];
   Map<OfficineModel, int> ratioTableaux = {};
+  Map<OfficineModel, String> distanceTableaux = {};
   List<ProduitModel> initialProduits = [];
+  late List<double> myPosition = [];
 
   @override
   void initState() {
@@ -44,6 +46,7 @@ class _SearchPageState extends State<SearchPage> {
     List<String>? datasGetted = prefs.getStringList('produits');
     tableauxOfficines = [];
     ratioTableaux = {};
+    distanceTableaux = {};
     List<dynamic> datas =
         await ProduitInOfficineProvider.searchProduitsAvialableInOfficine({
       "circonscription": user.circonscription!.id,
@@ -51,6 +54,17 @@ class _SearchPageState extends State<SearchPage> {
     });
     initialProduits =
         await ProduitProvider.specificAll({"produits": datasGetted});
+
+    Position? position;
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      position = await Geolocator.getLastKnownPosition();
+      print("L'utilisateur a refusé l'accès à la localisation");
+    } else {
+      position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+    }
+    myPosition = [position!.latitude, position!.longitude];
 
     for (var element in datas) {
       List<OfficineModel> officines =
@@ -61,7 +75,19 @@ class _SearchPageState extends State<SearchPage> {
 
       tableauxOfficines.add({officine: produits});
       ratioTableaux[officine] = element["ratio"];
+      double distance = Geolocator.distanceBetween(
+          officine.lat!, officine.lon!, position!.latitude, position.longitude);
+
+      distanceTableaux[officine] = distance < 1000
+          ? "$distance m"
+          : "${(distance / 1000).toStringAsFixed(2)} km";
     }
+
+    List<MapEntry<OfficineModel, String>> sortedEntries =
+        distanceTableaux.entries.toList()
+          ..sort((a, b) => a.value.compareTo(b.value));
+    distanceTableaux = Map.fromEntries(
+        sortedEntries.map((entry) => MapEntry(entry.key, entry.value)));
     setState(() {});
   }
 
@@ -77,11 +103,13 @@ class _SearchPageState extends State<SearchPage> {
         previewWidget: SearchPagePreview(tableauxOfficines: tableauxOfficines),
         expandedWidget: SearchPageExpanded(
             ratioTableaux: ratioTableaux,
+            distanceTableaux: distanceTableaux,
             tableauxOfficines: tableauxOfficines,
             initialProduits: initialProduits),
         backgroundWidget: SearchPageBackground(
             tableauxOfficines: tableauxOfficines,
-            initialProduits: initialProduits),
+            initialProduits: initialProduits,
+            position: myPosition),
         duration: const Duration(milliseconds: 10),
         maxExtent: MediaQuery.of(context).size.height * 0.5,
         onDragging: (pos) {},

@@ -27,8 +27,8 @@ class OfficineModel extends BaseModel {
   String? name;
   String? localisation;
   String? geometryJson;
-  int? lon;
-  String? lat;
+  double? lon;
+  double? lat;
   String? contact;
   String? contact2;
   TypeOfficineModel? type;

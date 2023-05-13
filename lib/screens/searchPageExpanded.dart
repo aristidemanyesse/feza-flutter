@@ -14,12 +14,14 @@ class SearchPageExpanded extends StatefulWidget {
   static const routeName = "/searchPageExpanded";
   final List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines;
   final Map<OfficineModel, int> ratioTableaux;
+  final Map<OfficineModel, String> distanceTableaux;
   final List<ProduitModel> initialProduits;
   const SearchPageExpanded(
       {Key? key,
       required this.tableauxOfficines,
       required this.ratioTableaux,
-      required this.initialProduits})
+      required this.initialProduits,
+      required this.distanceTableaux})
       : super(key: key);
 
   @override
@@ -94,7 +96,7 @@ class _SearchPageExpandedState extends State<SearchPageExpanded> {
                           officine: officine,
                           produits: produits,
                           initialProduits: widget.initialProduits,
-                          distance: "900 m",
+                          distance: widget.distanceTableaux[officine]!,
                           ratio: widget.ratioTableaux[officine].toString(),
                         ),
                       ),

@@ -26,9 +26,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool home = true;
   UtilisateurModel? user;
-  late String? circonscriptionActuelle;
 
   GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
   late TextEditingController _textFieldController = new TextEditingController();
@@ -192,8 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       margin: EdgeInsets.only(right: 12),
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context)
-                              .pushReplacementNamed(MenuScreen.routeName);
+                          Navigator.of(context).pushNamed(MenuScreen.routeName);
                         },
                         child: Icon(
                           Icons.menu,
@@ -310,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           });
                                         },
                                         child: Icon(
-                                          Icons.close,
+                                          Icons.delete_forever,
                                           color: Colors.red,
                                           size: 30,
                                         ),
