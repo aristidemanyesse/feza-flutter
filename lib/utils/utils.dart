@@ -1,12 +1,12 @@
 import 'dart:developer';
-import 'package:dtlearning/utils/constant.dart';
-// ignore: depend_on_referenced_packages
+
 import 'package:intl/intl.dart';
 import 'dart:math' as number;
-import 'package:dtlearning/utils/color.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:yebhofon/utils/color.dart';
+import 'package:yebhofon/utils/constant.dart';
 
 class Utils {
   showToast(String msg) {
@@ -52,7 +52,7 @@ class Utils {
         type: ProgressDialogType.normal, isDismissible: false, showLogs: false);
 
     prDialog.style(
-      message: "Please Wait",
+      message: "Veuillez patienter ...",
       borderRadius: 5,
       progressWidget: Container(
         padding: const EdgeInsets.all(8),

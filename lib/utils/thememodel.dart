@@ -1,4 +1,4 @@
-import 'package:dtlearning/utils/color.dart';
+import 'package:yebhofon/utils/color.dart';
 import 'package:flutter/material.dart';
 
 class ThemeModel {

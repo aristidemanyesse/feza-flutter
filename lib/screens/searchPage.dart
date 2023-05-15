@@ -28,6 +28,10 @@ class _SearchPageState extends State<SearchPage> {
   List<ProduitModel> initialProduits = [];
   late List<double> myPosition = [];
 
+  final GlobalKey _previewdKey = GlobalKey();
+  final GlobalKey _backgroundKey = GlobalKey();
+  final GlobalKey _expandedKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -64,7 +68,7 @@ class _SearchPageState extends State<SearchPage> {
       position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
     }
-    myPosition = [position!.latitude, position!.longitude];
+    myPosition = [position!.latitude, position.longitude];
 
     for (var element in datas) {
       List<OfficineModel> officines =
@@ -76,7 +80,7 @@ class _SearchPageState extends State<SearchPage> {
       tableauxOfficines.add({officine: produits});
       ratioTableaux[officine] = element["ratio"];
       double distance = Geolocator.distanceBetween(
-          officine.lat!, officine.lon!, position!.latitude, position.longitude);
+          officine.lat!, officine.lon!, position.latitude, position.longitude);
 
       distanceTableaux[officine] = distance < 1000
           ? "$distance m"
@@ -100,13 +104,17 @@ class _SearchPageState extends State<SearchPage> {
         curve: Curves.easeIn,
         barrierDismissible: false,
         barrierColor: Colors.transparent,
-        previewWidget: SearchPagePreview(tableauxOfficines: tableauxOfficines),
+        previewWidget: SearchPagePreview(
+            key: _previewdKey, tableauxOfficines: tableauxOfficines),
         expandedWidget: SearchPageExpanded(
+            key: _expandedKey,
             ratioTableaux: ratioTableaux,
             distanceTableaux: distanceTableaux,
             tableauxOfficines: tableauxOfficines,
-            initialProduits: initialProduits),
+            initialProduits: initialProduits,
+            backgroundKey: _backgroundKey),
         backgroundWidget: SearchPageBackground(
+            key: _backgroundKey,
             tableauxOfficines: tableauxOfficines,
             initialProduits: initialProduits,
             position: myPosition),

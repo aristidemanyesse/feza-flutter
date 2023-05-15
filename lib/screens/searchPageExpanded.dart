@@ -5,6 +5,7 @@ import 'package:yebhofon/models/OfficineModel.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
 import 'package:yebhofon/models/UtilisateurModel.dart';
 import 'package:yebhofon/provider/UtilisateurProvider.dart';
+import 'package:yebhofon/screens/searchPageBackground.dart';
 import 'package:yebhofon/widgets/indicator.dart';
 import 'package:yebhofon/widgets/pharmacieItemCard.dart';
 import 'package:yebhofon/widgets/selectCirconscriptionBloc.dart';
@@ -12,12 +13,14 @@ import '../screens/medicamentScreen.dart';
 
 class SearchPageExpanded extends StatefulWidget {
   static const routeName = "/searchPageExpanded";
+  final GlobalKey backgroundKey;
   final List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines;
   final Map<OfficineModel, int> ratioTableaux;
   final Map<OfficineModel, String> distanceTableaux;
   final List<ProduitModel> initialProduits;
   const SearchPageExpanded(
       {Key? key,
+      required this.backgroundKey,
       required this.tableauxOfficines,
       required this.ratioTableaux,
       required this.initialProduits,
@@ -84,30 +87,33 @@ class _SearchPageExpandedState extends State<SearchPageExpanded> {
               children: widget.tableauxOfficines.map((element) {
                 OfficineModel officine = element.keys.first;
                 List<ProduitModel> produits = element[element.keys.first]!;
-                return Container(
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(MedicamentScreen.routeName);
-                        },
-                        child: PharmacieItemCard(
+                return GestureDetector(
+                  onTap: () {
+                    SearchPageBackgroundState searchPageBackgroundState = widget
+                        .backgroundKey
+                        .currentState as SearchPageBackgroundState;
+                    searchPageBackgroundState.targetMarker(officine.id);
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Column(
+                      children: [
+                        PharmacieItemCard(
                           officine: officine,
                           produits: produits,
                           initialProduits: widget.initialProduits,
                           distance: widget.distanceTableaux[officine]!,
                           ratio: widget.ratioTableaux[officine].toString(),
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 3),
-                        child: Divider(
-                          color: AppColor.placeholder,
-                          thickness: 1.5,
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 3),
+                          child: Divider(
+                            color: AppColor.placeholder,
+                            thickness: 1.5,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               }).toList(),

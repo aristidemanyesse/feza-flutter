@@ -29,107 +29,20 @@ class _SearchedMedicamentListDialogState
   _SearchedMedicamentListDialogState();
 
   GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
+  GlobalKey searchBarkey = GlobalKey();
   UtilisateurModel? user;
-  late TextEditingController _textFieldController = new TextEditingController();
   late List<ProduitModel> _produits = [];
-  late AutoCompleteTextField<String> _textField;
   late List<String> _selectedOptions = [];
-  late List<String> _selectedOptionsID = [];
-  late List<String> _nomsProduits = [];
 
   @override
   void initState() {
     super.initState();
-    _textField = AutoCompleteTextField(
-      key: key,
-      controller: _textFieldController,
-      itemBuilder: (context, item) {
-        ProduitModel produitTrouve =
-            _produits.firstWhere((produit) => produit.name == item);
-        return SuggestionItemCard(produit: produitTrouve);
-      },
-      itemFilter: (suggestion, query) {
-        return suggestion.toLowerCase().contains(query.toLowerCase());
-      },
-      itemSorter: (a, b) {
-        return a.compareTo(b);
-      },
-      keyboardType: TextInputType.name,
-      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-      suggestions: _nomsProduits,
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(40)),
-          borderSide: BorderSide(color: AppColor.blue, width: 1.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(40)),
-          borderSide: BorderSide(color: AppColor.secondary, width: 1.0),
-        ),
-        prefixIcon: Icon(
-          Icons.search,
-          color: AppColor.blue,
-        ),
-        hintText: "Rechercher médicament...",
-        hintStyle: TextStyle(
-          color: AppColor.placeholder,
-          fontSize: 15,
-        ),
-        contentPadding: const EdgeInsets.only(
-          top: 10,
-        ),
-      ),
-      itemSubmitted: (selectedOption) {
-        setState(() {
-          _selectedOptions.add(selectedOption);
-          selectedOptionsID();
-        });
-      },
-    );
     getData();
   }
 
-  void selectedOptionsID() async {
-    _selectedOptionsID = [];
-    for (var text in _selectedOptions) {
-      ProduitModel produitTrouve =
-          _produits.firstWhere((produit) => produit.name == text);
-      _selectedOptionsID.add(produitTrouve.id!);
-    }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('produits', _selectedOptionsID);
-  }
-
   Future<void> getData() async {
-    ProduitProvider.all({}).then((datas) {
-      setState(() {
-        _produits = datas;
-        _nomsProduits = _produits.map((produit) => produit.name).toList();
-        _textField.updateSuggestions(_nomsProduits);
-      });
-    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userId');
-    String uniq = await UtilisateurProvider.getUniqID();
-    List<UtilisateurModel> users =
-        await UtilisateurProvider.all({"id": userId, "imei": uniq});
-    setState(() {
-      user = users[0];
-    });
-  }
-
-  Future<String> getCodeBar() async {
-    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", "Annuler", false, ScanMode.DEFAULT);
-    print("----------------- $barcodeScanRes");
-    return barcodeScanRes;
-  }
-
-  Future<String> getScanList() async {
-    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", "Annuler", false, ScanMode.DEFAULT);
-    print("----------------- $barcodeScanRes");
-    return barcodeScanRes;
+    _selectedOptions = prefs.getStringList('produitsSelected')!;
   }
 
   @override
@@ -147,6 +60,7 @@ class _SearchedMedicamentListDialogState
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
                       Helper.getAssetName("pharma1.png", "icons"),
@@ -174,50 +88,7 @@ class _SearchedMedicamentListDialogState
                 SizedBox(
                   height: 10,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _textField,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(right: 10),
-                      padding: EdgeInsets.all(7),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          border:
-                              Border.all(color: AppColor.secondary, width: 2)),
-                      child: GestureDetector(
-                        child: Icon(
-                          Icons.file_open_rounded,
-                          size: 23,
-                        ),
-                        onTap: () {
-                          this.getScanList();
-                        },
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(7),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          border:
-                              Border.all(color: AppColor.secondary, width: 2)),
-                      child: GestureDetector(
-                        child: Icon(
-                          Icons.barcode_reader,
-                          size: 23,
-                        ),
-                        onTap: () {
-                          this.getCodeBar();
-                        },
-                      ),
-                    )
-                  ],
-                ),
+                SearchBar(),
                 SizedBox(
                   height: 10,
                 ),
@@ -229,48 +100,89 @@ class _SearchedMedicamentListDialogState
                   height: 15,
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: widget.initialProduits.map((item) {
-                        return LigneSearched(title: item.name);
-                      }).toList(),
-                    ),
-                  ),
+                  child: _selectedOptions.length == 0
+                      ? Text(
+                          "Saisissez le médicament que vous recherchez\n ou appuyer sur @ pour scanner votre ordonnance ou le code barre du medicament",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(height: 1.5),
+                        )
+                      : SingleChildScrollView(
+                          child: Column(
+                            children: _selectedOptions.map((text) {
+                              ProduitModel produitTrouve = _produits.firstWhere(
+                                  (produit) => produit.name == text);
+                              return Container(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                        child: SuggestionItemCard(
+                                            produit: produitTrouve)),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          SearchBarState searchBarState =
+                                              searchBarkey.currentState
+                                                  as SearchBarState;
+                                          searchBarState
+                                              .removeInselectedOptionsID(text);
+                                          searchBarState.selectedOptionsID();
+                                        });
+                                      },
+                                      child: Icon(
+                                        Icons.delete_forever,
+                                        color: Colors.red,
+                                        size: 26,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      height: 35,
-                      width: Helper.getScreenWidth(context) * 0.5,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.white54,
-                      ),
-                      child: Row(
+                (_selectedOptions.length > 0)
+                    ? Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.search, size: 17, color: AppColor.blue),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.of(context)
-                                    .pushNamed(SearchPage.routeName);
-                              },
-                              child: Text(
-                                "Refaire la recherche",
-                                style: TextStyle(fontSize: 13),
-                              ))
+                          Container(
+                            alignment: Alignment.center,
+                            height: 35,
+                            width: Helper.getScreenWidth(context) * 0.5,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.white54,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.search,
+                                    size: 17, color: AppColor.blue),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      Navigator.of(context)
+                                          .pushNamed(SearchPage.routeName);
+                                    },
+                                    child: Text(
+                                      "Refaire la recherche",
+                                      style: TextStyle(fontSize: 13),
+                                    ))
+                              ],
+                            ),
+                          )
                         ],
-                      ),
-                    )
-                  ],
-                )
+                      )
+                    : Container()
               ],
             ),
           ),

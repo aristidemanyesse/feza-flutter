@@ -125,7 +125,6 @@ class AvialableMedicamentListDialog extends StatelessWidget {
                     child: Column(
                       children: initialProduits.map((item) {
                         bool test = false;
-                        print(item);
                         for (var i in produits) {
                           if (i.id == item.id) {
                             test = true;

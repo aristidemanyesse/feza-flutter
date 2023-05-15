@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:yebhofon/utils/helper.dart';
+
+class CustomMyMarker {
+  final LatLng point;
+  final String id;
+
+  CustomMyMarker(this.point, this.id);
+}
 
 class PharmacieMapPin extends StatelessWidget {
   PharmacieMapPin();

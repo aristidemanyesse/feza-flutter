@@ -1,18 +1,12 @@
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yebhofon/models/CirconscriptionModel.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
-import 'package:yebhofon/models/ResponseModel.dart';
 import 'package:yebhofon/models/UtilisateurModel.dart';
-import 'package:yebhofon/provider/CirconscriptionProvider.dart';
-import 'package:yebhofon/provider/ProduitProvider.dart';
 import 'package:yebhofon/provider/UtilisateurProvider.dart';
 import 'package:yebhofon/screens/menuScreen.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:yebhofon/screens/searchPage.dart';
 import 'package:yebhofon/widgets/SuggestionItemCard.dart';
-import 'package:yebhofon/widgets/circonscriptionChoicesDialog.dart';
+import 'package:yebhofon/widgets/searchBar.dart';
 import 'package:yebhofon/widgets/selectCirconscriptionBloc.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
@@ -28,109 +22,25 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   UtilisateurModel? user;
 
-  GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
-  late TextEditingController _textFieldController = new TextEditingController();
+  GlobalKey searchBarkey = GlobalKey();
   late List<ProduitModel> _produits = [];
-  late AutoCompleteTextField<String> _textField;
   late List<String> _selectedOptions = [];
-  late List<String> _selectedOptionsID = [];
-  late List<String> _nomsProduits = [];
 
   @override
   void initState() {
     super.initState();
-    _textField = AutoCompleteTextField(
-      key: key,
-      controller: _textFieldController,
-      itemBuilder: (context, item) {
-        ProduitModel produitTrouve =
-            _produits.firstWhere((produit) => produit.name == item);
-        return SuggestionItemCard(produit: produitTrouve);
-      },
-      itemFilter: (suggestion, query) {
-        return suggestion.toLowerCase().contains(query.toLowerCase());
-      },
-      itemSorter: (a, b) {
-        return a.compareTo(b);
-      },
-      keyboardType: TextInputType.name,
-      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-      suggestions: _nomsProduits,
-      decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(40)),
-          borderSide: BorderSide(color: AppColor.blue, width: 1.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(40)),
-          borderSide: BorderSide(color: AppColor.secondary, width: 1.0),
-        ),
-        prefixIcon: Icon(
-          Icons.search,
-          color: AppColor.blue,
-        ),
-        hintText: "Rechercher médicament...",
-        hintStyle: TextStyle(
-          color: AppColor.placeholder,
-          fontSize: 15,
-        ),
-        contentPadding: const EdgeInsets.only(
-          top: 10,
-        ),
-      ),
-      itemSubmitted: (selectedOption) {
-        setState(() {
-          _selectedOptions.add(selectedOption);
-          selectedOptionsID();
-        });
-      },
-    );
     getData();
   }
 
-  void selectedOptionsID() async {
-    _selectedOptionsID = [];
-    for (var text in _selectedOptions) {
-      ProduitModel produitTrouve =
-          _produits.firstWhere((produit) => produit.name == text);
-      _selectedOptionsID.add(produitTrouve.id!);
-    }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('produits', _selectedOptionsID);
-  }
-
   Future<void> getData() async {
-    ProduitProvider.all({}).then((datas) {
-      setState(() {
-        _produits = datas;
-        _nomsProduits = _produits.map((produit) => produit.name).toList();
-        _textField.updateSuggestions(_nomsProduits);
-      });
-    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    _selectedOptions = prefs.getStringList('produitsSelected')!;
     String? userId = prefs.getString('userId');
     String uniq = await UtilisateurProvider.getUniqID();
     List<UtilisateurModel> users =
         await UtilisateurProvider.all({"id": userId, "imei": uniq});
-    setState(() {
-      user = users[0];
-    });
-  }
-
-  Future<String> getCodeBar(context) async {
-    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", "Annuler", false, ScanMode.DEFAULT);
-    debugPrint("----------------- $barcodeScanRes");
-    Navigator.of(context).pushNamed(SearchPage.routeName);
-    return barcodeScanRes;
-  }
-
-  Future<String> getScanList(context) async {
-    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", "Annuler", false, ScanMode.DEFAULT);
-    debugPrint("----------------- $barcodeScanRes");
-    Navigator.of(context).pushNamed(SearchPage.routeName);
-    return barcodeScanRes;
+    user = users[0];
+    setState(() {});
   }
 
   @override
@@ -226,46 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Center(
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: _textField),
-                          ),
-                          SizedBox(height: 16),
-                          Container(
-                            margin: EdgeInsets.only(right: 10),
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                                border: Border.all(
-                                    color: AppColor.secondary, width: 2)),
-                            child: GestureDetector(
-                              child: Icon(Icons.file_open_rounded),
-                              onTap: () {
-                                this.getScanList(context);
-                              },
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(right: 10),
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                                border: Border.all(
-                                    color: AppColor.secondary, width: 2)),
-                            child: GestureDetector(
-                              child: Icon(Icons.barcode_reader),
-                              onTap: () {
-                                this.getCodeBar(context);
-                              },
-                            ),
-                          )
-                        ],
-                      ),
+                      SearchBar(),
                       SizedBox(
                         height: 15,
                       ),
@@ -302,8 +173,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            _selectedOptions.remove(text);
-                                            selectedOptionsID();
+                                            SearchBarState searchBarState =
+                                                searchBarkey.currentState
+                                                    as SearchBarState;
+                                            searchBarState
+                                                .removeInselectedOptionsID(
+                                                    text);
+                                            searchBarState.selectedOptionsID();
                                           });
                                         },
                                         child: Icon(

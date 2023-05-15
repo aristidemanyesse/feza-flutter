@@ -21,9 +21,7 @@ class PharmaciesGarde extends StatelessWidget {
         backgroundWidget: PharmaciesGardeBackground(),
         duration: const Duration(milliseconds: 10),
         maxExtent: MediaQuery.of(context).size.height * 0.5,
-        onDragging: (pos) {
-          print("brhjkg");
-        },
+        onDragging: (pos) {},
       ),
     );
   }

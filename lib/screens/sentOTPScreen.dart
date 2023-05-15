@@ -57,7 +57,6 @@ class _SendOTPScreen extends State<SendOTPScreen> {
   }
 
   Future<void> validation() async {
-    print(user.otp);
     if (user.otp.toString() == code) {
       uniq = await UtilisateurProvider.getUniqID();
       if (user.imei == uniq) {

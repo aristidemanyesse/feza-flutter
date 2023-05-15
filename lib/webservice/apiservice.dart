@@ -40,8 +40,8 @@ final QueryOptions options = QueryOptions(
 // }
 
 class ApiService {
-  static const BASE_URL = "http://192.168.43.117:8005/";
-  // static const BASE_URL = "http://192.168.1.39:8005/";
+  // static const BASE_URL = "http://192.168.43.117:8005/";
+  static const BASE_URL = "http://192.168.1.7:8005/";
   static const GRAPH_URL = BASE_URL + "graphql/";
 
   static Future<Map<String, dynamic>?> request(
@@ -61,7 +61,7 @@ class ApiService {
     final QueryResult result = await client.query(options);
 
     if (result.hasException) {
-      print(result.exception.toString());
+      print("Erreur Apiservice::::: ${result.exception.toString()}");
       return null;
     }
     return result.data;
