@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yebhofon/const/colors.dart';
 import 'package:yebhofon/models/OfficineModel.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
 import 'package:yebhofon/models/UtilisateurModel.dart';
 import 'package:yebhofon/provider/UtilisateurProvider.dart';
 import 'package:yebhofon/screens/searchPageBackground.dart';
+import 'package:yebhofon/utils/sharedpre.dart';
 import 'package:yebhofon/widgets/indicator.dart';
 import 'package:yebhofon/widgets/pharmacieItemCard.dart';
 import 'package:yebhofon/widgets/selectCirconscriptionBloc.dart';
-import '../screens/medicamentScreen.dart';
 
 class SearchPageExpanded extends StatefulWidget {
   static const routeName = "/searchPageExpanded";
@@ -33,6 +32,10 @@ class SearchPageExpanded extends StatefulWidget {
 
 class _SearchPageExpandedState extends State<SearchPageExpanded> {
   late UtilisateurModel? user;
+  late ScrollController _scrollController = ScrollController();
+  late Map<String, GlobalKey> containerKeys = {};
+  SharedPreferencesService sharedPreferencesService =
+      SharedPreferencesService();
 
   @override
   void initState() {
@@ -41,15 +44,50 @@ class _SearchPageExpandedState extends State<SearchPageExpanded> {
     getData();
   }
 
+  @override
+  void didUpdateWidget(covariant SearchPageExpanded oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.tableauxOfficines.isNotEmpty) {
+      for (var item in widget.tableauxOfficines) {
+        containerKeys[item.keys.first.id!] = GlobalKey();
+        setState(() {});
+      }
+    }
+    sharedPreferencesService
+        .watchString('scrollToContainerIndex')
+        .listen((value) async {
+      String text =
+          await sharedPreferencesService.getString('scrollToContainerIndex');
+      _scrollToContainer(text);
+      setState(() {});
+    });
+  }
+
   Future<void> getData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userId');
+    await sharedPreferencesService.init();
+    String? userId = await sharedPreferencesService.getString('userId');
     String uniq = await UtilisateurProvider.getUniqID();
     List<UtilisateurModel> users =
         await UtilisateurProvider.all({"id": userId, "imei": uniq});
     setState(() {
       user = users[0];
     });
+  }
+
+  void _scrollToContainer(String containerKey) {
+    GlobalKey? key = containerKeys[containerKey];
+    final RenderBox containerRenderBox =
+        key?.currentContext!.findRenderObject() as RenderBox;
+    final containerOffset = containerRenderBox.localToGlobal(Offset.zero);
+
+    _scrollController.animateTo(
+      containerOffset.dy -
+          (MediaQuery.of(context).size.height /
+              2), // Décaler vers le milieu de la zone
+      duration: const Duration(
+          milliseconds: 500), // Durée de l'animation de défilement
+      curve: Curves.easeInOut, // Courbe d'animation
+    );
   }
 
   @override
@@ -82,52 +120,66 @@ class _SearchPageExpandedState extends State<SearchPageExpanded> {
           ),
           const SizedBox(height: 16),
           Expanded(
-              child: SingleChildScrollView(
-            child: Column(
-              children: widget.tableauxOfficines.map((element) {
-                OfficineModel officine = element.keys.first;
-                List<ProduitModel> produits = element[element.keys.first]!;
-                return GestureDetector(
-                  onTap: () {
-                    SearchPageBackgroundState searchPageBackgroundState = widget
-                        .backgroundKey
-                        .currentState as SearchPageBackgroundState;
-                    searchPageBackgroundState.targetMarker(officine.id);
-                  },
-                  child: Container(
-                    color: Colors.transparent,
-                    child: Column(
-                      children: [
-                        PharmacieItemCard(
-                          officine: officine,
-                          produits: produits,
-                          initialProduits: widget.initialProduits,
-                          distance: widget.distanceTableaux[officine]!,
-                          ratio: widget.ratioTableaux[officine].toString(),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 3),
-                          child: Divider(
-                            color: AppColor.placeholder,
-                            thickness: 1.5,
-                          ),
-                        ),
-                      ],
-                    ),
+              child: widget.tableauxOfficines.length > 0
+                  ? SingleChildScrollView(
+                      controller: _scrollController,
+                      child: Column(
+                        children: widget.tableauxOfficines.map((element) {
+                          if (element.isEmpty) {
+                            return Container();
+                          }
+                          OfficineModel officine = element.keys.first;
+                          List<ProduitModel> produits =
+                              element[element.keys.first] ?? [];
+                          return GestureDetector(
+                            onTap: () {
+                              SearchPageBackgroundState
+                                  searchPageBackgroundState =
+                                  widget.backgroundKey.currentState
+                                      as SearchPageBackgroundState;
+                              searchPageBackgroundState
+                                  .targetMarker(officine.id);
+                            },
+                            child: Container(
+                              key: containerKeys[officine.id],
+                              color: Colors.transparent,
+                              child: Column(
+                                children: [
+                                  PharmacieItemCard(
+                                    officine: officine,
+                                    produits: produits,
+                                    initialProduits: widget.initialProduits,
+                                    distance:
+                                        widget.distanceTableaux[officine] ?? "",
+                                    ratio: widget.ratioTableaux[officine]
+                                        .toString(),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(vertical: 3),
+                                    child: Divider(
+                                      color: AppColor.placeholder,
+                                      thickness: 1.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    )
+                  : Container()),
+          widget.tableauxOfficines.length > 0
+              ? Container(
+                  margin: EdgeInsets.only(top: 10),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "${widget.tableauxOfficines.length} pharmacies de garde trouvées",
+                    style: TextStyle(
+                        color: AppColor.green, fontWeight: FontWeight.bold),
                   ),
-                );
-              }).toList(),
-            ),
-          )),
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            alignment: Alignment.center,
-            child: Text(
-              "${widget.tableauxOfficines.length} pharmacies de garde trouvées",
-              style:
-                  TextStyle(color: AppColor.green, fontWeight: FontWeight.bold),
-            ),
-          )
+                )
+              : Container()
         ],
       ),
     );

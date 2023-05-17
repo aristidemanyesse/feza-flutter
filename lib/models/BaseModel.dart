@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class BaseModel {
   BaseModel(
       {this.id, this.createAt, this.updateAt, this.deleted, this.protected});

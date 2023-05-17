@@ -1,21 +1,21 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yebhofon/const/colors.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
 import 'package:yebhofon/provider/ProduitProvider.dart';
+import 'package:yebhofon/utils/sharedpre.dart';
 import 'package:yebhofon/widgets/SuggestionItemCard.dart';
 
-class SearchBar extends StatefulWidget {
-  const SearchBar({Key? key}) : super(key: key);
-  static const routeName = "/SearchBar";
+class SearchBarGroup extends StatefulWidget {
+  static const routeName = "/SearchBarGroup";
+  SearchBarGroup({Key? key}) : super(key: key);
 
   @override
-  State<SearchBar> createState() => SearchBarState();
+  State<SearchBarGroup> createState() => SearchBarGroupState();
 }
 
-class SearchBarState extends State<SearchBar> {
+class SearchBarGroupState extends State<SearchBarGroup> {
   GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
   late TextEditingController _textFieldController = new TextEditingController();
   late List<ProduitModel> _produits = [];
@@ -23,6 +23,9 @@ class SearchBarState extends State<SearchBar> {
   late List<String> _selectedOptions = [];
   late List<String> _selectedOptionsID = [];
   late List<String> _nomsProduits = [];
+
+  SharedPreferencesService sharedPreferencesService =
+      SharedPreferencesService();
 
   Future<void> getData() async {
     ProduitProvider.all({}).then((datas) {
@@ -32,8 +35,9 @@ class SearchBarState extends State<SearchBar> {
         _textField.updateSuggestions(_nomsProduits);
       });
     });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _selectedOptions = prefs.getStringList('produitsSelected')!;
+    await sharedPreferencesService.init();
+    _selectedOptions =
+        await sharedPreferencesService.getStringList('produitsSelected');
   }
 
   Future<String> getCodeBar() async {
@@ -53,6 +57,10 @@ class SearchBarState extends State<SearchBar> {
   @override
   void initState() {
     super.initState();
+
+    sharedPreferencesService.watchString('produitsSelected').listen((value) {
+      selectedOptionsID();
+    });
 
     _textField = AutoCompleteTextField(
       key: key,
@@ -93,11 +101,10 @@ class SearchBarState extends State<SearchBar> {
           top: 10,
         ),
       ),
-      itemSubmitted: (selectedOption) {
-        setState(() {
-          _selectedOptions.add(selectedOption);
-          selectedOptionsID();
-        });
+      itemSubmitted: (selectedOption) async {
+        _selectedOptions.add(selectedOption);
+        await sharedPreferencesService.setStringList(
+            'produitsSelected', _selectedOptions);
       },
     );
     getData();
@@ -105,20 +112,15 @@ class SearchBarState extends State<SearchBar> {
 
   void selectedOptionsID() async {
     _selectedOptionsID = [];
+    _selectedOptions =
+        await sharedPreferencesService.getStringList('produitsSelected');
     for (var text in _selectedOptions) {
       ProduitModel produitTrouve =
           _produits.firstWhere((produit) => produit.name == text);
       _selectedOptionsID.add(produitTrouve.id!);
     }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('produitsSelected', _selectedOptions);
-    await prefs.setStringList('produitsIDSelected', _selectedOptionsID);
-  }
-
-  void removeInselectedOptionsID(String text) async {
-    _selectedOptions.remove(text);
-    selectedOptionsID();
-    setState(() {});
+    await sharedPreferencesService.setStringList(
+        'produitsIDSelected', _selectedOptionsID);
   }
 
   @override

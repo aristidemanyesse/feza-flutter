@@ -1,7 +1,6 @@
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yebhofon/models/OfficineModel.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
 import 'package:yebhofon/models/UtilisateurModel.dart';
@@ -12,6 +11,7 @@ import 'package:yebhofon/provider/UtilisateurProvider.dart';
 import 'package:yebhofon/screens/searchPageBackground.dart';
 import 'package:yebhofon/screens/searchPageExpanded.dart';
 import 'package:yebhofon/screens/searchPagePreview.dart';
+import 'package:yebhofon/utils/sharedpre.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key? key}) : super(key: key);
@@ -27,27 +27,40 @@ class _SearchPageState extends State<SearchPage> {
   Map<OfficineModel, String> distanceTableaux = {};
   List<ProduitModel> initialProduits = [];
   late List<double> myPosition = [];
+  late List<String>? datasGetted = [];
 
   final GlobalKey _previewdKey = GlobalKey();
   final GlobalKey _backgroundKey = GlobalKey();
   final GlobalKey _expandedKey = GlobalKey();
 
+  SharedPreferencesService sharedPreferencesService =
+      SharedPreferencesService();
+
   @override
   void initState() {
     super.initState();
     getData();
+
+    sharedPreferencesService
+        .watchString('produitsIDSelected')
+        .listen((value) async {
+      datasGetted =
+          await sharedPreferencesService.getStringList('produitsIDSelected');
+      setState(() {});
+    });
   }
 
   Future<void> getData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await sharedPreferencesService.init();
 
-    String? userId = prefs.getString('userId');
+    String? userId = await sharedPreferencesService.getString('userId');
     String uniq = await UtilisateurProvider.getUniqID();
     List<UtilisateurModel> users =
         await UtilisateurProvider.all({"id": userId, "imei": uniq});
     UtilisateurModel user = users[0];
 
-    List<String>? datasGetted = prefs.getStringList('produits');
+    datasGetted =
+        await sharedPreferencesService.getStringList('produitsIDSelected');
     tableauxOfficines = [];
     ratioTableaux = {};
     distanceTableaux = {};
@@ -79,19 +92,11 @@ class _SearchPageState extends State<SearchPage> {
 
       tableauxOfficines.add({officine: produits});
       ratioTableaux[officine] = element["ratio"];
-      double distance = Geolocator.distanceBetween(
-          officine.lat!, officine.lon!, position.latitude, position.longitude);
-
-      distanceTableaux[officine] = distance < 1000
-          ? "$distance m"
-          : "${(distance / 1000).toStringAsFixed(2)} km";
+      double distance = element["distance"];
+      distanceTableaux[officine] = distance < 1
+          ? "${distance * 1000} m"
+          : "${distance.toStringAsFixed(2)} km";
     }
-
-    List<MapEntry<OfficineModel, String>> sortedEntries =
-        distanceTableaux.entries.toList()
-          ..sort((a, b) => a.value.compareTo(b.value));
-    distanceTableaux = Map.fromEntries(
-        sortedEntries.map((entry) => MapEntry(entry.key, entry.value)));
     setState(() {});
   }
 

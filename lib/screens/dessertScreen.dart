@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:yebhofon/const/colors.dart';
 import 'package:yebhofon/utils/helper.dart';
 import 'package:yebhofon/widgets/customNavBar.dart';
-import 'package:yebhofon/widgets/searchBar.dart';
 
 class DessertScreen extends StatelessWidget {
   static const routeName = '/dessertScreen';
@@ -49,10 +48,6 @@ class DessertScreen extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 20,
-                  ),
-                  SearchBar(
-                    title: "Search Food",
-                    onEditionComplete: () {},
                   ),
                   SizedBox(
                     height: 15,

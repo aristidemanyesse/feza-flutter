@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:yebhofon/const/colors.dart';
 import 'package:yebhofon/models/OfficineModel.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
-import 'package:yebhofon/models/UtilisateurModel.dart';
-import 'package:yebhofon/utils/helper.dart';
 import 'package:yebhofon/widgets/bounceAnimation.dart';
 import 'package:yebhofon/widgets/indicator.dart';
 import 'package:yebhofon/widgets/selectCirconscriptionBloc.dart';
@@ -56,14 +54,17 @@ class _SearchPagePreviewState extends State<SearchPagePreview> {
                   color: Colors.grey.shade300,
                   margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "${widget.tableauxOfficines.length} pharmacies de garde trouvées",
-                    style: TextStyle(
-                        color: AppColor.green, fontWeight: FontWeight.bold),
-                  ),
-                )
+                widget.tableauxOfficines.length > 0
+                    ? Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "${widget.tableauxOfficines.length} pharmacies de garde trouvées",
+                          style: TextStyle(
+                              color: AppColor.green,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    : Container()
               ],
             ),
             Column(

@@ -58,7 +58,7 @@ class PharmacieItemCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            officine.localisation!,
+                            officine.localisation ?? "",
                             style: TextStyle(fontSize: 12),
                             overflow: TextOverflow.ellipsis,
                           ),

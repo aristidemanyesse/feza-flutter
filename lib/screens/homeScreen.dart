@@ -1,46 +1,69 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
 import 'package:yebhofon/models/UtilisateurModel.dart';
+import 'package:yebhofon/provider/ProduitProvider.dart';
 import 'package:yebhofon/provider/UtilisateurProvider.dart';
 import 'package:yebhofon/screens/menuScreen.dart';
 import 'package:yebhofon/screens/searchPage.dart';
+import 'package:yebhofon/utils/sharedpre.dart';
 import 'package:yebhofon/widgets/SuggestionItemCard.dart';
-import 'package:yebhofon/widgets/searchBar.dart';
+import 'package:yebhofon/widgets/searchBarGroup.dart';
 import 'package:yebhofon/widgets/selectCirconscriptionBloc.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  GlobalKey key = new GlobalKey();
   static const routeName = "/homeScreen";
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreen> createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  UtilisateurModel? user;
+class HomeScreenState extends State<HomeScreen> {
+  SharedPreferencesService sharedPreferencesService =
+      SharedPreferencesService();
 
-  GlobalKey searchBarkey = GlobalKey();
+  UtilisateurModel? user;
   late List<ProduitModel> _produits = [];
+  late List<String> _selectedOptionsID = [];
   late List<String> _selectedOptions = [];
 
   @override
   void initState() {
-    super.initState();
     getData();
+    super.initState();
+    sharedPreferencesService
+        .watchString('produitsSelected')
+        .listen((value) async {
+      _selectedOptions =
+          await sharedPreferencesService.getStringList('produitsSelected');
+      _selectedOptionsID =
+          await sharedPreferencesService.getStringList('produitsIDSelected');
+      setState(() {});
+    });
   }
 
   Future<void> getData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _selectedOptions = prefs.getStringList('produitsSelected')!;
-    String? userId = prefs.getString('userId');
+    await sharedPreferencesService.init();
+    _selectedOptions =
+        await sharedPreferencesService.getStringList('produitsSelected');
+    String? userId = await sharedPreferencesService.getString('userId');
     String uniq = await UtilisateurProvider.getUniqID();
     List<UtilisateurModel> users =
         await UtilisateurProvider.all({"id": userId, "imei": uniq});
     user = users[0];
+    _produits = await ProduitProvider.all({});
     setState(() {});
+  }
+
+  void removeInselectedOptionsID(String text) async {
+    _selectedOptions.remove(text);
+    await sharedPreferencesService.setStringList(
+        'produitsSelected', _selectedOptions);
   }
 
   @override
@@ -136,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Center(
                   child: Column(
                     children: [
-                      SearchBar(),
+                      SearchBarGroup(),
                       SizedBox(
                         height: 15,
                       ),
@@ -147,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Center(
                       child: Container(
                     margin: EdgeInsets.all(20),
-                    child: _selectedOptions.length == 0
+                    child: _selectedOptions.isEmpty
                         ? Text(
                             "Saisissez le médicament que vous recherchez\n ou appuyer sur @ pour scanner votre ordonnance ou le code barre du medicament",
                             textAlign: TextAlign.center,
@@ -172,15 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          setState(() {
-                                            SearchBarState searchBarState =
-                                                searchBarkey.currentState
-                                                    as SearchBarState;
-                                            searchBarState
-                                                .removeInselectedOptionsID(
-                                                    text);
-                                            searchBarState.selectedOptionsID();
-                                          });
+                                          removeInselectedOptionsID(text);
                                         },
                                         child: Icon(
                                           Icons.delete_forever,
@@ -231,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: 5,
                               ),
                               Text(
-                                "Rechercher",
+                                "Rechercher ${_selectedOptions.length} médicament(s)",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),

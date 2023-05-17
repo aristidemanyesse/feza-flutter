@@ -1,16 +1,13 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yebhofon/const/colors.dart';
 import 'package:yebhofon/models/ProduitModel.dart';
 import 'package:yebhofon/models/UtilisateurModel.dart';
 import 'package:yebhofon/provider/ProduitProvider.dart';
-import 'package:yebhofon/provider/UtilisateurProvider.dart';
 import 'package:yebhofon/screens/searchPage.dart';
+import 'package:yebhofon/utils/sharedpre.dart';
 import 'package:yebhofon/widgets/SuggestionItemCard.dart';
-import 'package:yebhofon/widgets/ligneProduitAvialable.dart';
-import 'package:yebhofon/widgets/searchBar.dart';
+import 'package:yebhofon/widgets/searchBarGroup.dart';
 import '../utils/helper.dart';
 
 class SearchedMedicamentListDialog extends StatefulWidget {
@@ -29,20 +26,40 @@ class _SearchedMedicamentListDialogState
   _SearchedMedicamentListDialogState();
 
   GlobalKey<AutoCompleteTextFieldState<String>> key = GlobalKey();
-  GlobalKey searchBarkey = GlobalKey();
+  GlobalKey searchBarGroupkey = GlobalKey();
   UtilisateurModel? user;
   late List<ProduitModel> _produits = [];
   late List<String> _selectedOptions = [];
+
+  SharedPreferencesService sharedPreferencesService =
+      SharedPreferencesService();
 
   @override
   void initState() {
     super.initState();
     getData();
+
+    sharedPreferencesService
+        .watchString('produitsSelected')
+        .listen((value) async {
+      _selectedOptions =
+          await sharedPreferencesService.getStringList('produitsSelected');
+      setState(() {});
+    });
   }
 
   Future<void> getData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _selectedOptions = prefs.getStringList('produitsSelected')!;
+    await sharedPreferencesService.init();
+    _selectedOptions =
+        await sharedPreferencesService.getStringList('produitsSelected');
+    _produits = await ProduitProvider.all({});
+    setState(() {});
+  }
+
+  void removeInselectedOptionsID(String text) async {
+    _selectedOptions.remove(text);
+    await sharedPreferencesService.setStringList(
+        'produitsSelected', _selectedOptions);
   }
 
   @override
@@ -88,7 +105,7 @@ class _SearchedMedicamentListDialogState
                 SizedBox(
                   height: 10,
                 ),
-                SearchBar(),
+                SearchBarGroup(key: searchBarGroupkey),
                 SizedBox(
                   height: 10,
                 ),
@@ -101,10 +118,12 @@ class _SearchedMedicamentListDialogState
                 ),
                 Expanded(
                   child: _selectedOptions.length == 0
-                      ? Text(
-                          "Saisissez le médicament que vous recherchez\n ou appuyer sur @ pour scanner votre ordonnance ou le code barre du medicament",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(height: 1.5),
+                      ? Center(
+                          child: Text(
+                            "Saisissez le médicament que vous recherchez\n ou appuyer sur @ pour scanner votre ordonnance ou le code barre du medicament",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(height: 1.5),
+                          ),
                         )
                       : SingleChildScrollView(
                           child: Column(
@@ -124,14 +143,7 @@ class _SearchedMedicamentListDialogState
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        setState(() {
-                                          SearchBarState searchBarState =
-                                              searchBarkey.currentState
-                                                  as SearchBarState;
-                                          searchBarState
-                                              .removeInselectedOptionsID(text);
-                                          searchBarState.selectedOptionsID();
-                                        });
+                                        removeInselectedOptionsID(text);
                                       },
                                       child: Icon(
                                         Icons.delete_forever,

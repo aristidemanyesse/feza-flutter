@@ -19,6 +19,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  GlobalKey homeScreenkey = GlobalKey();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -76,13 +77,13 @@ class MyApp extends StatelessWidget {
         LoginScreen.routeName: (context) => LoginScreen(),
         SendOTPScreen.routeName: (context) => SendOTPScreen(),
         IntroScreen.routeName: (context) => IntroScreen(),
-        HomeScreen.routeName: (context) => HomeScreen(),
         SearchPage.routeName: (context) => SearchPage(),
         MenuScreen.routeName: (context) => MenuScreen(),
         PharmaciesGarde.routeName: (context) => PharmaciesGarde(),
         ProfileScreen.routeName: (context) => ProfileScreen(),
         DessertScreen.routeName: (context) => DessertScreen(),
         MedicamentScreen.routeName: (context) => MedicamentScreen(),
+        HomeScreen.routeName: (context) => HomeScreen(),
       },
     );
   }

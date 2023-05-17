@@ -1,13 +1,13 @@
 class OfficineSchema {
   static const String ALL = r"""
-    query ($id: UUID, $circonscription: UUID, $type: UUID, $name: String, $ic_name: String) {
+    query ($id: UUID, $circonscription: UUID, $type: String, $name: String, $ic_name: String) {
       searchOfficine(
         deleted: false
         id: $id
         circonscription_Id: $circonscription
-        type_Id: $type
         name_Iexact: $name
         name_Icontains: $ic_name
+        type_Etiquette: $type
       ) {
         results {
           id

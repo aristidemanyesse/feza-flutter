@@ -15,11 +15,9 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  late Timer _timer;
-
   @override
   void initState() {
-    _timer = Timer(Duration(milliseconds: 3000), () {
+    Timer(Duration(milliseconds: 3000), () {
       checkUser();
     });
     super.initState();

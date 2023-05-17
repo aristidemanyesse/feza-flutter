@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:yebhofon/models/OfficineModel.dart';
+import 'package:yebhofon/utils/helper.dart';
 
-class ExamplePopup extends StatefulWidget {
+class MapMinPharmaciePopup extends StatelessWidget {
   final Marker marker;
+  final OfficineModel officine;
+  final String ratio;
+  final String distance;
 
-  const ExamplePopup(this.marker, {Key? key}) : super(key: key);
+  MapMinPharmaciePopup(
+      {required this.marker,
+      required this.officine,
+      required this.ratio,
+      required this.distance,
+      Key? key})
+      : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => _ExamplePopupState();
-}
-
-class _ExamplePopupState extends State<ExamplePopup> {
   final List<IconData> _icons = [
     Icons.star_border,
     Icons.star_half,
@@ -22,15 +28,16 @@ class _ExamplePopupState extends State<ExamplePopup> {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () => setState(() {
-          _currentIcon = (_currentIcon + 1) % _icons.length;
-        }),
+        onTap: () {},
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(left: 20, right: 10),
-              child: Icon(_icons[_currentIcon]),
+              padding: const EdgeInsets.only(left: 10, right: 5),
+              child: Image.asset(
+                Helper.getAssetName("pharma.png", "icons"),
+                width: 35,
+              ),
             ),
             _cardDescription(context),
           ],
@@ -49,24 +56,34 @@ class _ExamplePopupState extends State<ExamplePopup> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const Text(
-              'Popup for a marker!',
+            Text(
+              officine.name!,
               overflow: TextOverflow.fade,
               softWrap: false,
               style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
               ),
             ),
-            const Padding(padding: EdgeInsets.symmetric(vertical: 4.0)),
+            const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
             Text(
-              'Position: ${widget.marker.point.latitude}, ${widget.marker.point.longitude}',
+              officine.localisation ?? "",
               style: const TextStyle(fontSize: 12.0),
             ),
-            Text(
-              'Marker size: ${widget.marker.width}, ${widget.marker.height}',
-              style: const TextStyle(fontSize: 12.0),
-            ),
+            const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  distance,
+                  style: const TextStyle(fontSize: 13.0),
+                ),
+                Text(
+                  ratio,
+                  style: const TextStyle(fontSize: 13.0),
+                ),
+              ],
+            )
           ],
         ),
       ),

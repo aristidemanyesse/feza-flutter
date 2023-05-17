@@ -1,33 +1,48 @@
+import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPre {
-  read(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key);
+class SharedPreferencesService {
+  static final SharedPreferencesService _instance =
+      SharedPreferencesService._internal();
+
+  factory SharedPreferencesService() => _instance;
+
+  SharedPreferences? _prefs;
+  StreamController<String> _valueStreamController =
+      StreamController<String>.broadcast();
+
+  SharedPreferencesService._internal();
+
+  Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
   }
 
-  save(String key, value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(key, value);
+  Future<String> getString(String key) async {
+    return _prefs?.getString(key) ?? '';
   }
 
-  readBool(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(key);
+  Future<void> setString(String key, String value) async {
+    await _prefs?.setString(key, value);
+    _valueStreamController
+        .add(value); // Émettre la nouvelle valeur aux écouteurs
   }
 
-  saveBool(String key, value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool(key, value);
+  Future<List<String>> getStringList(String key) async {
+    return _prefs?.getStringList(key) ?? [];
   }
 
-  remove(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove(key);
+  Future<void> setStringList(String key, List<String> value) async {
+    await _prefs?.setStringList(key, value);
+    _valueStreamController
+        .add(value.toString()); // Émettre la nouvelle valeur aux écouteurs
   }
 
-  clear() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+  Stream<String> watchString(String key) {
+    return _valueStreamController.stream;
+  }
+
+  Stream<List<String>> watchStringList(String key) {
+    return _valueStreamController.stream
+        .map((value) => value.split(',').map((item) => item.trim()).toList());
   }
 }

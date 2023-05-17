@@ -13,6 +13,7 @@ class ProduitInOfficineSchema {
         officine
         produits
         ratio
+        distance
       }
 }
   """;

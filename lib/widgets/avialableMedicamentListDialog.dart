@@ -45,7 +45,7 @@ class AvialableMedicamentListDialog extends StatelessWidget {
                       padding: EdgeInsets.only(bottom: 5),
                       alignment: Alignment.center,
                       child: Text(
-                        officine.name!.toUpperCase(),
+                        (officine.name ?? "").toUpperCase(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -62,7 +62,7 @@ class AvialableMedicamentListDialog extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                officine.localisation!,
+                                officine.localisation ?? "",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 12),
                               ),
@@ -75,7 +75,7 @@ class AvialableMedicamentListDialog extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                "${officine.circonscription!.name}, à 900 m",
+                                "${officine.circonscription?.name}, à 900 m",
                                 style: TextStyle(fontSize: 12),
                               ),
                               Text(
