@@ -11,10 +11,14 @@ import 'package:yebhofon/widgets/mapPin.dart';
 import 'package:yebhofon/widgets/mapPopupPin.dart';
 import 'package:yebhofon/widgets/searchedMedicamentListDialog.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'dart:convert';
+import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class SearchPageBackground extends StatefulWidget {
   static const routeName = "/SearchPageBackground";
   final List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines;
+  final Map<String, String> routesOfficines;
   final List<ProduitModel> initialProduits;
   late List<double> position = [0, 0];
 
@@ -22,6 +26,7 @@ class SearchPageBackground extends StatefulWidget {
       {Key? key,
       required this.tableauxOfficines,
       required this.initialProduits,
+      required this.routesOfficines,
       required this.position})
       : super(key: key);
 
@@ -39,6 +44,7 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
 
   List<CustomMyMarker> allMarkers = [];
   List<LatLng> allMarkersLatLng = [];
+  List<LatLng> routeCoordinates = [];
 
   static const _startedId = 'AnimatedMapController#MoveStarted';
   static const _inProgressId = 'AnimatedMapController#MoveInProgress';
@@ -119,6 +125,7 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
       final centerZoom = mapController.centerZoomFitBounds(bounds);
       _animatedMapMove(centerZoom.center, centerZoom.zoom);
     }
+    setState(() {});
   }
 
   void targetMarker(String? id) {
@@ -129,9 +136,18 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
     }
   }
 
-  void _scrollToContainer(String index) async {
+  void scrollToContainer(String index) async {
     await sharedPreferencesService.init();
     await sharedPreferencesService.setString('scrollToContainerIndex', index);
+    routeCoordinates = [];
+    print(widget.routesOfficines);
+    for (var key in widget.routesOfficines.keys) {
+      final datas = widget.routesOfficines[key];
+      Map<String, dynamic> jsonData = json.decode(datas ?? "");
+      // routeCoordinates.add(LatLng(coords[0], coords[1]));
+    }
+    print(routeCoordinates);
+    setState(() {});
   }
 
   @override
@@ -161,22 +177,30 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
                             userAgentPackageName:
                                 'dev.fleaflet.flutter_map.example',
                           ),
-
-                          // MarkerLayer(markers: allMarkers),
+                          PolylineLayer(
+                            polylines: [
+                              Polyline(
+                                points: routeCoordinates,
+                                color: Colors
+                                    .blue, // Couleur de la ligne de l'itinéraire
+                                strokeWidth: 4.0, // Épaisseur de la ligne
+                              ),
+                            ],
+                          ),
                           PopupMarkerLayerWidget(
                             options: PopupMarkerLayerOptions(
-                              popupController: _popupLayerController,
+                              // popupController: _popupLayerController,
                               markers: allMarkers
                                   .map((element) => Marker(
                                         point: element.point,
-                                        width: 30,
-                                        height: 30,
+                                        width: 45,
+                                        height: 45,
                                         builder: (context) => GestureDetector(
-                                          onTap: () {
-                                            _scrollToContainer(
-                                                element.officine.id ?? "");
-                                          },
                                           child: PharmacieMapPin(),
+                                          onTap: () {
+                                            scrollToContainer(
+                                                element.officine.id!);
+                                          },
                                         ),
                                         anchorPos:
                                             AnchorPos.align(AnchorAlign.top),

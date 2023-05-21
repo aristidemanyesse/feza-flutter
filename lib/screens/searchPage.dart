@@ -12,6 +12,7 @@ import 'package:yebhofon/screens/searchPageBackground.dart';
 import 'package:yebhofon/screens/searchPageExpanded.dart';
 import 'package:yebhofon/screens/searchPagePreview.dart';
 import 'package:yebhofon/utils/sharedpre.dart';
+import 'package:yebhofon/widgets/loader.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key? key}) : super(key: key);
@@ -25,9 +26,11 @@ class _SearchPageState extends State<SearchPage> {
   List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines = [];
   Map<OfficineModel, int> ratioTableaux = {};
   Map<OfficineModel, String> distanceTableaux = {};
+  Map<String, String> routesOfficines = {};
   List<ProduitModel> initialProduits = [];
   late List<double> myPosition = [];
   late List<String>? datasGetted = [];
+  late bool ready = false;
 
   final GlobalKey _previewdKey = GlobalKey();
   final GlobalKey _backgroundKey = GlobalKey();
@@ -92,12 +95,17 @@ class _SearchPageState extends State<SearchPage> {
 
       tableauxOfficines.add({officine: produits});
       ratioTableaux[officine] = element["ratio"];
+      routesOfficines[officine.id!] = element["route"];
+      print(element["route"]);
+
       double distance = element["distance"];
       distanceTableaux[officine] = distance < 1
           ? "${distance * 1000} m"
           : "${distance.toStringAsFixed(2)} km";
     }
-    setState(() {});
+    setState(() {
+      ready = true;
+    });
   }
 
   @override
@@ -122,6 +130,7 @@ class _SearchPageState extends State<SearchPage> {
             key: _backgroundKey,
             tableauxOfficines: tableauxOfficines,
             initialProduits: initialProduits,
+            routesOfficines: routesOfficines,
             position: myPosition),
         duration: const Duration(milliseconds: 10),
         maxExtent: MediaQuery.of(context).size.height * 0.5,

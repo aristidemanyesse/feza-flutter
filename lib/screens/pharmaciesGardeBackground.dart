@@ -18,42 +18,6 @@ class PharmaciesGardeBackground extends StatelessWidget {
       point: LatLng(5.260298, -3.9522842),
       builder: (context) => PharmacieMapPin(),
     ),
-    Marker(
-      width: 45,
-      height: 45,
-      point: LatLng(5.254743, -3.943766),
-      builder: (context) => PharmacieMapPin(),
-    ),
-    Marker(
-      width: 45,
-      height: 45,
-      point: LatLng(5.271238, -3.923166),
-      builder: (context) => PharmacieMapPin(),
-    ),
-    Marker(
-      width: 45,
-      height: 45,
-      point: LatLng(5.266580, -3.953679),
-      builder: (context) => PharmacieMapPin(),
-    ),
-    Marker(
-      width: 45,
-      height: 45,
-      point: LatLng(5.255661, -3.955900),
-      builder: (context) => PharmacieMapPin(),
-    ),
-    Marker(
-      width: 45,
-      height: 45,
-      point: LatLng(5.276238, -3.977974),
-      builder: (context) => PharmacieMapPin(),
-    ),
-    Marker(
-      width: 45,
-      height: 45,
-      point: LatLng(5.301877, -3.960122),
-      builder: (context) => PharmacieMapPin(),
-    ),
   ];
 
 // ignore: missing_return

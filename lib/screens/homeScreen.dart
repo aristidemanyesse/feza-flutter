@@ -15,7 +15,6 @@ import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class HomeScreen extends StatefulWidget {
-  GlobalKey key = new GlobalKey();
   static const routeName = "/homeScreen";
   HomeScreen({Key? key}) : super(key: key);
 
@@ -29,7 +28,6 @@ class HomeScreenState extends State<HomeScreen> {
 
   UtilisateurModel? user;
   late List<ProduitModel> _produits = [];
-  late List<String> _selectedOptionsID = [];
   late List<String> _selectedOptions = [];
 
   @override
@@ -41,8 +39,6 @@ class HomeScreenState extends State<HomeScreen> {
         .listen((value) async {
       _selectedOptions =
           await sharedPreferencesService.getStringList('produitsSelected');
-      _selectedOptionsID =
-          await sharedPreferencesService.getStringList('produitsIDSelected');
       setState(() {});
     });
   }
@@ -225,7 +221,7 @@ class HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GestureDetector(
+                      InkWell(
                         onTap: () {
                           Navigator.of(context).pushNamed(SearchPage.routeName);
                         },

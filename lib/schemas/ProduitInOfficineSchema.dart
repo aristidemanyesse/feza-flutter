@@ -14,6 +14,7 @@ class ProduitInOfficineSchema {
         produits
         ratio
         distance
+        route
       }
 }
   """;
