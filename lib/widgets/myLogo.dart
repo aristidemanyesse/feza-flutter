@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/const/colors.dart';
-import 'package:yebhofon/utils/helper.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/utils/helper.dart';
 
 class MyLogo extends StatelessWidget {
   MyLogo();

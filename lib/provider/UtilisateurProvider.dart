@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/models/ResponseModel.dart';
-import 'package:yebhofon/models/UtilisateurModel.dart';
-import 'package:yebhofon/schemas/UtilisateurSchema.dart';
-import 'package:yebhofon/webservice/apiservice.dart';
+import 'package:ipi/models/ResponseModel.dart';
+import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/schemas/UtilisateurSchema.dart';
+import 'package:ipi/webservice/apiservice.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:device_info/device_info.dart';

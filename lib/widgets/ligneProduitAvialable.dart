@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/const/colors.dart';
+import 'package:ipi/const/colors.dart';
 
 class Ligne extends StatelessWidget {
   final String title;

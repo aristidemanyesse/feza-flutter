@@ -1,4 +1,4 @@
-import 'package:yebhofon/models/TypeProduitModel.dart';
+import 'package:ipi/models/TypeProduitModel.dart';
 
 class ProduitModel {
   ProduitModel({

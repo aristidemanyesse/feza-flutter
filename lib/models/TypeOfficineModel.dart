@@ -1,4 +1,4 @@
-import 'package:yebhofon/models/BaseModel.dart';
+import 'package:ipi/models/BaseModel.dart';
 
 class TypeOfficineModel extends BaseModel {
   TypeOfficineModel({

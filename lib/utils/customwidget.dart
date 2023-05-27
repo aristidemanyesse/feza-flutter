@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:yebhofon/utils/color.dart';
+import 'package:ipi/utils/color.dart';
 
 class CustomWidget extends StatelessWidget {
   final double width;

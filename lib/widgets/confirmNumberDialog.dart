@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:yebhofon/models/ResponseModel.dart';
-import 'package:yebhofon/models/UtilisateurModel.dart';
-import 'package:yebhofon/provider/UtilisateurProvider.dart';
-import 'package:yebhofon/screens/sentOTPScreen.dart';
+import 'package:ipi/models/ResponseModel.dart';
+import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/UtilisateurProvider.dart';
+import 'package:ipi/screens/sentOTPScreen.dart';
 import '../utils/helper.dart';
 
 class ConfirmNumberDialog extends StatelessWidget {

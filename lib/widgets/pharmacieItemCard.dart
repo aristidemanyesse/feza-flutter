@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/models/OfficineModel.dart';
-import 'package:yebhofon/models/ProduitModel.dart';
-import 'package:yebhofon/widgets/avialableMedicamentListDialog.dart';
+import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/widgets/avialableMedicamentListDialog.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';

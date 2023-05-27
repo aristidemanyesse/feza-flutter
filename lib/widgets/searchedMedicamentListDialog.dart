@@ -1,13 +1,13 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:yebhofon/const/colors.dart';
-import 'package:yebhofon/models/ProduitModel.dart';
-import 'package:yebhofon/models/UtilisateurModel.dart';
-import 'package:yebhofon/provider/ProduitProvider.dart';
-import 'package:yebhofon/screens/searchPage.dart';
-import 'package:yebhofon/utils/sharedpre.dart';
-import 'package:yebhofon/widgets/SuggestionItemCard.dart';
-import 'package:yebhofon/widgets/searchBarGroup.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/ProduitProvider.dart';
+import 'package:ipi/screens/searchPage.dart';
+import 'package:ipi/utils/sharedpre.dart';
+import 'package:ipi/widgets/SuggestionItemCard.dart';
+import 'package:ipi/widgets/searchBarGroup.dart';
 import '../utils/helper.dart';
 
 class SearchedMedicamentListDialog extends StatefulWidget {

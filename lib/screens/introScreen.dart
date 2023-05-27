@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/const/colors.dart';
-import 'package:yebhofon/screens/landingScreen.dart';
-import 'package:yebhofon/utils/helper.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/screens/landingScreen.dart';
+import 'package:ipi/utils/helper.dart';
 import 'package:lottie/lottie.dart';
 
 class IntroScreen extends StatefulWidget {

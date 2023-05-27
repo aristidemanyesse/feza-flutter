@@ -1,8 +1,8 @@
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:yebhofon/screens/pharmaciesGardeBackground.dart';
-import 'package:yebhofon/screens/pharmaciesGardeExpanded.dart';
-import 'package:yebhofon/screens/pharmaciesGardePreview.dart';
+import 'package:ipi/screens/pharmaciesGardeBackground.dart';
+import 'package:ipi/screens/pharmaciesGardeExpanded.dart';
+import 'package:ipi/screens/pharmaciesGardePreview.dart';
 
 class PharmaciesGarde extends StatelessWidget {
   static const routeName = "/pharmaciesGarde";

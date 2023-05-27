@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lottie/lottie.dart';
-import 'package:yebhofon/models/UtilisateurModel.dart';
-import 'package:yebhofon/provider/UtilisateurProvider.dart';
-import 'package:yebhofon/screens/homeScreen.dart';
-import 'package:yebhofon/screens/introScreen.dart';
+import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/UtilisateurProvider.dart';
+import 'package:ipi/screens/homeScreen.dart';
+import 'package:ipi/screens/introScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/helper.dart';
@@ -58,7 +58,7 @@ class _LoaderScreenState extends State<LoaderScreen> {
                       height: 20,
                     ),
                     Text(
-                      "Feza recherche les pharmacies ...",
+                      "ipi recherche les pharmacies ...",
                       textAlign: TextAlign.center,
                       style:
                           TextStyle(fontSize: 17, fontWeight: FontWeight.w600),

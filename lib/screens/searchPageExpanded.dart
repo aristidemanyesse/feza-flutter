@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/const/colors.dart';
-import 'package:yebhofon/models/OfficineModel.dart';
-import 'package:yebhofon/models/ProduitModel.dart';
-import 'package:yebhofon/models/UtilisateurModel.dart';
-import 'package:yebhofon/provider/UtilisateurProvider.dart';
-import 'package:yebhofon/screens/searchPageBackground.dart';
-import 'package:yebhofon/utils/sharedpre.dart';
-import 'package:yebhofon/widgets/indicator.dart';
-import 'package:yebhofon/widgets/pharmacieItemCard.dart';
-import 'package:yebhofon/widgets/selectCirconscriptionBloc.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/UtilisateurProvider.dart';
+import 'package:ipi/screens/searchPageBackground.dart';
+import 'package:ipi/utils/sharedpre.dart';
+import 'package:ipi/widgets/indicator.dart';
+import 'package:ipi/widgets/pharmacieItemCard.dart';
+import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 
 class SearchPageExpanded extends StatefulWidget {
   static const routeName = "/searchPageExpanded";

@@ -1,18 +1,18 @@
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:yebhofon/models/OfficineModel.dart';
-import 'package:yebhofon/models/ProduitModel.dart';
-import 'package:yebhofon/models/UtilisateurModel.dart';
-import 'package:yebhofon/provider/OfficineProvider.dart';
-import 'package:yebhofon/provider/ProduitInOfficineProvider.dart';
-import 'package:yebhofon/provider/ProduitProvider.dart';
-import 'package:yebhofon/provider/UtilisateurProvider.dart';
-import 'package:yebhofon/screens/searchPageBackground.dart';
-import 'package:yebhofon/screens/searchPageExpanded.dart';
-import 'package:yebhofon/screens/searchPagePreview.dart';
-import 'package:yebhofon/utils/sharedpre.dart';
-import 'package:yebhofon/widgets/loader.dart';
+import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/OfficineProvider.dart';
+import 'package:ipi/provider/ProduitInOfficineProvider.dart';
+import 'package:ipi/provider/ProduitProvider.dart';
+import 'package:ipi/provider/UtilisateurProvider.dart';
+import 'package:ipi/screens/searchPageBackground.dart';
+import 'package:ipi/screens/searchPageExpanded.dart';
+import 'package:ipi/screens/searchPagePreview.dart';
+import 'package:ipi/utils/sharedpre.dart';
+import 'package:ipi/widgets/loader.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key? key}) : super(key: key);
@@ -126,12 +126,14 @@ class _SearchPageState extends State<SearchPage> {
             tableauxOfficines: tableauxOfficines,
             initialProduits: initialProduits,
             backgroundKey: _backgroundKey),
-        backgroundWidget: SearchPageBackground(
-            key: _backgroundKey,
-            tableauxOfficines: tableauxOfficines,
-            initialProduits: initialProduits,
-            routesOfficines: routesOfficines,
-            position: myPosition),
+        backgroundWidget: !ready
+            ? LoaderScreen()
+            : SearchPageBackground(
+                key: _backgroundKey,
+                tableauxOfficines: tableauxOfficines,
+                initialProduits: initialProduits,
+                routesOfficines: routesOfficines,
+                position: myPosition),
         duration: const Duration(milliseconds: 10),
         maxExtent: MediaQuery.of(context).size.height * 0.5,
         onDragging: (pos) {},

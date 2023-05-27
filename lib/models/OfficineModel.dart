@@ -1,6 +1,6 @@
-import 'package:yebhofon/models/BaseModel.dart';
-import 'package:yebhofon/models/CirconscriptionModel.dart';
-import 'package:yebhofon/models/TypeOfficineModel.dart';
+import 'package:ipi/models/BaseModel.dart';
+import 'package:ipi/models/CirconscriptionModel.dart';
+import 'package:ipi/models/TypeOfficineModel.dart';
 
 class OfficineModel extends BaseModel {
   OfficineModel({

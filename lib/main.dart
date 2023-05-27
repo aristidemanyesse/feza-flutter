@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/screens/medicamentScreen.dart';
-import 'package:yebhofon/screens/pharmaciesGarde.dart';
+import 'package:ipi/screens/medicamentScreen.dart';
+import 'package:ipi/screens/pharmaciesGarde.dart';
 
 import './screens/spashScreen.dart';
 import './screens/landingScreen.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Yebhofon App',
+      title: 'ipi App',
       theme: ThemeData(
         fontFamily: "Metropolis",
         primarySwatch: Colors.blue,

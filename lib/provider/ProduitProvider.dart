@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/models/ProduitModel.dart';
-import 'package:yebhofon/schemas/ProduitSchema.dart';
-import 'package:yebhofon/webservice/apiservice.dart';
+import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/schemas/ProduitSchema.dart';
+import 'package:ipi/webservice/apiservice.dart';
 
 class ProduitProvider extends ChangeNotifier {
   late List<ProduitModel> produits;

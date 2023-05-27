@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:yebhofon/models/BaseModel.dart';
+import 'package:ipi/models/BaseModel.dart';
 
 AssuranceModel assuranceModelFromJson(String str) =>
     AssuranceModel.fromJson(json.decode(str));

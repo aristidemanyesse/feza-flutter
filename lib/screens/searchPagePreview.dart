@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/const/colors.dart';
-import 'package:yebhofon/models/OfficineModel.dart';
-import 'package:yebhofon/models/ProduitModel.dart';
-import 'package:yebhofon/widgets/bounceAnimation.dart';
-import 'package:yebhofon/widgets/indicator.dart';
-import 'package:yebhofon/widgets/selectCirconscriptionBloc.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/widgets/bounceAnimation.dart';
+import 'package:ipi/widgets/indicator.dart';
+import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 
 class SearchPagePreview extends StatefulWidget {
   static const routeName = "/SearchPagePreview";

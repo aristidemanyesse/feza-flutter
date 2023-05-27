@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:yebhofon/utils/helper.dart';
-import 'package:yebhofon/widgets/mapPin.dart';
-import 'package:yebhofon/widgets/mapPopupPin.dart';
+import 'package:ipi/utils/helper.dart';
+import 'package:ipi/widgets/mapPin.dart';
+import 'package:ipi/widgets/mapPopupPin.dart';
 import 'package:location/location.dart';
 
 class PharmaciesGardeBackground extends StatelessWidget {

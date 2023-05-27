@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/const/colors.dart';
-import 'package:yebhofon/utils/helper.dart';
-import 'package:yebhofon/widgets/bounceAnimation.dart';
-import 'package:yebhofon/widgets/indicator.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/utils/helper.dart';
+import 'package:ipi/widgets/bounceAnimation.dart';
+import 'package:ipi/widgets/indicator.dart';
 
 class PharmaciesGardePreview extends StatelessWidget {
   @override

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yebhofon/models/UtilisateurModel.dart';
-import 'package:yebhofon/provider/UtilisateurProvider.dart';
-import 'package:yebhofon/widgets/circonscriptionChoicesDialog.dart';
+import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/UtilisateurProvider.dart';
+import 'package:ipi/widgets/circonscriptionChoicesDialog.dart';
 
 class SelectCirconscriptionBloc extends StatefulWidget {
   SelectCirconscriptionBloc({Key? key}) : super(key: key);

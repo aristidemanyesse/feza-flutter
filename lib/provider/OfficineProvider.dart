@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/models/OfficineModel.dart';
-import 'package:yebhofon/schemas/OfficineSchema.dart';
-import 'package:yebhofon/webservice/apiservice.dart';
+import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/schemas/OfficineSchema.dart';
+import 'package:ipi/webservice/apiservice.dart';
 
 class OfficineProvider extends ChangeNotifier {
   late List<OfficineModel> officines;

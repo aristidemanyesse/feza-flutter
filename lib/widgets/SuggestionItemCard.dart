@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/models/ProduitModel.dart';
-import 'package:yebhofon/webservice/apiservice.dart';
+import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/webservice/apiservice.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';

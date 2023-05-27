@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/const/colors.dart';
-import 'package:yebhofon/utils/helper.dart';
-import 'package:yebhofon/widgets/customNavBar.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/utils/helper.dart';
+import 'package:ipi/widgets/customNavBar.dart';
 
 class MedicamentScreen extends StatelessWidget {
   static const routeName = "/individualScreen";

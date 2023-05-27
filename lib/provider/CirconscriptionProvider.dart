@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/models/CirconscriptionModel.dart';
-import 'package:yebhofon/schemas/CirconscriptionSchema.dart';
-import 'package:yebhofon/webservice/apiservice.dart';
+import 'package:ipi/models/CirconscriptionModel.dart';
+import 'package:ipi/schemas/CirconscriptionSchema.dart';
+import 'package:ipi/webservice/apiservice.dart';
 
 class CirconscriptionProvider extends ChangeNotifier {
   late List<CirconscriptionModel> circonscriptions;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/const/colors.dart';
-import 'package:yebhofon/utils/helper.dart';
-import 'package:yebhofon/widgets/indicator.dart';
-import 'package:yebhofon/widgets/pharmacieItemCard2.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/utils/helper.dart';
+import 'package:ipi/widgets/indicator.dart';
+import 'package:ipi/widgets/pharmacieItemCard2.dart';
 import '../screens/medicamentScreen.dart';
 
 class PharmaciesGardeExpanded extends StatelessWidget {

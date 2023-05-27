@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yebhofon/const/colors.dart';
-import 'package:yebhofon/models/CirconscriptionModel.dart';
-import 'package:yebhofon/models/ResponseModel.dart';
-import 'package:yebhofon/models/UtilisateurModel.dart';
-import 'package:yebhofon/provider/CirconscriptionProvider.dart';
-import 'package:yebhofon/provider/UtilisateurProvider.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/models/CirconscriptionModel.dart';
+import 'package:ipi/models/ResponseModel.dart';
+import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/CirconscriptionProvider.dart';
+import 'package:ipi/provider/UtilisateurProvider.dart';
 import '../utils/helper.dart';
 
 class CirconscriptionChoicesDialog extends StatefulWidget {

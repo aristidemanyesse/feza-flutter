@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:yebhofon/models/OfficineModel.dart';
-import 'package:yebhofon/utils/helper.dart';
+import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/utils/helper.dart';
 
 class CustomMyMarker {
   final LatLng point;

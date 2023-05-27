@@ -1,4 +1,4 @@
-import 'package:yebhofon/models/CirconscriptionModel.dart';
+import 'package:ipi/models/CirconscriptionModel.dart';
 
 class UtilisateurModel {
   UtilisateurModel({

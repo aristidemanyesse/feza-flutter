@@ -1,4 +1,4 @@
-import 'package:yebhofon/utils/color.dart';
+import 'package:ipi/utils/color.dart';
 import 'package:flutter/material.dart';
 
 class ThemeModel {

@@ -5,8 +5,8 @@ import 'dart:math' as number;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
-import 'package:yebhofon/utils/color.dart';
-import 'package:yebhofon/utils/constant.dart';
+import 'package:ipi/utils/color.dart';
+import 'package:ipi/utils/constant.dart';
 
 class Utils {
   showToast(String msg) {

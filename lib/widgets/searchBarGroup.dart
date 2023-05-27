@@ -1,11 +1,11 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:yebhofon/const/colors.dart';
-import 'package:yebhofon/models/ProduitModel.dart';
-import 'package:yebhofon/provider/ProduitProvider.dart';
-import 'package:yebhofon/utils/sharedpre.dart';
-import 'package:yebhofon/widgets/SuggestionItemCard.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/provider/ProduitProvider.dart';
+import 'package:ipi/utils/sharedpre.dart';
+import 'package:ipi/widgets/SuggestionItemCard.dart';
 
 class SearchBarGroup extends StatefulWidget {
   static const routeName = "/SearchBarGroup";

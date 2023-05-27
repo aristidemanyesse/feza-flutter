@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/const/colors.dart';
-import 'package:yebhofon/screens/dessertScreen.dart';
-import 'package:yebhofon/screens/pharmaciesGarde.dart';
-import 'package:yebhofon/screens/profileScreen.dart';
-import 'package:yebhofon/utils/helper.dart';
-import 'package:yebhofon/widgets/menuCard.dart';
-import 'package:yebhofon/widgets/myLogo.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/screens/dessertScreen.dart';
+import 'package:ipi/screens/pharmaciesGarde.dart';
+import 'package:ipi/screens/profileScreen.dart';
+import 'package:ipi/utils/helper.dart';
+import 'package:ipi/widgets/menuCard.dart';
+import 'package:ipi/widgets/myLogo.dart';
 
 class MenuScreen extends StatelessWidget {
   static const routeName = "/menuScreen";

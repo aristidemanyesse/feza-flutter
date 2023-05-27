@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:yebhofon/const/colors.dart';
+import 'package:ipi/const/colors.dart';
 
 class OTPInput extends StatelessWidget {
   final FocusNode focusNode = FocusNode();

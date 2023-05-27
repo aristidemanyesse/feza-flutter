@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yebhofon/screens/landingScreen.dart';
+import 'package:ipi/screens/landingScreen.dart';
 import 'package:csshadow/csshadow.dart';
-import 'package:yebhofon/widgets/confirmNumberDialog.dart';
+import 'package:ipi/widgets/confirmNumberDialog.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
 import '../widgets/customTextInput.dart';
@@ -198,7 +198,7 @@ class _LoginScreen extends State<LoginScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Yebhofon @ Copyright 2023"),
+                      Text("ipi @ Copyright 2023"),
                     ],
                   ),
                 )

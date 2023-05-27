@@ -1,6 +1,6 @@
 import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
-import 'package:yebhofon/screens/loginScreen.dart';
+import 'package:ipi/screens/loginScreen.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
@@ -82,7 +82,7 @@ class LandingScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Yebhofon @ Copyright 2023"),
+                        Text("ipi @ Copyright 2023"),
                       ],
                     ),
                   ),

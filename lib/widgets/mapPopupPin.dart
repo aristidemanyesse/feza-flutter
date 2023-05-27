@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:yebhofon/models/OfficineModel.dart';
-import 'package:yebhofon/utils/helper.dart';
+import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/utils/helper.dart';
 
 class MapMinPharmaciePopup extends StatelessWidget {
   final Marker marker;
