@@ -1,6 +1,6 @@
 {
-    "name": "monkey_app_demo",
-    "short_name": "monkey_app_demo",
+    "name": "IPI",
+    "short_name": "IPI",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

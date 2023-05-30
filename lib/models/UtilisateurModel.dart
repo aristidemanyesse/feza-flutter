@@ -31,8 +31,7 @@ class UtilisateurModel {
   String? createAt;
   String? updateAt;
 
-  static UtilisateurModel fromJson(
-          Map<String, dynamic> json) =>
+  static UtilisateurModel fromJson(Map<String, dynamic> json) =>
       UtilisateurModel(
           id: json["id"],
           fullname: json["fullname"],
@@ -41,8 +40,9 @@ class UtilisateurModel {
           imei: json["imei"],
           isValide: json["isValide"],
           geometryJson: json["geometryJson"],
-          circonscription:
-              CirconscriptionModel.fromJson(json["circonscription"]),
+          circonscription: json["circonscription"] == null
+              ? CirconscriptionModel(name: "...")
+              : CirconscriptionModel.fromJson(json["circonscription"]),
           image: json["image"],
           deleted: json["deleted"],
           protected: json["protected"],

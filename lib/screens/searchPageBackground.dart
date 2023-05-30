@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher_icons/main.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_geojson/flutter_map_geojson.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
+import 'package:ipi/widgets/loader.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/OfficineModel.dart';
@@ -14,19 +17,24 @@ import 'package:flutter_map/plugin_api.dart';
 import 'dart:convert';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:proj4dart/proj4dart.dart';
 
 class SearchPageBackground extends StatefulWidget {
   static const routeName = "/SearchPageBackground";
   final List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines;
-  final Map<String, String> routesOfficines;
+  final Map<String, dynamic> routesOfficines;
+  final Map<OfficineModel, int> ratioTableaux;
+  final Map<OfficineModel, String> distanceTableaux;
   final List<ProduitModel> initialProduits;
-  late List<double> position = [0, 0];
+  late LatLng position = LatLng(5.307600, -3.972112);
 
   SearchPageBackground(
       {Key? key,
       required this.tableauxOfficines,
       required this.initialProduits,
       required this.routesOfficines,
+      required this.ratioTableaux,
+      required this.distanceTableaux,
       required this.position})
       : super(key: key);
 
@@ -44,7 +52,8 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
 
   List<CustomMyMarker> allMarkers = [];
   List<LatLng> allMarkersLatLng = [];
-  List<LatLng> routeCoordinates = [];
+  Polyline routeCoordinates = Polyline(points: []);
+  bool ready = false;
 
   static const _startedId = 'AnimatedMapController#MoveStarted';
   static const _inProgressId = 'AnimatedMapController#MoveInProgress';
@@ -102,18 +111,12 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   void didUpdateWidget(covariant SearchPageBackground oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Vérifiez si widget.tableauxOfficines est disponible
     if (widget.tableauxOfficines.isNotEmpty) {
       // Les données sont disponibles, vous pouvez exécuter votre code ici
-      center = LatLng(widget.position[0], widget.position[1]);
+      center = widget.position;
       for (var item in widget.tableauxOfficines) {
         OfficineModel officine = item.keys.first;
         allMarkers.add(
@@ -124,13 +127,16 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
       LatLngBounds bounds = LatLngBounds.fromPoints(allMarkersLatLng);
       final centerZoom = mapController.centerZoomFitBounds(bounds);
       _animatedMapMove(centerZoom.center, centerZoom.zoom);
+      setState(() {
+        ready = true;
+      });
     }
-    setState(() {});
   }
 
   void targetMarker(String? id) {
     for (var marker in allMarkers) {
       if (marker.officine.id == id) {
+        scrollToContainer(id!);
         _animatedMapMove(marker.point, 13);
       }
     }
@@ -139,15 +145,39 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
   void scrollToContainer(String index) async {
     await sharedPreferencesService.init();
     await sharedPreferencesService.setString('scrollToContainerIndex', index);
-    routeCoordinates = [];
-    print(widget.routesOfficines);
-    for (var key in widget.routesOfficines.keys) {
-      final datas = widget.routesOfficines[key];
-      Map<String, dynamic> jsonData = json.decode(datas ?? "");
-      // routeCoordinates.add(LatLng(coords[0], coords[1]));
+    var geojson = widget.routesOfficines[index];
+    List<LatLng> points = [];
+    for (var element in jsonDecode(geojson)["geometry"]["coordinates"]) {
+      points.add(LatLng(element[1], element[0]));
     }
-    print(routeCoordinates);
+
+    routeCoordinates = Polyline(
+        points: points,
+        color: Colors.orange,
+        borderStrokeWidth: 3,
+        strokeWidth: 3,
+        borderColor: Colors.white);
+    mapController.fitBounds(getBoundsFromCoordinates(routeCoordinates.points));
     setState(() {});
+  }
+
+  LatLngBounds getBoundsFromCoordinates(List<LatLng> coordinates) {
+    double minLat = double.infinity;
+    double maxLat = -double.infinity;
+    double minLng = double.infinity;
+    double maxLng = -double.infinity;
+
+    for (LatLng coordinate in coordinates) {
+      if (coordinate.latitude < minLat) minLat = coordinate.latitude;
+      if (coordinate.latitude > maxLat) maxLat = coordinate.latitude;
+      if (coordinate.longitude < minLng) minLng = coordinate.longitude;
+      if (coordinate.longitude > maxLng) maxLng = coordinate.longitude;
+    }
+
+    return LatLngBounds(
+      LatLng(minLat, minLng),
+      LatLng(maxLat, maxLng),
+    );
   }
 
   @override
@@ -163,69 +193,96 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
                 Stack(
                   children: [
                     SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      child: FlutterMap(
-                        mapController: mapController,
-                        options: MapOptions(
-                          center: LatLng(5.307600, -3.972112),
-                          zoom: 13,
-                        ),
-                        children: [
-                          TileLayer(
-                            urlTemplate:
-                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            userAgentPackageName:
-                                'dev.fleaflet.flutter_map.example',
-                          ),
-                          PolylineLayer(
-                            polylines: [
-                              Polyline(
-                                points: routeCoordinates,
-                                color: Colors
-                                    .blue, // Couleur de la ligne de l'itinéraire
-                                strokeWidth: 4.0, // Épaisseur de la ligne
+                        height: MediaQuery.of(context).size.height,
+                        child: Stack(
+                          children: [
+                            FlutterMap(
+                              mapController: mapController,
+                              options: MapOptions(
+                                center: center,
+                                zoom: 13,
                               ),
-                            ],
-                          ),
-                          PopupMarkerLayerWidget(
-                            options: PopupMarkerLayerOptions(
-                              // popupController: _popupLayerController,
-                              markers: allMarkers
-                                  .map((element) => Marker(
-                                        point: element.point,
-                                        width: 45,
-                                        height: 45,
-                                        builder: (context) => GestureDetector(
-                                          child: PharmacieMapPin(),
-                                          onTap: () {
-                                            scrollToContainer(
-                                                element.officine.id!);
-                                          },
-                                        ),
+                              children: [
+                                TileLayer(
+                                  urlTemplate:
+                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                  userAgentPackageName:
+                                      'dev.fleaflet.flutter_map.example',
+                                ),
+                                PolylineLayer(
+                                  polylines: [routeCoordinates],
+                                ),
+                                PopupMarkerLayerWidget(
+                                  options: PopupMarkerLayerOptions(
+                                    // popupController: _popupLayerController,
+                                    markers: [
+                                      Marker(
+                                        point: center,
+                                        width: 25,
+                                        height: 25,
+                                        builder: (context) => MyPinInMap(),
                                         anchorPos:
                                             AnchorPos.align(AnchorAlign.top),
-                                      ))
-                                  .toList(),
-                              markerRotateAlignment:
-                                  PopupMarkerLayerOptions.rotationAlignmentFor(
-                                      AnchorAlign.top),
-                              popupBuilder:
-                                  (BuildContext context, Marker marker) =>
-                                      MapMinPharmaciePopup(
-                                          marker: marker,
-                                          officine: allMarkers
-                                              .firstWhere((element) =>
-                                                  element.point == marker.point)
-                                              .officine,
-                                          ratio: "23",
-                                          distance: "23"),
+                                      )
+                                    ],
+                                    markerRotateAlignment:
+                                        PopupMarkerLayerOptions
+                                            .rotationAlignmentFor(
+                                                AnchorAlign.top),
+                                    popupBuilder:
+                                        (BuildContext context, Marker marker) {
+                                      return Container(
+                                        padding: EdgeInsets.all(7),
+                                        child: Text("c'est moi !"),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                PopupMarkerLayerWidget(
+                                  options: PopupMarkerLayerOptions(
+                                    // popupController: _popupLayerController,
+                                    markers: allMarkers
+                                        .map((element) => Marker(
+                                              point: element.point,
+                                              width: 17,
+                                              height: 17,
+                                              builder: (context) =>
+                                                  PharmacieMapPin(),
+                                              anchorPos: AnchorPos.align(
+                                                  AnchorAlign.top),
+                                            ))
+                                        .toList(),
+                                    markerRotateAlignment:
+                                        PopupMarkerLayerOptions
+                                            .rotationAlignmentFor(
+                                                AnchorAlign.top),
+                                    popupBuilder:
+                                        (BuildContext context, Marker marker) {
+                                      CustomMyMarker element =
+                                          allMarkers.firstWhere((element) =>
+                                              element.point == marker.point);
+                                      return MapMinPharmaciePopup(
+                                        marker: marker,
+                                        officine: element.officine,
+                                        ratio:
+                                            "${widget.ratioTableaux[element.officine].toString()}/${widget.initialProduits.length}",
+                                        distance: widget.distanceTableaux[
+                                            element.officine]!,
+                                        ittineraireFunction: () {
+                                          scrollToContainer(
+                                              element.officine.id!);
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
+                            ready ? Container() : LoaderScreen()
+                          ],
+                        )),
                     Container(
-                      height: Helper.getScreenHeight(context) * 0.2,
+                      height: Helper.getScreenHeight(context) * 0.1,
                       width: Helper.getScreenWidth(context),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -240,6 +297,7 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Container(
                             margin: EdgeInsets.only(left: 12),

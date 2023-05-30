@@ -28,7 +28,7 @@ class UtilisateurSchema {
   """;
 
   static const String CREATE = r"""
-    mutation ($contact: String!, $imei: String!, $circonscription: ID!) {
+    mutation ($contact: String!, $imei: String!, $circonscription: ID) {
   createUtilisateur(
     newUtilisateur: {contact: $contact, imei: $imei, circonscription: $circonscription}
   ) {

@@ -38,7 +38,10 @@ class _SearchedMedicamentListDialogState
   void initState() {
     super.initState();
     getData();
+  }
 
+  Future<void> getData() async {
+    await sharedPreferencesService.init();
     sharedPreferencesService
         .watchString('produitsSelected')
         .listen((value) async {
@@ -46,10 +49,7 @@ class _SearchedMedicamentListDialogState
           await sharedPreferencesService.getStringList('produitsSelected');
       setState(() {});
     });
-  }
 
-  Future<void> getData() async {
-    await sharedPreferencesService.init();
     _selectedOptions =
         await sharedPreferencesService.getStringList('produitsSelected');
     _produits = await ProduitProvider.all({});

@@ -20,52 +20,32 @@ class LoaderScreen extends StatefulWidget {
 class _LoaderScreenState extends State<LoaderScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: Helper.getScreenWidth(context),
-        height: Helper.getScreenHeight(context),
-        child: Stack(
+    return Container(
+      padding: EdgeInsets.only(bottom: 100),
+      width: Helper.getScreenWidth(context),
+      height: Helper.getScreenHeight(context),
+      color: Colors.white.withOpacity(0.4),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              height: double.infinity,
-              width: double.infinity,
-              child: FlutterMap(
-                options: MapOptions(
-                  center: LatLng(5.307600, -3.972112),
-                  zoom: 13,
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'dev.fleaflet.flutter_map.example',
-                  ),
-                ],
-              ),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Lottie.asset("assets/lotties/search.json",
+                    width: Helper.getScreenWidth(context) * 0.8),
+                Lottie.asset("assets/lotties/loading.json",
+                    width: Helper.getScreenWidth(context) * 0.6),
+              ],
             ),
-            Container(
-              width: Helper.getScreenWidth(context),
-              height: Helper.getScreenHeight(context),
-              color: Colors.white.withOpacity(0.55),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Lottie.asset("assets/lotties/loading.json",
-                        width: Helper.getScreenWidth(context) * 0.6),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "ipi recherche les pharmacies ...",
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                    )
-                  ],
-                ),
-              ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "IPI recherche les pharmacies ...",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
             )
           ],
         ),

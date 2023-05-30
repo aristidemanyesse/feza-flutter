@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
 import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
@@ -64,13 +64,10 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
-        body: Stack(children: [
-          Container(
+    return KeyboardVisibilityBuilder(
+      builder: (context, isKeyboardVisible) {
+        return Scaffold(
+          body: Container(
             height: Helper.getScreenHeight(context),
             width: double.infinity,
             padding: EdgeInsets.all(10),
@@ -164,159 +161,147 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
                 Expanded(
                   child: Center(
-                      child: Container(
-                          margin: EdgeInsets.all(20),
-                          child: _selectedOptions.isEmpty
-                              ? Text(
-                                  "Saisissez le médicament que vous recherchez\n ou appuyer sur @ pour scanner votre ordonnance ou le code barre du medicament",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(height: 1.5),
-                                )
-                              : Container(
-                                  child: Column(
-                                    children: [
-                                      SingleChildScrollView(
-                                        child: Column(
-                                          children:
-                                              _selectedOptions.map((text) {
-                                            ProduitModel produitTrouve =
-                                                _produits.firstWhere(
-                                                    (produit) =>
-                                                        produit.name == text);
-                                            return Container(
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                      child: SuggestionItemCard(
-                                                          produit:
-                                                              produitTrouve)),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      removeInselectedOptionsID(
-                                                          text);
-                                                    },
-                                                    child: Icon(
-                                                      Icons
-                                                          .delete_forever_outlined,
-                                                      color: Colors.red,
-                                                      size: 27,
-                                                    ),
-                                                  )
-                                                ],
+                    child: Container(
+                      margin: EdgeInsets.all(20),
+                      child: _selectedOptions.isEmpty
+                          ? Text(
+                              "Saisissez le médicament que vous recherchez\n ou appuyer sur @ pour scanner votre ordonnance ou le code barre du medicament",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(height: 1.5),
+                            )
+                          : Container(
+                              child: Column(
+                                children: [
+                                  SingleChildScrollView(
+                                    child: Column(
+                                      children: _selectedOptions.map((text) {
+                                        ProduitModel produitTrouve =
+                                            _produits.firstWhere((produit) =>
+                                                produit.name == text);
+                                        return Container(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                  child: SuggestionItemCard(
+                                                      produit: produitTrouve)),
+                                              SizedBox(
+                                                width: 10,
                                               ),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 25,
-                                      ),
-                                      _selectedOptions.length > 2
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                InkWell(
-                                                  onTap: () async {
-                                                    _selectedOptions = [];
-                                                    await sharedPreferencesService
-                                                        .setStringList(
-                                                            'produitsSelected',
-                                                            []);
-                                                    setState(() {});
-                                                  },
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 5,
-                                                            vertical: 7),
-                                                    child: Row(
-                                                      children: [
-                                                        Icon(
-                                                          Icons.delete_forever,
-                                                          size: 24,
-                                                          color: Colors
-                                                              .red.shade400,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                        Text(
-                                                          "Vider",
-                                                          style: TextStyle(
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Colors.red
-                                                                  .shade400),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            )
-                                          : Container()
-                                    ],
+                                              GestureDetector(
+                                                onTap: () {
+                                                  removeInselectedOptionsID(
+                                                      text);
+                                                },
+                                                child: Icon(
+                                                  Icons.delete_forever_outlined,
+                                                  color: Colors.red,
+                                                  size: 27,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
                                   ),
-                                ))),
+                                  SizedBox(
+                                    height: 25,
+                                  ),
+                                  _selectedOptions.length > 2
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            InkWell(
+                                              onTap: () async {
+                                                _selectedOptions = [];
+                                                await sharedPreferencesService
+                                                    .setStringList(
+                                                        'produitsSelected', []);
+                                                setState(() {});
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5, vertical: 7),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.delete_forever,
+                                                      size: 24,
+                                                      color:
+                                                          Colors.red.shade400,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Text(
+                                                      "Vider",
+                                                      style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors
+                                                              .red.shade400),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      : Container()
+                                ],
+                              ),
+                            ),
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: Helper.getScreenHeight(context) * 0.05,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(SearchPage.routeName);
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        decoration: BoxDecoration(
+                            color: AppColor.blue,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.search,
+                              size: 24,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Rechercher ${_selectedOptions.length} médicament(s)",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
                 )
               ],
             ),
           ),
-          (_selectedOptions.length > 0)
-              ? Positioned(
-                  bottom: 15,
-                  left: 0,
-                  right: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(SearchPage.routeName);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
-                          decoration: BoxDecoration(
-                              color: AppColor.blue,
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.search,
-                                size: 24,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "Rechercher ${_selectedOptions.length} médicament(s)",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ))
-              : Container()
-        ]),
-      ),
+        );
+      },
     );
+    ;
   }
 }

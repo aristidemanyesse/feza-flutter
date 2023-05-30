@@ -3,36 +3,18 @@ import 'package:ipi/const/colors.dart';
 import 'package:ipi/utils/helper.dart';
 
 class MyLogo extends StatelessWidget {
-  MyLogo();
+  late double width;
+  late double height;
+  MyLogo({this.width = 150, this.height = 150});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: Image.asset(
-              Helper.getAssetName("MealMonkeyLogo.png", "icons"),
-              height: 90,
-            ),
-          ),
-          SizedBox(
-            height: 12,
-          ),
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              "FéZa",
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.placeholder),
-            ),
-          ),
-        ],
+    return Align(
+      alignment: Alignment.center,
+      child: Image.asset(
+        Helper.getAssetName("logo.png", "icons"),
+        height: this.height,
+        width: this.width,
       ),
     );
   }

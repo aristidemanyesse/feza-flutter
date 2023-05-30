@@ -13,6 +13,9 @@ import 'package:ipi/screens/searchPageExpanded.dart';
 import 'package:ipi/screens/searchPagePreview.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/loader.dart';
+import 'dart:convert';
+
+import 'package:latlong2/latlong.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key? key}) : super(key: key);
@@ -26,9 +29,9 @@ class _SearchPageState extends State<SearchPage> {
   List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines = [];
   Map<OfficineModel, int> ratioTableaux = {};
   Map<OfficineModel, String> distanceTableaux = {};
-  Map<String, String> routesOfficines = {};
+  Map<String, dynamic> routesOfficines = {};
   List<ProduitModel> initialProduits = [];
-  late List<double> myPosition = [];
+  late LatLng myPosition = LatLng(5.307600, -3.972112);
   late List<String>? datasGetted = [];
   late bool ready = false;
 
@@ -62,19 +65,6 @@ class _SearchPageState extends State<SearchPage> {
         await UtilisateurProvider.all({"id": userId, "imei": uniq});
     UtilisateurModel user = users[0];
 
-    datasGetted =
-        await sharedPreferencesService.getStringList('produitsIDSelected');
-    tableauxOfficines = [];
-    ratioTableaux = {};
-    distanceTableaux = {};
-    List<dynamic> datas =
-        await ProduitInOfficineProvider.searchProduitsAvialableInOfficine({
-      "circonscription": user.circonscription!.id,
-      "produits": datasGetted
-    });
-    initialProduits =
-        await ProduitProvider.specificAll({"produits": datasGetted});
-
     Position? position;
     LocationPermission permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
@@ -84,7 +74,22 @@ class _SearchPageState extends State<SearchPage> {
       position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
     }
-    myPosition = [position!.latitude, position.longitude];
+    myPosition = LatLng(position!.latitude, position.longitude);
+
+    datasGetted =
+        await sharedPreferencesService.getStringList('produitsIDSelected');
+    tableauxOfficines = [];
+    ratioTableaux = {};
+    distanceTableaux = {};
+    List<dynamic> datas =
+        await ProduitInOfficineProvider.searchProduitsAvialableInOfficine({
+      "circonscription": user.circonscription!.id,
+      "produits": datasGetted,
+      "longitude": position.longitude,
+      "latitude": position.latitude
+    });
+    initialProduits =
+        await ProduitProvider.specificAll({"produits": datasGetted});
 
     for (var element in datas) {
       List<OfficineModel> officines =
@@ -95,8 +100,7 @@ class _SearchPageState extends State<SearchPage> {
 
       tableauxOfficines.add({officine: produits});
       ratioTableaux[officine] = element["ratio"];
-      routesOfficines[officine.id!] = element["route"];
-      print(element["route"]);
+      routesOfficines[officine.id!] = jsonDecode(element["route"]);
 
       double distance = element["distance"];
       distanceTableaux[officine] = distance < 1
@@ -126,14 +130,14 @@ class _SearchPageState extends State<SearchPage> {
             tableauxOfficines: tableauxOfficines,
             initialProduits: initialProduits,
             backgroundKey: _backgroundKey),
-        backgroundWidget: !ready
-            ? LoaderScreen()
-            : SearchPageBackground(
-                key: _backgroundKey,
-                tableauxOfficines: tableauxOfficines,
-                initialProduits: initialProduits,
-                routesOfficines: routesOfficines,
-                position: myPosition),
+        backgroundWidget: SearchPageBackground(
+            key: _backgroundKey,
+            tableauxOfficines: tableauxOfficines,
+            ratioTableaux: ratioTableaux,
+            distanceTableaux: distanceTableaux,
+            initialProduits: initialProduits,
+            routesOfficines: routesOfficines,
+            position: myPosition),
         duration: const Duration(milliseconds: 10),
         maxExtent: MediaQuery.of(context).size.height * 0.5,
         onDragging: (pos) {},

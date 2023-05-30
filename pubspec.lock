@@ -270,6 +270,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.6"
+  flutter_keyboard_visibility:
+    dependency: "direct main"
+    description:
+      name: flutter_keyboard_visibility
+      sha256: "4983655c26ab5b959252ee204c2fffa4afeb4413cd030455194ec0caa3b8e7cb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.4.1"
+  flutter_keyboard_visibility_linux:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility_linux
+      sha256: "6fba7cd9bb033b6ddd8c2beb4c99ad02d728f1e6e6d9b9446667398b2ac39f08"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  flutter_keyboard_visibility_macos:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility_macos
+      sha256: c5c49b16fff453dfdafdc16f26bdd8fb8d55812a1d50b0ce25fc8d9f2e53d086
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  flutter_keyboard_visibility_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility_platform_interface
+      sha256: e43a89845873f7be10cb3884345ceb9aebf00a659f479d1c8f4293fcb37022a4
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  flutter_keyboard_visibility_web:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility_web
+      sha256: d3771a2e752880c79203f8d80658401d0c998e4183edca05a149f5098ce6e3d1
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  flutter_keyboard_visibility_windows:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility_windows
+      sha256: fc4b0f0b6be9b93ae527f3d527fb56ee2d918cd88bbca438c478af7bcfd0ef73
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -282,18 +330,34 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_map
-      sha256: "52c65a977daae42f9aae6748418dd1535eaf27186e9bac9bf431843082bc75a3"
+      sha256: "59dfd14267b691bea55760786b47d3172d47cdcc0d79ff930746a5ad123491b8"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "3.1.0"
+  flutter_map_geojson:
+    dependency: "direct main"
+    description:
+      name: flutter_map_geojson
+      sha256: f66ef4c6f5595df5c44388cb230e383fe28e49f75a8a31348b244b2308ca22eb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  flutter_map_marker_cluster:
+    dependency: "direct main"
+    description:
+      name: flutter_map_marker_cluster
+      sha256: "63d8658a4d1357679f591308b9567d1d66cb23ba37a2b7792ff48ff009553283"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   flutter_map_marker_popup:
     dependency: "direct main"
     description:
       name: flutter_map_marker_popup
-      sha256: "7cf30fab25ffe1ba04a9e0fbe1227f44a83c73256d4d70be1c26cf141ce5c41d"
+      sha256: f5a40d006e07154a213345300217e8f995ddd3cd280dbe8dc8964f47e7d7fe7c
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.0"
+    version: "4.0.3"
   flutter_osm_interface:
     dependency: transitive
     description:
@@ -820,10 +884,10 @@ packages:
     dependency: transitive
     description:
       name: petitparser
-      sha256: cb3798bef7fc021ac45b308f4b51208a152792445cce0448c9a4ba5879dd8750
+      sha256: "49392a45ced973e8d94a85fdb21293fbb40ba805fc49f2965101ae748a3683b4"
       url: "https://pub.dev"
     source: hosted
-    version: "5.4.0"
+    version: "5.1.0"
   platform:
     dependency: transitive
     description:
@@ -856,6 +920,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  positioned_tap_detector_2:
+    dependency: transitive
+    description:
+      name: positioned_tap_detector_2
+      sha256: "52e06863ad3e1f82b058fd05054fc8c9caeeb3b47d5cea7a24bd9320746059c1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   process:
     dependency: transitive
     description:

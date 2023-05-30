@@ -5,6 +5,7 @@ import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/introScreen.dart';
+import 'package:ipi/widgets/myLogo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/helper.dart';
@@ -45,28 +46,31 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: Helper.getScreenWidth(context),
-        height: Helper.getScreenHeight(context),
-        child: Stack(
-          children: [
-            Container(
-              height: double.infinity,
-              width: double.infinity,
-              child: Image.asset(
-                Helper.getAssetName("splashIcon.png", "virtual"),
-                fit: BoxFit.fill,
+      body: Stack(children: [
+        Container(
+          width: Helper.getScreenWidth(context),
+          height: Helper.getScreenHeight(context),
+          child: Stack(
+            children: [
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                child: Image.asset(
+                  Helper.getAssetName("landing.jpg", "bg"),
+                  fit: BoxFit.scaleDown,
+                  repeat: ImageRepeat.repeatY,
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Image.asset(
-                Helper.getAssetName("MealMonkeyLogo.png", "virtual"),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+        Container(
+          width: Helper.getScreenWidth(context),
+          height: Helper.getScreenHeight(context),
+          color: Colors.white.withOpacity(0.8),
+        ),
+        MyLogo(),
+      ]),
     );
   }
 }

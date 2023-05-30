@@ -20,7 +20,6 @@ class ConfirmNumberDialog extends StatelessWidget {
     if (users.isEmpty) {
       UtilisateurModel user = new UtilisateurModel(contact: number, imei: uniq);
       Map<String, dynamic> variables = user.toJson();
-      variables["circonscription"] = "7c6a9402-cf80-46d9-8151-5befa42abc52";
       ResponseModel response = await UtilisateurProvider.create(variables);
       if (response.ok) {
         Navigator.of(context).pop();
@@ -28,7 +27,7 @@ class ConfirmNumberDialog extends StatelessWidget {
             arguments: {"user": response.data, "numero": number});
       } else {
         Fluttertoast.showToast(
-          msg: response.message!,
+          msg: response.message ?? "Ouups, Veuillez recommencer !",
           gravity: ToastGravity.BOTTOM,
         );
       }

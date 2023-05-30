@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ipi/screens/landingScreen.dart';
 import 'package:csshadow/csshadow.dart';
 import 'package:ipi/widgets/confirmNumberDialog.dart';
+import 'package:ipi/widgets/myLogo.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
 import '../widgets/customTextInput.dart';
@@ -22,24 +23,21 @@ class _LoginScreen extends State<LoginScreen> {
     bool test = false;
     String err = "";
     String text = myNumeroController.text;
-    if (text.isNotEmpty) {
-      if (text.startsWith("01") ||
-          text.startsWith("05") ||
-          text.startsWith("07")) {
-        if (myNumeroController.text.length == 14) {
-          test = true;
-          err = "";
-        } else {
-          test = false;
-        }
+    if (text.startsWith("01") ||
+        text.startsWith("05") ||
+        text.startsWith("07")) {
+      if (myNumeroController.text.length == 14) {
+        test = true;
+        err = "";
+        myFocusNode.unfocus();
       } else {
         test = false;
-        err = 'Un numero de téléphone valide !';
       }
     } else {
       test = false;
-      err = 'Veuillez saisir votre numero de téléphone.';
+      err = 'Un numero de téléphone valide !';
     }
+
     setState(() {
       errorText = err;
     });
@@ -129,10 +127,7 @@ class _LoginScreen extends State<LoginScreen> {
                 ]),
                 Align(
                   alignment: Alignment.center,
-                  child: Image.asset(
-                    Helper.getAssetName("MealMonkeyLogo.png", "virtual"),
-                    height: 120,
-                  ),
+                  child: MyLogo(),
                 ),
                 SizedBox(
                   height: Helper.getScreenHeight(context) * 0.06,
@@ -159,7 +154,11 @@ class _LoginScreen extends State<LoginScreen> {
                           CustomTextInput(
                             controller: myNumeroController,
                             myFocusNode: myFocusNode,
-                            onChanged: (myNumeroController) {},
+                            onChanged: (myNumeroController) {
+                              if (myNumeroController!.toString().length == 14) {
+                                _checkNumero();
+                              }
+                            },
                             keyboard: TextInputType.number,
                             hintText: "07 01 02 03 04",
                             onEditingComplete: () {
@@ -198,7 +197,7 @@ class _LoginScreen extends State<LoginScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("ipi @ Copyright 2023"),
+                      Text("Ici, les Pharmacies Ivoiriennes @ Copyright 2023"),
                     ],
                   ),
                 )

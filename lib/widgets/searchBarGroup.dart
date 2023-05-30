@@ -28,6 +28,13 @@ class SearchBarGroupState extends State<SearchBarGroup> {
       SharedPreferencesService();
 
   Future<void> getData() async {
+    await sharedPreferencesService.init();
+    _selectedOptions =
+        await sharedPreferencesService.getStringList('produitsSelected');
+    sharedPreferencesService.watchString('produitsSelected').listen((value) {
+      selectedOptionsID();
+    });
+
     ProduitProvider.all({}).then((datas) {
       setState(() {
         _produits = datas;
@@ -35,9 +42,6 @@ class SearchBarGroupState extends State<SearchBarGroup> {
         _textField.updateSuggestions(_nomsProduits);
       });
     });
-    await sharedPreferencesService.init();
-    _selectedOptions =
-        await sharedPreferencesService.getStringList('produitsSelected');
   }
 
   Future<String> getCodeBar() async {
@@ -57,10 +61,6 @@ class SearchBarGroupState extends State<SearchBarGroup> {
   @override
   void initState() {
     super.initState();
-
-    sharedPreferencesService.watchString('produitsSelected').listen((value) {
-      selectedOptionsID();
-    });
 
     _textField = AutoCompleteTextField(
       key: key,

@@ -1,6 +1,7 @@
 import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
 import 'package:ipi/screens/loginScreen.dart';
+import 'package:ipi/widgets/myLogo.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
@@ -39,12 +40,9 @@ class LandingScreen extends StatelessWidget {
                   )),
             ),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Image.asset(
-              Helper.getAssetName("MealMonkeyLogo.png", "virtual"),
-              height: 200,
-            ),
+          MyLogo(
+            height: 100,
+            width: 100,
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -82,7 +80,8 @@ class LandingScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("ipi @ Copyright 2023"),
+                        Text(
+                            "Ici Pharmacies de Côte d'Ivoire @ Copyright 2023"),
                       ],
                     ),
                   ),
