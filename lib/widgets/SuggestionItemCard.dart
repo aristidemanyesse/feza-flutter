@@ -43,7 +43,7 @@ class SuggestionItemCard extends StatelessWidget {
                       height: 3,
                     ),
                     Text(
-                      this.produit.description,
+                      this.produit.forme ?? "",
                       style: TextStyle(fontSize: 12),
                       overflow: TextOverflow.ellipsis,
                     ),

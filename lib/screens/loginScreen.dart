@@ -127,7 +127,10 @@ class _LoginScreen extends State<LoginScreen> {
                 ]),
                 Align(
                   alignment: Alignment.center,
-                  child: MyLogo(),
+                  child: MyLogo(
+                    height: 120,
+                    width: 120,
+                  ),
                 ),
                 SizedBox(
                   height: Helper.getScreenHeight(context) * 0.06,
@@ -197,7 +200,7 @@ class _LoginScreen extends State<LoginScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Ici, les Pharmacies Ivoiriennes @ Copyright 2023"),
+                      Text("IPI @ Copyright 2023"),
                     ],
                   ),
                 )

@@ -14,6 +14,9 @@ class ProduitSchema {
       description
       codebarre
       onlyOrdonnance
+      cis
+      forme
+      voies
       image
       type {
         id
@@ -33,6 +36,9 @@ query ($produits: [String]!) {
       description
       codebarre
       onlyOrdonnance
+      cis
+      forme
+      voies
       image
       type {
         id

@@ -9,6 +9,9 @@ class ProduitModel {
     this.onlyOrdonnance,
     this.image,
     this.type,
+    this.cis,
+    this.forme,
+    this.voies,
     this.deleted,
     this.protected,
     this.createAt,
@@ -19,6 +22,9 @@ class ProduitModel {
   String name;
   String description;
   String codebarre;
+  String? cis;
+  String? forme;
+  String? voies;
   bool? onlyOrdonnance;
   String? image;
   TypeProduitModel? type;
@@ -34,6 +40,9 @@ class ProduitModel {
       codebarre: json["codebarre"],
       onlyOrdonnance: json["onlyOrdonnance"],
       image: json["image"],
+      cis: json["cis"],
+      forme: json["forme"],
+      voies: json["voies"],
       type: TypeProduitModel.fromJson(json["type"]),
       deleted: json["deleted"],
       protected: json["protected"],
@@ -45,6 +54,9 @@ class ProduitModel {
         "name": name,
         "description": description,
         "codebarre": codebarre,
+        "cis": cis,
+        "forme": forme,
+        "voies": voies,
         "onlyOrdonnance": onlyOrdonnance,
         "image": image,
         "type": type?.toJson(),
