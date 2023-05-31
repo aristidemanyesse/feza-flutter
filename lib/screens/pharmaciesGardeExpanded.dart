@@ -46,7 +46,7 @@ class PharmaciesGardeExpanded extends StatelessWidget {
                     icon: Padding(
                       padding: EdgeInsets.only(left: 7),
                       child: Image.asset(
-                        Helper.getAssetName("dropdown_filled.png", "virtual"),
+                        Helper.getAssetName("dropdown_filled.png", "bg"),
                       ),
                     ),
                     style: Helper.getTheme(context)

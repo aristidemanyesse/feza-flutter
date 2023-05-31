@@ -73,7 +73,6 @@ flutter:
   assets:
     - assets/images/bg/
     - assets/images/icons/
-    - assets/images/virtual/
     - assets/images/real/
     - assets/lotties/
 

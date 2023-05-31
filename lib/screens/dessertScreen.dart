@@ -41,7 +41,7 @@ class DessertScreen extends StatelessWidget {
                           ),
                         ),
                         Image.asset(
-                          Helper.getAssetName("cart.png", "virtual"),
+                          Helper.getAssetName("cart.png", "bg"),
                         ),
                       ],
                     ),
@@ -178,7 +178,7 @@ class DessertCard extends StatelessWidget {
                   Row(
                     children: [
                       Image.asset(
-                        Helper.getAssetName("star_filled.png", "virtual"),
+                        Helper.getAssetName("star_filled.png", "bg"),
                       ),
                       SizedBox(
                         width: 5,

@@ -123,7 +123,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                             ),
                           ),
                           child: Image.asset(
-                            Helper.getAssetName("login_bg.png", "virtual"),
+                            Helper.getAssetName("login_bg.png", "bg"),
                             fit: BoxFit.cover,
                           )),
                     ),

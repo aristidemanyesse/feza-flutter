@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher_icons/main.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_geojson/flutter_map_geojson.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:ipi/widgets/loader.dart';
+import 'package:ipi/widgets/loader2.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/OfficineModel.dart';
@@ -15,9 +14,6 @@ import 'package:ipi/widgets/mapPopupPin.dart';
 import 'package:ipi/widgets/searchedMedicamentListDialog.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'dart:convert';
-import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:proj4dart/proj4dart.dart';
 
 class SearchPageBackground extends StatefulWidget {
   static const routeName = "/SearchPageBackground";
@@ -278,7 +274,7 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
                                 ),
                               ],
                             ),
-                            ready ? Container() : LoaderScreen()
+                            ready ? Container() : ZoomOutLoader()
                           ],
                         )),
                     Container(

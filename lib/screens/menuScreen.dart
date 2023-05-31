@@ -18,7 +18,7 @@ class MenuScreen extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             child: Image.asset(
-              Helper.getAssetName("splashIcon.png", "virtual"),
+              Helper.getAssetName("splashIcon.png", "bg"),
               fit: BoxFit.fill,
             ),
           ),
