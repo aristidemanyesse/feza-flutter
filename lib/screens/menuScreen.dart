@@ -26,14 +26,17 @@ class MenuScreen extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(
-                  height: Helper.getScreenHeight(context) * 0.08,
+                  height: Helper.getScreenHeight(context) * 0.15,
                 ),
-                MyLogo(),
-                SizedBox(
-                  height: Helper.getScreenHeight(context) * 0.05,
+                MyLogo(
+                  height: 100,
+                  width: 100,
                 ),
                 SizedBox(
-                    height: Helper.getScreenHeight(context) * 0.5,
+                  height: Helper.getScreenHeight(context) * 0.1,
+                ),
+                SizedBox(
+                    height: Helper.getScreenHeight(context) * 0.4,
                     width: Helper.getScreenWidth(context),
                     child: Stack(
                       children: [
@@ -77,33 +80,33 @@ class MenuScreen extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(
-                                height: 30,
+                                height: 50,
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .pushNamed(DessertScreen.routeName);
-                                },
-                                child: MenuCard(
-                                  imageShape: ClipPath(
-                                    clipper: CustomDiamond(),
-                                    child: Container(
-                                      height: 80,
-                                      width: 80,
-                                      child: Image.asset(
-                                        Helper.getAssetName(
-                                            "advice.png", "icons"),
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                                  ),
-                                  name: "Conseils Santé",
-                                  subtitle: "25",
-                                ),
-                              ),
-                              SizedBox(
-                                height: 30,
-                              ),
+                              // GestureDetector(
+                              //   onTap: () {
+                              //     Navigator.of(context)
+                              //         .pushNamed(DessertScreen.routeName);
+                              //   },
+                              //   child: MenuCard(
+                              //     imageShape: ClipPath(
+                              //       clipper: CustomDiamond(),
+                              //       child: Container(
+                              //         height: 80,
+                              //         width: 80,
+                              //         child: Image.asset(
+                              //           Helper.getAssetName(
+                              //               "advice.png", "icons"),
+                              //           fit: BoxFit.contain,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     name: "Conseils Santé",
+                              //     subtitle: "25",
+                              //   ),
+                              // ),
+                              // SizedBox(
+                              //   height: 30,
+                              // ),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.of(context)
@@ -157,9 +160,16 @@ class MenuScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).pop();
                     },
-                    child: Icon(
-                      Icons.arrow_back_ios_rounded,
-                      color: Colors.black,
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(100))),
+                      child: Icon(
+                        Icons.arrow_back_ios_rounded,
+                        size: 20,
+                        color: AppColor.blue,
+                      ),
                     ),
                   ),
                 ),

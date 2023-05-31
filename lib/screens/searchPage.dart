@@ -65,16 +65,9 @@ class _SearchPageState extends State<SearchPage> {
         await UtilisateurProvider.all({"id": userId, "imei": uniq});
     UtilisateurModel user = users[0];
 
-    Position? position;
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      position = await Geolocator.getLastKnownPosition();
-      print("L'utilisateur a refusé l'accès à la localisation");
-    } else {
-      position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-    }
-    myPosition = LatLng(position!.latitude, position.longitude);
+    dynamic coords = await sharedPreferencesService.getString('coords');
+    coords = json.decode(coords)["coordinates"];
+    myPosition = LatLng(coords[0], coords[1]);
 
     datasGetted =
         await sharedPreferencesService.getStringList('produitsIDSelected');
@@ -85,8 +78,8 @@ class _SearchPageState extends State<SearchPage> {
         await ProduitInOfficineProvider.searchProduitsAvialableInOfficine({
       "circonscription": user.circonscription!.id,
       "produits": datasGetted,
-      "longitude": position.longitude,
-      "latitude": position.latitude
+      "longitude": myPosition.longitude,
+      "latitude": myPosition.latitude
     });
     initialProduits =
         await ProduitProvider.specificAll({"produits": datasGetted});

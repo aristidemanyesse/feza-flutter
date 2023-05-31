@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/introScreen.dart';
+import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/myLogo.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/helper.dart';
@@ -16,9 +19,13 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  SharedPreferencesService sharedPreferencesService =
+      SharedPreferencesService();
+
   @override
   void initState() {
     Timer(Duration(milliseconds: 3000), () {
+      getPosition();
       checkUser();
     });
     super.initState();
@@ -41,6 +48,22 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
     }
+  }
+
+  Future<void> getPosition() async {
+    Position? position;
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      position = await Geolocator.getLastKnownPosition();
+      print("L'utilisateur a refusé l'accès à la localisation");
+    } else {
+      position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+    }
+    var coords =
+        LatLng(position!.latitude, position.longitude).toJson().toString();
+    await sharedPreferencesService.init();
+    await sharedPreferencesService.setString('coords', coords);
   }
 
   @override
@@ -70,6 +93,23 @@ class _SplashScreenState extends State<SplashScreen> {
           color: Colors.white.withOpacity(0.8),
         ),
         MyLogo(),
+        Positioned(
+            bottom: 50,
+            right: 0,
+            left: 0,
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text("Veuillez patienter...")
+                ],
+              ),
+            ))
       ]),
     );
   }

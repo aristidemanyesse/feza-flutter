@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter/material.dart';
 import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
@@ -9,6 +8,7 @@ import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/searchPage.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/SuggestionItemCard.dart';
+import 'package:ipi/widgets/confirmExitDialog.dart';
 import 'package:ipi/widgets/searchBarGroup.dart';
 import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 import '../const/colors.dart';
@@ -64,9 +64,8 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardVisibilityBuilder(
-      builder: (context, isKeyboardVisible) {
-        return Scaffold(
+    return WillPopScope(
+        child: Scaffold(
           body: Container(
             height: Helper.getScreenHeight(context),
             width: double.infinity,
@@ -261,47 +260,50 @@ class HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: Helper.getScreenHeight(context) * 0.05,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(SearchPage.routeName);
-                      },
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                        decoration: BoxDecoration(
-                            color: AppColor.blue,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.search,
-                              size: 24,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "Rechercher ${_selectedOptions.length} médicament(s)",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                )
+                _selectedOptions.length > 0
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(SearchPage.routeName);
+                            },
+                            child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 10),
+                                decoration: BoxDecoration(
+                                    color: AppColor.blue,
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.search,
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "Rechercher ${_selectedOptions.length} médicament(s)",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    )
+                                  ],
+                                )),
+                          )
+                        ],
+                      )
+                    : Container(),
               ],
             ),
           ),
-        );
-      },
-    );
-    ;
+        ),
+        onWillPop: () {
+          ConfirmExitDialog();
+          return Future.value(false);
+        });
   }
 }

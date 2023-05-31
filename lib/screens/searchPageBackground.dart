@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:ipi/widgets/loader.dart';
-import 'package:ipi/widgets/loader2.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/OfficineModel.dart';
@@ -274,7 +273,7 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
                                 ),
                               ],
                             ),
-                            ready ? Container() : ZoomOutLoader()
+                            ready ? Container() : LoaderScreen()
                           ],
                         )),
                     Container(
