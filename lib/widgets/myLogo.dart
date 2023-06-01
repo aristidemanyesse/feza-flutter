@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ipi/const/colors.dart';
 import 'package:ipi/utils/helper.dart';
 
 class MyLogo extends StatelessWidget {

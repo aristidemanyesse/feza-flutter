@@ -1,6 +1,5 @@
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
@@ -12,7 +11,6 @@ import 'package:ipi/screens/searchPageBackground.dart';
 import 'package:ipi/screens/searchPageExpanded.dart';
 import 'package:ipi/screens/searchPagePreview.dart';
 import 'package:ipi/utils/sharedpre.dart';
-import 'package:ipi/widgets/loader.dart';
 import 'dart:convert';
 
 import 'package:latlong2/latlong.dart';

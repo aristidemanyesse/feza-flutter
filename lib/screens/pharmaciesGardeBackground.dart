@@ -4,7 +4,6 @@ import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/widgets/mapPin.dart';
-import 'package:ipi/widgets/mapPopupPin.dart';
 import 'package:location/location.dart';
 
 class PharmaciesGardeBackground extends StatelessWidget {
