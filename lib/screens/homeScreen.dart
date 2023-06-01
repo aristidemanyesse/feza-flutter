@@ -116,7 +116,8 @@ class HomeScreenState extends State<HomeScreen> {
                       margin: EdgeInsets.only(right: 12),
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context).pushNamed(MenuScreen.routeName);
+                          Navigator.of(context).pushNamed(MenuScreen.routeName,
+                              arguments: {"user": user});
                         },
                         child: Icon(
                           Icons.menu,
@@ -264,36 +265,29 @@ class HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(
-                      onTap: () {
+                    ElevatedButton(
+                      onPressed: () {
                         Navigator.of(context).pushNamed(SearchPage.routeName);
                       },
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                        decoration: BoxDecoration(
-                            color: AppColor.blue,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.search,
-                              size: 24,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "Rechercher ${_selectedOptions.length} médicament(s)",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            )
-                          ],
-                        ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search,
+                            size: 24,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Rechercher ${_selectedOptions.length} médicament(s)",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          )
+                        ],
                       ),
-                    )
+                    ),
                   ],
                 )
               ],

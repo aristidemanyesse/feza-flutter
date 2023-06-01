@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
+import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/screens/dessertScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
 import 'package:ipi/screens/profileScreen.dart';
@@ -7,10 +8,24 @@ import 'package:ipi/utils/helper.dart';
 import 'package:ipi/widgets/menuCard.dart';
 import 'package:ipi/widgets/myLogo.dart';
 
-class MenuScreen extends StatelessWidget {
+class MenuScreen extends StatefulWidget {
   static const routeName = "/menuScreen";
   @override
+  _MenuScreen createState() => _MenuScreen();
+}
+
+class _MenuScreen extends State<MenuScreen> {
+  late UtilisateurModel user;
+
+  @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+
+    setState(() {
+      user = arguments["user"];
+    });
+
     return Scaffold(
       body: Stack(
         children: [
@@ -106,8 +121,9 @@ class MenuScreen extends StatelessWidget {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context)
-                                      .pushNamed(ProfileScreen.routeName);
+                                  Navigator.of(context).pushNamed(
+                                      ProfileScreen.routeName,
+                                      arguments: {"user": user});
                                 },
                                 child: MenuCard(
                                   imageShape: ClipPath(
@@ -123,7 +139,7 @@ class MenuScreen extends StatelessWidget {
                                     ),
                                   ),
                                   name: "Mon compte",
-                                  subtitle: "25",
+                                  subtitle: user.contact ?? "",
                                 ),
                               ),
                             ],

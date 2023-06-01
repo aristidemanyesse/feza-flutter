@@ -91,7 +91,7 @@ class MenuCard extends StatelessWidget {
                     )
                   ]),
               child: Image.asset(
-                Helper.getAssetName("next_filled.png", "bg"),
+                Helper.getAssetName("next_filled.png", "virtual"),
               ),
             ),
           ),

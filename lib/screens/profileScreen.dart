@@ -1,14 +1,31 @@
 import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
+import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/screens/landingScreen.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/widgets/customNavBar.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   static const routeName = "/profileScreen";
+  ProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileScreen> createState() => ProfileScreenState();
+}
+
+class ProfileScreenState extends State<ProfileScreen> {
+  late UtilisateurModel user;
+
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+
+    setState(() {
+      user = arguments["user"];
+    });
+
     return Scaffold(
       body: Stack(
         children: [
@@ -91,7 +108,7 @@ class ProfileScreen extends StatelessWidget {
                       height: 30,
                     ),
                     Text(
-                      "Emilia Shadrak",
+                      user.fullname ?? "_",
                       style: Helper.getTheme(context).headlineMedium?.copyWith(
                             color: AppColor.primary,
                           ),
@@ -99,7 +116,7 @@ class ProfileScreen extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    Text("01 02 03 0405"),
+                    Text(user.contact ?? "_"),
                     SizedBox(
                       height: 40,
                     ),
@@ -109,25 +126,25 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           CustomFormImput(
                             label: "Nom & prénoms",
-                            value: "Emilia Clarke",
+                            value: user.fullname ?? "",
                           ),
                           SizedBox(
-                            height: 20,
+                            height: 40,
                           ),
                           CustomFormImput(
                             label: "Circonscription",
-                            value: "Port-Bouet",
+                            value: user.circonscription?.name ?? "...",
                           ),
                           SizedBox(
-                            height: 20,
+                            height: 40,
                           ),
-                          CustomFormImput(
-                            label: "Mes assurances",
-                            value: "AssuB, COOPECJ, GENEASSUR",
-                          ),
-                          SizedBox(
-                            height: 45,
-                          ),
+                          // CustomFormImput(
+                          //   label: "Mes assurances",
+                          //   value: "AssuB, COOPECJ, GENEASSUR",
+                          // ),
+                          // SizedBox(
+                          //   height: 45,
+                          // ),
                           SizedBox(
                             height: 50,
                             width: double.infinity,
@@ -144,11 +161,44 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: CustomNavBar(
-              profile: true,
+          Container(
+            height: Helper.getScreenHeight(context) * 0.1,
+            width: Helper.getScreenWidth(context),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.0, 0.4],
+                colors: [
+                  Colors.black.withOpacity(0.9),
+                  Colors.black.withOpacity(0.0),
+                ],
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 12),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(100))),
+                      child: Icon(
+                        Icons.arrow_back_ios_rounded,
+                        size: 20,
+                        color: AppColor.blue,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
