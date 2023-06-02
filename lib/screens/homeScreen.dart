@@ -23,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  late StreamSubscription<String> _sharedPreferencesSubscription;
+
   SharedPreferencesService sharedPreferencesService =
       SharedPreferencesService();
 
@@ -32,15 +34,21 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    getData();
     super.initState();
-    sharedPreferencesService
+    getData();
+    _sharedPreferencesSubscription = sharedPreferencesService
         .watchString('produitsSelected')
         .listen((value) async {
       _selectedOptions =
           await sharedPreferencesService.getStringList('produitsSelected');
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    _sharedPreferencesSubscription.cancel(); // Arrêter le StreamSubscription
+    super.dispose();
   }
 
   Future<void> getData() async {
@@ -66,238 +74,265 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-          body: Container(
-            height: Helper.getScreenHeight(context),
-            width: double.infinity,
-            padding: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 50,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+          body: SingleChildScrollView(
+            child: Container(
+              height: Helper.getScreenHeight(context),
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            Helper.getAssetName("pharma.png", "icons"),
+                            width: 35,
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text(
+                            "Bonjour ",
+                            style: Helper.getTheme(context).headlineSmall,
+                          ),
+                          Text(
+                            user?.fullname ?? "",
+                            style: Helper.getTheme(context)
+                                .headlineSmall
+                                ?.copyWith(
+                                    color: AppColor.blue,
+                                    fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            " !",
+                            style: Helper.getTheme(context)
+                                .headlineSmall
+                                ?.copyWith(
+                                    color: AppColor.blue,
+                                    fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(right: 12),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                                MenuScreen.routeName,
+                                arguments: {"user": user});
+                          },
+                          child: Icon(
+                            Icons.menu,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset(
-                          Helper.getAssetName("pharma.png", "icons"),
-                          width: 35,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                          ),
+                          child: Text("Circonscription actuelle"),
                         ),
                         SizedBox(
-                          width: 15,
+                          height: 10,
                         ),
-                        Text(
-                          "Bonjour ",
-                          style: Helper.getTheme(context).headlineSmall,
-                        ),
-                        Text(
-                          user?.fullname ?? "",
-                          style: Helper.getTheme(context)
-                              .headlineSmall
-                              ?.copyWith(
-                                  color: AppColor.blue,
-                                  fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          " !",
-                          style: Helper.getTheme(context)
-                              .headlineSmall
-                              ?.copyWith(
-                                  color: AppColor.blue,
-                                  fontWeight: FontWeight.bold),
-                        ),
+                        SelectCirconscriptionBloc(),
                       ],
                     ),
-                    Container(
-                      margin: EdgeInsets.only(right: 12),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushNamed(MenuScreen.routeName,
-                              arguments: {"user": user});
-                        },
-                        child: Icon(
-                          Icons.menu,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                        ),
-                        child: Text("Circonscription actuelle"),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SelectCirconscriptionBloc(),
-                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Center(
-                  child: Column(
-                    children: [
-                      SearchBarGroup(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                    ],
+                  SizedBox(
+                    height: 40,
                   ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Container(
-                      margin: EdgeInsets.all(20),
-                      child: _selectedOptions.isEmpty
-                          ? Text(
-                              "Saisissez le médicament que vous recherchez\n ou appuyer sur @ pour scanner votre ordonnance ou le code barre du medicament",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(height: 1.5),
-                            )
-                          : Container(
-                              child: Column(
+                  Center(
+                    child: SearchBarGroup(),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    child: Center(
+                      child: Container(
+                        margin: EdgeInsets.all(10),
+                        child: _selectedOptions.isEmpty
+                            ? Text(
+                                "Saisissez le médicament que vous recherchez\n ou appuyer sur @ pour scanner votre ordonnance ou le code barre du medicament",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(height: 1.5),
+                              )
+                            : Column(
                                 children: [
-                                  SingleChildScrollView(
-                                    child: Column(
-                                      children: _selectedOptions.map((text) {
-                                        ProduitModel produitTrouve =
-                                            _produits.firstWhere((produit) =>
-                                                produit.name == text);
-                                        return Container(
-                                          child: Row(
+                                  Column(
+                                    children: [
+                                      Container(
+                                        height:
+                                            Helper.getScreenHeight(context) *
+                                                0.45,
+                                        child: SingleChildScrollView(
+                                          child: Column(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                  child: SuggestionItemCard(
-                                                      produit: produitTrouve)),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  removeInselectedOptionsID(
-                                                      text);
-                                                },
-                                                child: Icon(
-                                                  Icons.delete_forever_outlined,
-                                                  color: Colors.red,
-                                                  size: 27,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 25,
-                                  ),
-                                  _selectedOptions.length > 2
-                                      ? Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            InkWell(
-                                              onTap: () async {
-                                                _selectedOptions = [];
-                                                await sharedPreferencesService
-                                                    .setStringList(
-                                                        'produitsSelected', []);
-                                                setState(() {});
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 5, vertical: 7),
+                                                MainAxisAlignment.start,
+                                            children:
+                                                _selectedOptions.map((text) {
+                                              ProduitModel? produitTrouve;
+                                              if (_produits.isNotEmpty) {
+                                                produitTrouve = _produits
+                                                    .firstWhere((produit) =>
+                                                        produit.name == text);
+                                              }
+
+                                              return Container(
                                                 child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    Icon(
-                                                      Icons.delete_forever,
-                                                      size: 24,
-                                                      color:
-                                                          Colors.red.shade400,
-                                                    ),
+                                                    Expanded(
+                                                        child: SuggestionItemCard(
+                                                            produit: produitTrouve ??
+                                                                ProduitModel(
+                                                                    name: "",
+                                                                    description:
+                                                                        "",
+                                                                    image: "",
+                                                                    codebarre:
+                                                                        ""))),
                                                     SizedBox(
-                                                      width: 5,
+                                                      width: 10,
                                                     ),
-                                                    Text(
-                                                      "Vider",
-                                                      style: TextStyle(
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors
-                                                              .red.shade400),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        removeInselectedOptionsID(
+                                                            text);
+                                                      },
+                                                      child: Icon(
+                                                        Icons
+                                                            .delete_forever_outlined,
+                                                        color: Colors.red,
+                                                        size: 27,
+                                                      ),
                                                     )
                                                   ],
                                                 ),
-                                              ),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ),
+                                      _selectedOptions.length > 2
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () async {
+                                                    _selectedOptions = [];
+                                                    await sharedPreferencesService
+                                                        .setStringList(
+                                                            'produitsSelected',
+                                                            []);
+                                                  },
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 5,
+                                                            vertical: 7),
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.delete_forever,
+                                                          size: 22,
+                                                          color: Colors
+                                                              .red.shade400,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        Text(
+                                                          "Vider",
+                                                          style: TextStyle(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: Colors.red
+                                                                  .shade400),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
                                             )
-                                          ],
-                                        )
-                                      : Container()
+                                          : Container()
+                                    ],
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  _selectedOptions.length > 0
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pushNamed(SearchPage.routeName);
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.search,
+                                    size: 24,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    "Rechercher ${_selectedOptions.length} médicament(s)",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  )
                                 ],
                               ),
                             ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: Helper.getScreenHeight(context) * 0.05,
-                ),
-                _selectedOptions.length > 0
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .pushNamed(SearchPage.routeName);
-                            },
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.search,
-                                  size: 24,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "Rechercher ${_selectedOptions.length} médicament(s)",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container()
-              ],
+                          ],
+                        )
+                      : Container()
+                ],
+              ),
             ),
           ),
         ),
         onWillPop: () {
-          ConfirmExitDialog();
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return ConfirmExitDialog();
+            },
+          );
           return Future.value(false);
         });
   }

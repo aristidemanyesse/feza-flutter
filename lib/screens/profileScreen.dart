@@ -17,6 +17,11 @@ class ProfileScreenState extends State<ProfileScreen> {
   late UtilisateurModel user;
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
@@ -65,7 +70,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       Container(
-                        height: Helper.getScreenHeight(context) * 0.15,
+                        height: Helper.getScreenHeight(context) * 0.12,
                         child: Center(
                           child: Align(
                               alignment: Alignment.center,
@@ -86,22 +91,22 @@ class ProfileScreenState extends State<ProfileScreen> {
                           child: Image.asset(
                             Helper.getAssetName(
                               "user.jpg",
-                              "real",
+                              "icons",
                             ),
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                      Positioned(
-                        bottom: -3,
-                        left: 70,
-                        child: Container(
-                            child: Icon(
-                          Icons.camera_alt,
-                          color: AppColor.blue,
-                          size: 35,
-                        )),
-                      ),
+                      // Positioned(
+                      //   bottom: -3,
+                      //   left: 70,
+                      //   child: Container(
+                      //       child: Icon(
+                      //     Icons.camera_alt,
+                      //     color: AppColor.blue,
+                      //     size: 35,
+                      //   )),
+                      // ),
                     ]),
                     SizedBox(
                       height: 30,
@@ -161,7 +166,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           Container(
-            height: Helper.getScreenHeight(context) * 0.1,
+            height: Helper.getScreenHeight(context) * 0.13,
             width: Helper.getScreenWidth(context),
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -187,12 +192,12 @@ class ProfileScreenState extends State<ProfileScreen> {
                     child: Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.transparent,
                           borderRadius: BorderRadius.all(Radius.circular(100))),
                       child: Icon(
                         Icons.arrow_back_ios_rounded,
                         size: 20,
-                        color: AppColor.blue,
+                        color: Colors.white,
                       ),
                     ),
                   ),

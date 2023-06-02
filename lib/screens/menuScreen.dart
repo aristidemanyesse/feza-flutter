@@ -17,6 +17,11 @@ class _MenuScreen extends State<MenuScreen> {
   late UtilisateurModel user;
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;

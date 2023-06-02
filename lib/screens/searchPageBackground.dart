@@ -128,6 +128,11 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void targetMarker(String? id) {
     for (var marker in allMarkers) {
       if (marker.officine.id == id) {
@@ -191,93 +196,102 @@ class SearchPageBackgroundState extends State<SearchPageBackground>
                         height: MediaQuery.of(context).size.height,
                         child: Stack(
                           children: [
-                            FlutterMap(
-                              mapController: mapController,
-                              options: MapOptions(
-                                center: center,
-                                zoom: 13,
-                              ),
-                              children: [
-                                TileLayer(
-                                  urlTemplate:
-                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                  userAgentPackageName:
-                                      'dev.fleaflet.flutter_map.example',
-                                ),
-                                PolylineLayer(
-                                  polylines: [routeCoordinates],
-                                ),
-                                PopupMarkerLayerWidget(
-                                  options: PopupMarkerLayerOptions(
-                                    // popupController: _popupLayerController,
-                                    markers: [
-                                      Marker(
-                                        point: center,
-                                        width: 25,
-                                        height: 25,
-                                        builder: (context) => MyPinInMap(),
-                                        anchorPos:
-                                            AnchorPos.align(AnchorAlign.top),
-                                      )
-                                    ],
-                                    markerRotateAlignment:
-                                        PopupMarkerLayerOptions
-                                            .rotationAlignmentFor(
-                                                AnchorAlign.top),
-                                    popupBuilder:
-                                        (BuildContext context, Marker marker) {
-                                      return Container(
-                                        padding: EdgeInsets.all(7),
-                                        child: Text("c'est moi !"),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                PopupMarkerLayerWidget(
-                                  options: PopupMarkerLayerOptions(
-                                    // popupController: _popupLayerController,
-                                    markers: allMarkers
-                                        .map((element) => Marker(
-                                              point: element.point,
-                                              width: 17,
-                                              height: 17,
+                            !ready
+                                ? LoaderScreen()
+                                : FlutterMap(
+                                    mapController: mapController,
+                                    options: MapOptions(
+                                      center: center,
+                                      zoom: 13,
+                                    ),
+                                    children: [
+                                      TileLayer(
+                                        urlTemplate:
+                                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                        userAgentPackageName:
+                                            'dev.fleaflet.flutter_map.example',
+                                      ),
+                                      PolylineLayer(
+                                        polylines: [routeCoordinates],
+                                      ),
+                                      PopupMarkerLayerWidget(
+                                        options: PopupMarkerLayerOptions(
+                                          // popupController: _popupLayerController,
+                                          markers: [
+                                            Marker(
+                                              point: center,
+                                              width: 25,
+                                              height: 25,
                                               builder: (context) =>
-                                                  PharmacieMapPin(),
+                                                  MyPinInMap(),
                                               anchorPos: AnchorPos.align(
                                                   AnchorAlign.top),
-                                            ))
-                                        .toList(),
-                                    markerRotateAlignment:
-                                        PopupMarkerLayerOptions
-                                            .rotationAlignmentFor(
-                                                AnchorAlign.top),
-                                    popupBuilder:
-                                        (BuildContext context, Marker marker) {
-                                      CustomMyMarker element =
-                                          allMarkers.firstWhere((element) =>
-                                              element.point == marker.point);
-                                      return MapMinPharmaciePopup(
-                                        marker: marker,
-                                        officine: element.officine,
-                                        ratio:
-                                            "${widget.ratioTableaux[element.officine].toString()}/${widget.initialProduits.length}",
-                                        distance: widget.distanceTableaux[
-                                            element.officine]!,
-                                        ittineraireFunction: () {
-                                          scrollToContainer(
-                                              element.officine.id!);
-                                        },
-                                      );
-                                    },
+                                            )
+                                          ],
+                                          markerRotateAlignment:
+                                              PopupMarkerLayerOptions
+                                                  .rotationAlignmentFor(
+                                                      AnchorAlign.top),
+                                          popupBuilder: (BuildContext context,
+                                              Marker marker) {
+                                            return Container(
+                                              padding: EdgeInsets.all(7),
+                                              margin: EdgeInsets.all(7),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Text("Vous êtes ici !"),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      PopupMarkerLayerWidget(
+                                        options: PopupMarkerLayerOptions(
+                                          // popupController: _popupLayerController,
+                                          markers: allMarkers
+                                              .map((element) => Marker(
+                                                    point: element.point,
+                                                    width: 17,
+                                                    height: 17,
+                                                    builder: (context) =>
+                                                        PharmacieMapPin(),
+                                                    anchorPos: AnchorPos.align(
+                                                        AnchorAlign.top),
+                                                  ))
+                                              .toList(),
+                                          markerRotateAlignment:
+                                              PopupMarkerLayerOptions
+                                                  .rotationAlignmentFor(
+                                                      AnchorAlign.top),
+                                          popupBuilder: (BuildContext context,
+                                              Marker marker) {
+                                            CustomMyMarker element = allMarkers
+                                                .firstWhere((element) =>
+                                                    element.point ==
+                                                    marker.point);
+                                            return MapMinPharmaciePopup(
+                                              marker: marker,
+                                              officine: element.officine,
+                                              ratio:
+                                                  "${widget.ratioTableaux[element.officine].toString()}/${widget.initialProduits.length}",
+                                              distance: widget.distanceTableaux[
+                                                  element.officine]!,
+                                              ittineraireFunction: () {
+                                                scrollToContainer(
+                                                    element.officine.id!);
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            ready ? Container() : LoaderScreen()
                           ],
                         )),
                     Container(
-                      height: Helper.getScreenHeight(context) * 0.1,
+                      height: Helper.getScreenHeight(context) * 0.12,
                       width: Helper.getScreenWidth(context),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(

@@ -40,6 +40,11 @@ class _IntroScreenState extends State<IntroScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void nextFunction(int index) {
     if (count < 2) {
       setState(() {

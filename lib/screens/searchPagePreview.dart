@@ -18,6 +18,11 @@ class SearchPagePreview extends StatefulWidget {
 
 class _SearchPagePreviewState extends State<SearchPagePreview> {
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
         height: MediaQuery.of(context).size.height * 0.15,

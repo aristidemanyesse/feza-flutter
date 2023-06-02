@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:ipi/models/OfficineModel.dart';
@@ -31,11 +33,12 @@ class _SearchPageState extends State<SearchPage> {
   List<ProduitModel> initialProduits = [];
   late LatLng myPosition = LatLng(5.307600, -3.972112);
   late List<String>? datasGetted = [];
-  late bool ready = false;
 
   final GlobalKey _previewdKey = GlobalKey();
   final GlobalKey _backgroundKey = GlobalKey();
   final GlobalKey _expandedKey = GlobalKey();
+
+  late StreamSubscription<String> _sharedPreferencesSubscription;
 
   SharedPreferencesService sharedPreferencesService =
       SharedPreferencesService();
@@ -45,13 +48,19 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
     getData();
 
-    sharedPreferencesService
+    _sharedPreferencesSubscription = sharedPreferencesService
         .watchString('produitsIDSelected')
         .listen((value) async {
       datasGetted =
           await sharedPreferencesService.getStringList('produitsIDSelected');
       setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    _sharedPreferencesSubscription.cancel();
+    super.dispose();
   }
 
   Future<void> getData() async {
@@ -63,9 +72,9 @@ class _SearchPageState extends State<SearchPage> {
         await UtilisateurProvider.all({"id": userId, "imei": uniq});
     UtilisateurModel user = users[0];
 
-    dynamic coords = await sharedPreferencesService.getString('coords');
-    coords = json.decode(coords)["coordinates"];
-    myPosition = LatLng(coords[0], coords[1]);
+    dynamic lat = await sharedPreferencesService.getString('lat');
+    dynamic lon = await sharedPreferencesService.getString('lon');
+    myPosition = LatLng(double.parse(lat), double.parse(lon));
 
     datasGetted =
         await sharedPreferencesService.getStringList('produitsIDSelected');
@@ -98,9 +107,6 @@ class _SearchPageState extends State<SearchPage> {
           ? "${distance * 1000} m"
           : "${distance.toStringAsFixed(2)} km";
     }
-    setState(() {
-      ready = true;
-    });
   }
 
   @override

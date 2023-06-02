@@ -24,6 +24,11 @@ class _SelectCirconscriptionBlocState extends State<SelectCirconscriptionBloc> {
     getData();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void changeCirconscription() async {
     await showDialog(
       context: context,

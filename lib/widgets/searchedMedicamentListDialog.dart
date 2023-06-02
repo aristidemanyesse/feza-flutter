@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
@@ -31,6 +33,8 @@ class _SearchedMedicamentListDialogState
   late List<ProduitModel> _produits = [];
   late List<String> _selectedOptions = [];
 
+  late StreamSubscription<String> _sharedPreferencesSubscription;
+
   SharedPreferencesService sharedPreferencesService =
       SharedPreferencesService();
 
@@ -40,9 +44,15 @@ class _SearchedMedicamentListDialogState
     getData();
   }
 
+  @override
+  void dispose() {
+    _sharedPreferencesSubscription.cancel(); // Arrêter le StreamSubscription
+    super.dispose();
+  }
+
   Future<void> getData() async {
     await sharedPreferencesService.init();
-    sharedPreferencesService
+    _sharedPreferencesSubscription = sharedPreferencesService
         .watchString('produitsSelected')
         .listen((value) async {
       _selectedOptions =

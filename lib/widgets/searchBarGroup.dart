@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -24,23 +26,23 @@ class SearchBarGroupState extends State<SearchBarGroup> {
   late List<String> _selectedOptionsID = [];
   late List<String> _nomsProduits = [];
 
+  late StreamSubscription<String> _sharedPreferencesSubscription;
+
   SharedPreferencesService sharedPreferencesService =
       SharedPreferencesService();
 
   Future<void> getData() async {
+    _produits = await ProduitProvider.all({});
+    _nomsProduits = _produits.map((produit) => produit.name).toList();
+    _textField.updateSuggestions(_nomsProduits);
+
     await sharedPreferencesService.init();
     _selectedOptions =
         await sharedPreferencesService.getStringList('produitsSelected');
-    sharedPreferencesService.watchString('produitsSelected').listen((value) {
+    _sharedPreferencesSubscription = sharedPreferencesService
+        .watchString('produitsSelected')
+        .listen((value) {
       selectedOptionsID();
-    });
-
-    ProduitProvider.all({}).then((datas) {
-      setState(() {
-        _produits = datas;
-        _nomsProduits = _produits.map((produit) => produit.name).toList();
-        _textField.updateSuggestions(_nomsProduits);
-      });
     });
   }
 
@@ -59,8 +61,15 @@ class SearchBarGroupState extends State<SearchBarGroup> {
   }
 
   @override
+  void dispose() {
+    _sharedPreferencesSubscription.cancel(); // Arrêter le StreamSubscription
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
+    getData();
 
     _textField = AutoCompleteTextField(
       key: key,
@@ -107,7 +116,6 @@ class SearchBarGroupState extends State<SearchBarGroup> {
             'produitsSelected', _selectedOptions);
       },
     );
-    getData();
   }
 
   void selectedOptionsID() async {

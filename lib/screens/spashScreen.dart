@@ -22,17 +22,29 @@ class _SplashScreenState extends State<SplashScreen> {
   SharedPreferencesService sharedPreferencesService =
       SharedPreferencesService();
 
+  late Timer timer;
+
   @override
   void initState() {
-    Timer(Duration(milliseconds: 3000), () {
+    timer = Timer(Duration(milliseconds: 3000), () {
       getPosition();
       checkUser();
     });
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   Future<void> checkUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove("produitsSelected");
+    await prefs.remove("produitsIDSelected");
+
     String? userId = prefs.getString('userId');
     String uniq = await UtilisateurProvider.getUniqID();
     if (userId != null) {
@@ -60,10 +72,11 @@ class _SplashScreenState extends State<SplashScreen> {
       position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
     }
-    var coords =
-        LatLng(position!.latitude, position.longitude).toJson().toString();
     await sharedPreferencesService.init();
-    await sharedPreferencesService.setString('coords', coords);
+    await sharedPreferencesService.setString(
+        'lat', position!.latitude.toString());
+    await sharedPreferencesService.setString(
+        'lon', position!.longitude.toString());
   }
 
   @override

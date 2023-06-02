@@ -11,11 +11,11 @@ class ConfirmExitDialog extends StatelessWidget {
     return Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          height: Helper.getScreenHeight(context) * 0.28,
-          padding: EdgeInsets.all(20),
+          height: 175,
+          padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Colors.white.withOpacity(0.85)),
+              color: Colors.white.withOpacity(0.9)),
           child: Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,37 +26,40 @@ class ConfirmExitDialog extends StatelessWidget {
                       padding: EdgeInsets.only(bottom: 5),
                       alignment: Alignment.center,
                       child: Text(
-                        "Hhmmm !",
+                        "😩😟 Hhmmm !",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                            fontSize: 24,
                             height: 1.3,
                             color: Colors.green.shade900),
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     Container(
                       child: Text(
                         "Voulez-vous vraiment quitter cettte application ?",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: 14, height: 1.5, color: Colors.black),
+                            fontSize: 15, height: 1.5, color: Colors.black),
                       ),
                     ),
                   ],
                 ),
+                SizedBox(
+                  height: 25,
+                ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
                       alignment: Alignment.center,
                       height: 35,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: Colors.white54,
+                        color: Colors.transparent,
                       ),
                       child: TextButton(
                           onPressed: () {
@@ -64,7 +67,10 @@ class ConfirmExitDialog extends StatelessWidget {
                           },
                           child: Text(
                             "Oui",
-                            style: TextStyle(fontSize: 13),
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold),
                           )),
                     ),
                     Container(
@@ -72,7 +78,7 @@ class ConfirmExitDialog extends StatelessWidget {
                       height: 35,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: Colors.white54,
+                        color: Colors.transparent,
                       ),
                       child: TextButton(
                           onPressed: () {
@@ -80,7 +86,7 @@ class ConfirmExitDialog extends StatelessWidget {
                           },
                           child: Text(
                             "Non, Annuler",
-                            style: TextStyle(fontSize: 13),
+                            style: TextStyle(fontSize: 17),
                           )),
                     )
                   ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:marquee_widget/marquee_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/CirconscriptionModel.dart';
@@ -24,6 +25,11 @@ class _CirconscriptionChoicesDialogState
   late List<CirconscriptionModel> _circonscriptions = [];
 
   _CirconscriptionChoicesDialogState();
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -224,12 +230,21 @@ class Ligne extends StatelessWidget {
                     size: 19,
                   ),
                   SizedBox(
-                    width: 15,
+                    width: 12,
                   ),
-                  Text(
-                    circonscription.name,
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  )
+                  Marquee(
+                    child: Text(
+                      circonscription.name,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    direction: Axis.horizontal,
+                    textDirection: TextDirection.ltr,
+                    animationDuration: Duration(seconds: 4),
+                    backDuration: Duration(milliseconds: 5000),
+                    pauseDuration: Duration(milliseconds: 1000),
+                    directionMarguee: DirectionMarguee.oneDirection,
+                  ),
                 ],
               ),
             ),

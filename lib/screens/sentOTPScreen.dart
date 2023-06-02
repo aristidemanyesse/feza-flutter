@@ -129,7 +129,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                     ),
                   ),
                   Container(
-                    height: Helper.getScreenHeight(context) * 0.2,
+                    height: Helper.getScreenHeight(context) * 0.17,
                     child: Center(
                       child: Align(
                           alignment: Alignment.center,
@@ -144,7 +144,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                 ]),
                 Container(
                   alignment: Alignment.center,
-                  child: MyLogo(),
+                  child: MyLogo(height: 100, width: 100),
                 ),
                 SizedBox(
                   height: Helper.getScreenHeight(context) * 0.06,

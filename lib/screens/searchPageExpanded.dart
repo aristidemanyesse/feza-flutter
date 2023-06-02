@@ -45,6 +45,11 @@ class _SearchPageExpandedState extends State<SearchPageExpanded> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(covariant SearchPageExpanded oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.tableauxOfficines.isNotEmpty) {
