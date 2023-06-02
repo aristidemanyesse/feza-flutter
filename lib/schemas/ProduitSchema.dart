@@ -1,10 +1,10 @@
 class ProduitSchema {
   static const String ALL = r"""
-    query ($id: UUID, $code: String, $name: String, $type: UUID) {
+    query ($id: UUID, $codebarre: String, $name: String, $type: UUID) {
   searchProduit(
     deleted: false
     id: $id
-    codebarre: $code
+    codebarre: $codebarre
     name_Icontains: $name
     type_Id: $type
   ) {

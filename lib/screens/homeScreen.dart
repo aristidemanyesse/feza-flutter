@@ -168,6 +168,7 @@ class HomeScreenState extends State<HomeScreen> {
                   Container(
                     child: Center(
                       child: Container(
+                        height: Helper.getScreenHeight(context) * 0.45,
                         margin: EdgeInsets.all(10),
                         child: _selectedOptions.isEmpty
                             ? Text(

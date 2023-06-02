@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -46,11 +45,13 @@ class SearchBarGroupState extends State<SearchBarGroup> {
     });
   }
 
-  Future<String> getCodeBar() async {
+  Future<void> getCodeBar() async {
     String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", "Annuler", false, ScanMode.DEFAULT);
-    print("----------------- $barcodeScanRes");
-    return barcodeScanRes;
+        "#ff6666", "Annuler", true, ScanMode.BARCODE);
+    var datas = await ProduitProvider.all({"codebarre": barcodeScanRes});
+    _selectedOptions.add(datas[0].name);
+    await sharedPreferencesService.setStringList(
+        'produitsSelected', _selectedOptions);
   }
 
   Future<String> getScanList() async {
@@ -169,6 +170,7 @@ class SearchBarGroupState extends State<SearchBarGroup> {
               size: 20,
             ),
             onTap: () {
+              print("ghfk dkg");
               this.getCodeBar();
             },
           ),
