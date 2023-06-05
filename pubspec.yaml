@@ -46,13 +46,12 @@ dependencies:
   proj4dart: ^2.1.0
   shimmer: ^2.0.0
   progress_dialog_null_safe: ^1.0.7
-  google_polyline_algorithm: ^3.1.0
   flutter_polyline_points: ^1.0.0
   flutter_launcher_icons: ^0.11.0
-  flutter_map_geojson: ^1.0.1
   flutter_map_marker_cluster: ^1.1.0
   flutter_keyboard_visibility: ^5.4.1
   marquee_widget: ^1.2.0
+  google_ml_kit: ^0.15.0
 
 dev_dependencies:
   flutter_test:

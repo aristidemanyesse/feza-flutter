@@ -37,9 +37,15 @@ class _MenuScreen extends State<MenuScreen> {
             height: double.infinity,
             width: double.infinity,
             child: Image.asset(
-              Helper.getAssetName("splashIcon.png", "bg"),
-              fit: BoxFit.fill,
+              Helper.getAssetName("landing.jpg", "bg"),
+              fit: BoxFit.scaleDown,
+              repeat: ImageRepeat.repeatY,
             ),
+          ),
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Colors.white.withOpacity(0.75),
           ),
           SafeArea(
             child: Column(

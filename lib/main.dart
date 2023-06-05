@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/screens/medicamentScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
+import 'package:ipi/widgets/testPage.dart';
 
 import './screens/spashScreen.dart';
 import './screens/landingScreen.dart';
@@ -88,6 +89,7 @@ class MyApp extends StatelessWidget {
           DessertScreen.routeName: (context) => DessertScreen(),
           MedicamentScreen.routeName: (context) => MedicamentScreen(),
           HomeScreen.routeName: (context) => HomeScreen(),
+          TextRecognizerView.routeName: (context) => TextRecognizerView(),
         },
       ),
     );

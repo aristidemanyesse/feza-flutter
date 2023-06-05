@@ -7,6 +7,9 @@ import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/SuggestionItemCard.dart';
+import 'package:ipi/widgets/testPage.dart';
+import 'package:learning_input_image/learning_input_image.dart';
+import 'package:learning_text_recognition/learning_text_recognition.dart';
 
 class SearchBarGroup extends StatefulWidget {
   static const routeName = "/SearchBarGroup";
@@ -26,9 +29,10 @@ class SearchBarGroupState extends State<SearchBarGroup> {
   late List<String> _nomsProduits = [];
 
   late StreamSubscription<String> _sharedPreferencesSubscription;
-
   SharedPreferencesService sharedPreferencesService =
       SharedPreferencesService();
+
+  TextRecognition? _textRecognition = TextRecognition();
 
   Future<void> getData() async {
     _produits = await ProduitProvider.all({});
@@ -54,15 +58,13 @@ class SearchBarGroupState extends State<SearchBarGroup> {
         'produitsSelected', _selectedOptions);
   }
 
-  Future<String> getScanList() async {
-    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", "Annuler", false, ScanMode.DEFAULT);
-    print("----------------- $barcodeScanRes");
-    return barcodeScanRes;
+  void getScanList() {
+    Navigator.of(context).pushNamed(TextRecognizerView.routeName);
   }
 
   @override
   void dispose() {
+    _textRecognition?.dispose();
     _sharedPreferencesSubscription.cancel(); // Arrêter le StreamSubscription
     super.dispose();
   }
@@ -170,11 +172,10 @@ class SearchBarGroupState extends State<SearchBarGroup> {
               size: 20,
             ),
             onTap: () {
-              print("ghfk dkg");
               this.getCodeBar();
             },
           ),
-        )
+        ),
       ],
     );
   }
