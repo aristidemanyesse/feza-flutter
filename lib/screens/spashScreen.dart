@@ -29,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
     timer = Timer(Duration(milliseconds: 3000), () {
       getPosition();
       checkUser();
+      getDatas();
     });
 
     super.initState();
@@ -78,6 +79,8 @@ class _SplashScreenState extends State<SplashScreen> {
     await sharedPreferencesService.setString(
         'lon', position!.longitude.toString());
   }
+
+  Future<void> getDatas() {}
 
   @override
   Widget build(BuildContext context) {

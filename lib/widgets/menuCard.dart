@@ -54,7 +54,7 @@ class MenuCard extends StatelessWidget {
                 _name,
                 style: Helper.getTheme(context)
                     .headlineMedium
-                    ?.copyWith(color: AppColor.primary, fontSize: 16),
+                    ?.copyWith(color: AppColor.primary, fontSize: 15),
               ),
               SizedBox(
                 height: 5,

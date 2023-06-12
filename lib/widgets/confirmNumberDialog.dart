@@ -44,7 +44,7 @@ class ConfirmNumberDialog extends StatelessWidget {
     return Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          height: Helper.getScreenHeight(context) * 0.28,
+          height: Helper.getScreenHeight(context) * 0.3,
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
@@ -81,15 +81,21 @@ class ConfirmNumberDialog extends StatelessWidget {
                     ),
                   ],
                 ),
+                SizedBox(
+                  height: 20,
+                ),
                 Expanded(
                   child: Center(
                     child: Text("+225 $number",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 22,
+                            fontSize: 20,
                             color: Colors.black)),
                   ),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
