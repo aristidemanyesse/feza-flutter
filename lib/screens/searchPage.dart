@@ -9,6 +9,8 @@ import 'package:ipi/provider/OfficineProvider.dart';
 import 'package:ipi/provider/ProduitInOfficineProvider.dart';
 import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
+import 'package:ipi/screens/errorPage.dart';
+import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/searchPageBackground.dart';
 import 'package:ipi/screens/searchPageExpanded.dart';
 import 'package:ipi/screens/searchPagePreview.dart';
@@ -88,24 +90,30 @@ class _SearchPageState extends State<SearchPage> {
       "longitude": myPosition.longitude,
       "latitude": myPosition.latitude
     });
-    initialProduits =
-        await ProduitProvider.specificAll({"produits": datasGetted});
 
-    for (var element in datas) {
-      List<OfficineModel> officines =
-          await OfficineProvider.all({"id": element["officine"]});
-      OfficineModel officine = officines[0];
-      List<ProduitModel> produits =
-          await ProduitProvider.specificAll({"produits": element["produits"]});
+    if (datas.length > 0) {
+      initialProduits =
+          await ProduitProvider.specificAll({"produits": datasGetted});
 
-      tableauxOfficines.add({officine: produits});
-      ratioTableaux[officine] = element["ratio"];
-      routesOfficines[officine.id!] = jsonDecode(element["route"]);
+      for (var element in datas) {
+        List<OfficineModel> officines =
+            await OfficineProvider.all({"id": element["officine"]});
+        OfficineModel officine = officines[0];
+        List<ProduitModel> produits = await ProduitProvider.specificAll(
+            {"produits": element["produits"]});
 
-      double distance = element["distance"];
-      distanceTableaux[officine] = distance < 1
-          ? "${distance * 1000} m"
-          : "${distance.toStringAsFixed(2)} km";
+        tableauxOfficines.add({officine: produits});
+        ratioTableaux[officine] = element["ratio"];
+        routesOfficines[officine.id!] = jsonDecode(element["route"]);
+
+        double distance = element["distance"];
+        distanceTableaux[officine] = distance < 1
+            ? "${distance * 1000} m"
+            : "${distance.toStringAsFixed(2)} km";
+      }
+    } else {
+      Navigator.of(context)
+          .pushNamed(ErrorPage.routeName, arguments: {"user": user});
     }
   }
 

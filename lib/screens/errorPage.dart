@@ -14,15 +14,15 @@ import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const routeName = "/homeScreen";
-  HomeScreen({Key? key}) : super(key: key);
+class ErrorPage extends StatefulWidget {
+  static const routeName = "/errorPage";
+  ErrorPage({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => HomeScreenState();
+  State<ErrorPage> createState() => ErrorPageState();
 }
 
-class HomeScreenState extends State<HomeScreen> {
+class ErrorPageState extends State<ErrorPage> {
   late StreamSubscription<String> _sharedPreferencesSubscription;
 
   SharedPreferencesService sharedPreferencesService =
@@ -77,6 +77,15 @@ class HomeScreenState extends State<HomeScreen> {
           body: SingleChildScrollView(
             child: Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Ouups !!:",
+                      style: TextStyle(fontSize: 25),
+                    )
+                  ],
+                ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   height: Helper.getScreenHeight(context) * 0.3,

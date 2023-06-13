@@ -67,7 +67,7 @@ class _LoaderScreenState extends State<LoaderScreen>
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  Lottie.asset("assets/lotties/search.json",
+                  Lottie.asset("assets/lotties/search2.json",
                       width: Helper.getScreenWidth(context) * 0.8)
                 ],
               ),
