@@ -215,28 +215,36 @@ class _CameraViewState extends State<CameraView> {
             )
           : Icon(
               Icons.image,
+              color: Colors.grey,
               size: 200,
             ),
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: ElevatedButton(
-          child: Text('From Gallery'),
-          onPressed: () => _getImage(ImageSource.gallery),
-        ),
-      ),
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: ElevatedButton(
-          child: Text('Take a picture'),
-          onPressed: () => _getImage(ImageSource.camera),
-        ),
-      ),
-      if (_image != null)
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-              '${_path == null ? '' : 'Image path: $_path'}\n\n${widget.text ?? ''}'),
-        ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+            child: IconButton(
+              icon: Icon(
+                Icons.image,
+                size: 35,
+              ),
+              onPressed: () => _getImage(ImageSource.gallery),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100), border: Border()),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+            child: IconButton(
+              icon: Icon(
+                Icons.camera_alt,
+                size: 35,
+              ),
+              onPressed: () => _getImage(ImageSource.camera),
+            ),
+          ),
+        ],
+      )
     ]);
   }
 

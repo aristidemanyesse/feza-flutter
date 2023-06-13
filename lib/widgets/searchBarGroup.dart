@@ -6,6 +6,7 @@ import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/utils/sharedpre.dart';
+import 'package:ipi/widgets/ChooseMLMethod.dart';
 import 'package:ipi/widgets/SuggestionItemCard.dart';
 import 'package:ipi/widgets/testPage.dart';
 import 'package:learning_input_image/learning_input_image.dart';
@@ -59,6 +60,12 @@ class SearchBarGroupState extends State<SearchBarGroup> {
   }
 
   void getScanList() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ChooseMLMethod();
+      },
+    );
     Navigator.of(context).pushNamed(TextRecognizerView.routeName);
   }
 
@@ -100,17 +107,48 @@ class SearchBarGroupState extends State<SearchBarGroup> {
           borderRadius: BorderRadius.all(Radius.circular(40)),
           borderSide: BorderSide(color: AppColor.secondary, width: 1.0),
         ),
+        hintText: "Rechercher médicament...",
+        hintStyle: TextStyle(
+          color: AppColor.placeholder,
+          fontSize: 14,
+        ),
         prefixIcon: Icon(
           Icons.search,
           color: AppColor.blue,
         ),
-        hintText: "Rechercher médicament...",
-        hintStyle: TextStyle(
-          color: AppColor.placeholder,
-          fontSize: 15,
+        suffix: Container(
+          margin: EdgeInsets.only(right: 15, top: 5),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                child: Icon(
+                  Icons.barcode_reader,
+                  size: 22,
+                  color: Colors.blue.shade400,
+                ),
+                onTap: () {
+                  this.getCodeBar();
+                },
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              GestureDetector(
+                child: Icon(
+                  Icons.file_open_rounded,
+                  size: 22,
+                  color: Colors.blue.shade400,
+                ),
+                onTap: () {
+                  this.getScanList();
+                },
+              ),
+            ],
+          ),
         ),
         contentPadding: const EdgeInsets.only(
-          top: 10,
+          top: 13,
         ),
       ),
       itemSubmitted: (selectedOption) async {
@@ -145,37 +183,37 @@ class SearchBarGroupState extends State<SearchBarGroup> {
         SizedBox(
           width: 10,
         ),
-        Container(
-          margin: EdgeInsets.only(right: 10),
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              border: Border.all(color: AppColor.secondary, width: 2)),
-          child: GestureDetector(
-            child: Icon(
-              Icons.file_open_rounded,
-              size: 20,
-            ),
-            onTap: () {
-              this.getScanList();
-            },
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              border: Border.all(color: AppColor.secondary, width: 2)),
-          child: GestureDetector(
-            child: Icon(
-              Icons.barcode_reader,
-              size: 20,
-            ),
-            onTap: () {
-              this.getCodeBar();
-            },
-          ),
-        ),
+        // Container(
+        //   margin: EdgeInsets.only(right: 10),
+        //   padding: EdgeInsets.all(5),
+        //   decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.all(Radius.circular(15)),
+        //       border: Border.all(color: AppColor.secondary, width: 2)),
+        //   child: GestureDetector(
+        //     child: Icon(
+        //       Icons.file_open_rounded,
+        //       size: 20,
+        //     ),
+        //     onTap: () {
+        //       this.getScanList();
+        //     },
+        //   ),
+        // ),
+        // Container(
+        //   padding: EdgeInsets.all(5),
+        //   decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.all(Radius.circular(15)),
+        //       border: Border.all(color: AppColor.secondary, width: 2)),
+        //   child: GestureDetector(
+        //     child: Icon(
+        //       Icons.barcode_reader,
+        //       size: 20,
+        //     ),
+        //     onTap: () {
+        //       this.getCodeBar();
+        //     },
+        //   ),
+        // ),
       ],
     );
   }

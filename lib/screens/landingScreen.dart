@@ -51,6 +51,7 @@ class LandingScreen extends StatelessWidget {
               height: Helper.getScreenHeight(context) * 0.35,
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
                     child: Text(
@@ -59,8 +60,8 @@ class LandingScreen extends StatelessWidget {
                       style: TextStyle(height: 1.5, color: AppColor.primary),
                     ),
                   ),
-                  Spacer(
-                    flex: 1,
+                  SizedBox(
+                    height: 15,
                   ),
                   SizedBox(
                     width: double.infinity,
@@ -72,7 +73,9 @@ class LandingScreen extends StatelessWidget {
                       child: Text("Commençons !"),
                     ),
                   ),
-                  Spacer(),
+                  Expanded(
+                    child: Container(),
+                  ),
                   Container(
                     alignment: Alignment.center,
                     height: 20,
@@ -80,8 +83,7 @@ class LandingScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                            "Ici Pharmacies de Côte d'Ivoire @ Copyright 2023"),
+                        Text("IPI @ Copyright 2023"),
                       ],
                     ),
                   ),

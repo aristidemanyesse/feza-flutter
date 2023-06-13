@@ -33,7 +33,7 @@ class _LoginScreen extends State<LoginScreen> {
       } else {
         test = false;
       }
-    } else {
+    } else if (myNumeroController.text.length > 0) {
       test = false;
       err = 'Un numero de téléphone valide !';
     }
@@ -80,9 +80,7 @@ class _LoginScreen extends State<LoginScreen> {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
-        body: Container(
-          height: Helper.getScreenHeight(context),
-          width: Helper.getScreenWidth(context),
+        body: SingleChildScrollView(
           child: SafeArea(
             child: Column(
               children: [
@@ -123,7 +121,7 @@ class _LoginScreen extends State<LoginScreen> {
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           )),
                     ),
-                  )
+                  ),
                 ]),
                 Align(
                   alignment: Alignment.center,
@@ -135,64 +133,58 @@ class _LoginScreen extends State<LoginScreen> {
                 SizedBox(
                   height: Helper.getScreenHeight(context) * 0.06,
                 ),
-                Expanded(
-                    child: Container(
-                  child: SingleChildScrollView(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 40,
-                        vertical: 20,
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            'On a juste besoin de ton numero de téléphone',
-                            style:
-                                TextStyle(height: 1.5, color: AppColor.primary),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          CustomTextInput(
-                            controller: myNumeroController,
-                            myFocusNode: myFocusNode,
-                            onChanged: (myNumeroController) {
-                              if (myNumeroController!.toString().length == 14) {
-                                _checkNumero();
-                              }
-                            },
-                            keyboard: TextInputType.number,
-                            hintText: "07 01 02 03 04",
-                            onEditingComplete: () {
-                              myFocusNode.unfocus();
-                            },
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            errorText,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.red, fontSize: 12),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          SizedBox(
-                            height: 50,
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed:
-                                  _checkNumero() ? confirmationPopup : null,
-                              child: Text("Vérification"),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 20,
                   ),
-                )),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'On a juste besoin de ton numero de téléphone',
+                        style: TextStyle(height: 1.5, color: AppColor.primary),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      CustomTextInput(
+                        controller: myNumeroController,
+                        myFocusNode: myFocusNode,
+                        onChanged: (myNumeroController) {
+                          if (myNumeroController!.toString().length == 14) {
+                            _checkNumero();
+                          }
+                        },
+                        keyboard: TextInputType.number,
+                        hintText: "07 01 02 03 04",
+                        onEditingComplete: () {
+                          myFocusNode.unfocus();
+                        },
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        errorText,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _checkNumero() ? confirmationPopup : null,
+                          child: Text("Vérification"),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
                 Container(
                   alignment: Alignment.center,
                   height: 20,
@@ -203,7 +195,7 @@ class _LoginScreen extends State<LoginScreen> {
                       Text("IPI @ Copyright 2023"),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),

@@ -100,7 +100,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
         return Scaffold(
-          body: SafeArea(
+          body: SingleChildScrollView(
             child: Column(
               children: [
                 Stack(children: [
@@ -144,133 +144,117 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                 ]),
                 Container(
                   alignment: Alignment.center,
-                  child: MyLogo(height: 100, width: 100),
+                  child: MyLogo(height: 80, width: 80),
                 ),
                 SizedBox(
-                  height: Helper.getScreenHeight(context) * 0.06,
+                  height: 20,
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Column(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "On vérifie que c'est vous!",
+                        style: Helper.getTheme(context)
+                            .titleLarge!
+                            .copyWith(fontSize: 18),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text("Nous venons de vous envoyer un code sur le "),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        "+225 $numero",
+                        style: TextStyle(
+                          color: AppColor.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(
-                            height: 20,
+                          OTPInput(
+                            controller: myController1,
+                            onChanged: (value) {
+                              if (value.length == 1) {
+                                FocusScope.of(context).nextFocus();
+                              }
+                            },
                           ),
-                          Text(
-                            "On verifie que c'est vous!",
-                            style: Helper.getTheme(context).titleLarge,
-                            textAlign: TextAlign.center,
+                          OTPInput(
+                            controller: myController2,
+                            onChanged: (value) {
+                              if (value.length == 1) {
+                                FocusScope.of(context).nextFocus();
+                              } else {
+                                FocusScope.of(context).previousFocus();
+                              }
+                            },
                           ),
-                          SizedBox(
-                            height: 20,
+                          OTPInput(
+                            controller: myController3,
+                            onChanged: (value) {
+                              if (value.length == 1) {
+                                FocusScope.of(context).nextFocus();
+                              } else {
+                                FocusScope.of(context).previousFocus();
+                              }
+                            },
                           ),
-                          Text("Nous venons de vous envoyer un code sur le "),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            "+225 $numero",
-                            style: TextStyle(
-                              color: AppColor.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              OTPInput(
-                                controller: myController1,
-                                onChanged: (value) {
-                                  if (value.length == 1) {
-                                    FocusScope.of(context).nextFocus();
-                                  }
-                                },
-                              ),
-                              OTPInput(
-                                controller: myController2,
-                                onChanged: (value) {
-                                  if (value.length == 1) {
-                                    FocusScope.of(context).nextFocus();
-                                  } else {
-                                    FocusScope.of(context).previousFocus();
-                                  }
-                                },
-                              ),
-                              OTPInput(
-                                controller: myController3,
-                                onChanged: (value) {
-                                  if (value.length == 1) {
-                                    FocusScope.of(context).nextFocus();
-                                  } else {
-                                    FocusScope.of(context).previousFocus();
-                                  }
-                                },
-                              ),
-                              OTPInput(
-                                controller: myController4,
-                                onChanged: (value) {
-                                  if (value.length == 1) {
-                                    FocusScope.of(context).unfocus();
-                                  } else {
-                                    FocusScope.of(context).previousFocus();
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          SizedBox(
-                            height: 50,
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: checkOTP() ? validation : null,
-                              child: Text("Continuer"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("Je n'ai pas reçu de code. "),
-                                Text(
-                                  "Renvoyez-le !",
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
+                          OTPInput(
+                            controller: myController4,
+                            onChanged: (value) {
+                              if (value.length == 1) {
+                                FocusScope.of(context).unfocus();
+                              } else {
+                                FocusScope.of(context).previousFocus();
+                              }
+                            },
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  height: 20,
-                  margin: EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("ipi @ Copyright 2023"),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: checkOTP() ? validation : null,
+                          child: Text("Continuer"),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Je n'ai pas reçu de code. "),
+                            Text(
+                              "Renvoyez-le !",
+                              style: TextStyle(
+                                color: AppColor.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: 10,
                 ),
               ],
             ),

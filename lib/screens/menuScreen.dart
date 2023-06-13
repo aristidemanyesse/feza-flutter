@@ -45,7 +45,7 @@ class _MenuScreen extends State<MenuScreen> {
           Container(
             height: double.infinity,
             width: double.infinity,
-            color: Colors.white.withOpacity(0.75),
+            color: Colors.white.withOpacity(0.85),
           ),
           SafeArea(
             child: Column(
