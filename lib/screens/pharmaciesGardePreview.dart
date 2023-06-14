@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
-import 'package:ipi/utils/helper.dart';
+import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/widgets/bounceAnimation.dart';
 import 'package:ipi/widgets/indicator.dart';
+import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 
-class PharmaciesGardePreview extends StatelessWidget {
+class PharmaciesGardePreview extends StatefulWidget {
+  static const routeName = "/PharmaciesGardePreview";
+  final List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines;
+  const PharmaciesGardePreview({Key? key, required this.tableauxOfficines})
+      : super(key: key);
+
+  @override
+  State<PharmaciesGardePreview> createState() => _PharmaciesGardePreviewState();
+}
+
+class _PharmaciesGardePreviewState extends State<PharmaciesGardePreview> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,37 +48,7 @@ class PharmaciesGardePreview extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Circonscription"),
-                    DropdownButtonHideUnderline(
-                      child: SizedBox(
-                        child: DropdownButton(
-                          value: "Port-Bouet",
-                          items: [
-                            DropdownMenuItem(
-                              child: Text("Port-Bouet"),
-                              value: "Port-Bouet",
-                            ),
-                            DropdownMenuItem(
-                              child: Text("Marcory"),
-                              value: "Marcory",
-                            ),
-                            DropdownMenuItem(
-                              child: Text("Koumassi"),
-                              value: "Koumassi",
-                            ),
-                          ],
-                          icon: Padding(
-                            padding: EdgeInsets.only(left: 7),
-                            child: Image.asset(
-                              Helper.getAssetName("dropdown_filled.png", "bg"),
-                            ),
-                          ),
-                          style: Helper.getTheme(context)
-                              .headlineMedium
-                              ?.copyWith(fontSize: 16),
-                          onChanged: (_) {},
-                        ),
-                      ),
-                    ),
+                    SelectCirconscriptionBloc(),
                   ],
                 ),
                 Container(
@@ -69,14 +56,17 @@ class PharmaciesGardePreview extends StatelessWidget {
                   color: Colors.grey.shade300,
                   margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "5 pharmacies de garde trouvées",
-                    style: TextStyle(
-                        color: AppColor.green, fontWeight: FontWeight.bold),
-                  ),
-                )
+                widget.tableauxOfficines.length > 0
+                    ? Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "${widget.tableauxOfficines.length} pharmacies de garde trouvées",
+                          style: TextStyle(
+                              color: AppColor.green,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    : Container()
               ],
             ),
             Column(

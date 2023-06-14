@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:ipi/models/ProduitModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesService {
@@ -47,51 +48,31 @@ class SharedPreferencesService {
         .map((value) => value.split(',').map((item) => item.trim()).toList());
   }
 
-  Future<List<Map<String, dynamic>>> getMapList(String key) async {
+  Future<List<ProduitModel>> getProduitList(String key) async {
     final jsonString = _prefs?.getString(key) ?? '';
     if (jsonString.isEmpty) {
       return [];
     }
     final jsonList = jsonDecode(jsonString);
-    return List<Map<String, dynamic>>.from(jsonList);
+    return List<ProduitModel>.from(
+      jsonList.map((json) => ProduitModel.fromJson(json)),
+    );
   }
 
-  Future<void> setMapList(String key, List<Map<String, dynamic>> value) async {
-    final jsonString = jsonEncode(value);
+  Future<void> setProduitList(String key, List<ProduitModel> value) async {
+    final jsonString = jsonEncode(
+      value.map((produit) => produit.toJson()).toList(),
+    );
     await _prefs?.setString(key, jsonString);
     _valueStreamController.add(jsonString);
   }
 
-  Stream<List<Map<String, dynamic>>> watchMapList(String key) {
+  Stream<List<ProduitModel>> watchProduitList(String key) {
     return _valueStreamController.stream.map((jsonString) {
       final jsonList = jsonDecode(jsonString);
-      return List<Map<String, dynamic>>.from(jsonList);
-    });
-  }
-
-  Future<List<T>> getObjectList<T>(
-      String key, T Function(Map<String, dynamic>) fromJson) async {
-    final jsonString = _prefs?.getString(key) ?? '';
-    if (jsonString.isEmpty) {
-      return [];
-    }
-    final jsonArray = jsonDecode(jsonString);
-    return List<T>.from(jsonArray.map((json) => fromJson(json)));
-  }
-
-  Future<void> setObjectList<T>(
-      String key, List<T> value, dynamic Function(T) toJson) async {
-    final jsonArray = value.map((item) => toJson(item)).toList();
-    final jsonString = jsonEncode(jsonArray);
-    await _prefs?.setString(key, jsonString);
-    _valueStreamController.add(jsonString);
-  }
-
-  Stream<List<T>> watchObjectList<T>(
-      String key, T Function(Map<String, dynamic>) fromJson) {
-    return _valueStreamController.stream.map((jsonString) {
-      final jsonArray = jsonDecode(jsonString);
-      return List<T>.from(jsonArray.map((json) => fromJson(json)));
+      return List<ProduitModel>.from(
+        jsonList.map((json) => ProduitModel.fromJson(json)),
+      );
     });
   }
 }

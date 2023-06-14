@@ -9,8 +9,7 @@ import 'package:ipi/provider/OfficineProvider.dart';
 import 'package:ipi/provider/ProduitInOfficineProvider.dart';
 import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
-import 'package:ipi/screens/errorPage.dart';
-import 'package:ipi/screens/homeScreen.dart';
+import 'package:ipi/widgets/noPharmacieAvialable.dart';
 import 'package:ipi/screens/searchPageBackground.dart';
 import 'package:ipi/screens/searchPageExpanded.dart';
 import 'package:ipi/screens/searchPagePreview.dart';
@@ -112,8 +111,12 @@ class _SearchPageState extends State<SearchPage> {
             : "${distance.toStringAsFixed(2)} km";
       }
     } else {
-      Navigator.of(context)
-          .pushNamed(ErrorPage.routeName, arguments: {"user": user});
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return NoPharmacieAvialable();
+        },
+      );
     }
   }
 

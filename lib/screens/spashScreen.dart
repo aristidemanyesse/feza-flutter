@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    timer = Timer(Duration(milliseconds: 3000), () {
+    timer = Timer(Duration(milliseconds: 1000), () {
       getPosition();
       checkUser();
       getDatas();
@@ -49,6 +49,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
     String? userId = prefs.getString('userId');
     String uniq = await UtilisateurProvider.getUniqID();
+    print("*************************");
+    print(userId);
+    print(uniq);
     if (userId != null) {
       List<UtilisateurModel> users =
           await UtilisateurProvider.all({"id": userId, "imei": uniq});
@@ -56,6 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
       } else {
         UtilisateurModel user = users[0];
+        print(user);
         Navigator.of(context)
             .pushNamed(HomeScreen.routeName, arguments: {"user": user});
       }
@@ -84,10 +88,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> getDatas() async {
     await sharedPreferencesService.init();
     List<ProduitModel> produits = [];
-    produits = await sharedPreferencesService.getObjectList(
-        'produits',
-        // ignore: sdk_version_constructor_tearoffs
-        ProduitModel.fromJson);
+    produits = await sharedPreferencesService.getProduitList('produits');
     print("================================================");
     print(produits.length);
     if (produits.length == 0) {
@@ -95,8 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
       List<String> nomsProduits =
           produits.map((produit) => produit.name).toList();
 
-      sharedPreferencesService.setObjectList(
-          'produits', produits, ProduitModel.toJsonMap);
+      sharedPreferencesService.setProduitList('produits', produits);
       sharedPreferencesService.setStringList('nomsProduits', nomsProduits);
     }
   }

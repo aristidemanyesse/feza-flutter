@@ -2,15 +2,16 @@ import 'dart:async';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/utils/sharedpre.dart';
-import 'package:ipi/widgets/ChooseMLMethod.dart';
 import 'package:ipi/widgets/SuggestionItemCard.dart';
-import 'package:ipi/widgets/testPage.dart';
-import 'package:learning_input_image/learning_input_image.dart';
+import 'package:ipi/widgets/chooseMLMethod.dart';
+import 'package:ipi/widgets/painters.dart';
 import 'package:learning_text_recognition/learning_text_recognition.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class SearchBarGroup extends StatefulWidget {
   static const routeName = "/SearchBarGroup";
@@ -28,6 +29,13 @@ class SearchBarGroupState extends State<SearchBarGroup> {
   late List<String> _selectedOptions = [];
   late List<String> _selectedOptionsID = [];
   late List<String> _nomsProduits = [];
+
+  final TextRecognizer _textRecognizer =
+      TextRecognizer(script: TextRecognitionScript.latin);
+  bool _canProcess = true;
+  bool _isBusy = false;
+  CustomPaint? _customPaint;
+  String? _text;
 
   late StreamSubscription<String> _sharedPreferencesSubscription;
   SharedPreferencesService sharedPreferencesService =
@@ -57,16 +65,6 @@ class SearchBarGroupState extends State<SearchBarGroup> {
     _selectedOptions.add(datas[0].name);
     await sharedPreferencesService.setStringList(
         'produitsSelected', _selectedOptions);
-  }
-
-  void getScanList() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ChooseMLMethod();
-      },
-    );
-    Navigator.of(context).pushNamed(TextRecognizerView.routeName);
   }
 
   @override
@@ -116,37 +114,6 @@ class SearchBarGroupState extends State<SearchBarGroup> {
           Icons.search,
           color: AppColor.blue,
         ),
-        suffix: Container(
-          margin: EdgeInsets.only(right: 15, top: 5),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                child: Icon(
-                  Icons.barcode_reader,
-                  size: 22,
-                  color: Colors.blue.shade400,
-                ),
-                onTap: () {
-                  this.getCodeBar();
-                },
-              ),
-              SizedBox(
-                width: 15,
-              ),
-              GestureDetector(
-                child: Icon(
-                  Icons.file_open_rounded,
-                  size: 22,
-                  color: Colors.blue.shade400,
-                ),
-                onTap: () {
-                  this.getScanList();
-                },
-              ),
-            ],
-          ),
-        ),
         contentPadding: const EdgeInsets.only(
           top: 13,
         ),
@@ -172,6 +139,30 @@ class SearchBarGroupState extends State<SearchBarGroup> {
         'produitsIDSelected', _selectedOptionsID);
   }
 
+  Future<void> processImage(InputImage inputImage) async {
+    if (!_canProcess) return;
+    if (_isBusy) return;
+    _isBusy = true;
+    setState(() {
+      _text = '';
+    });
+    final recognizedText = await _textRecognizer.processImage(inputImage);
+    if (inputImage.metadata?.size != null &&
+        inputImage.metadata?.rotation != null) {
+      final painter = TextRecognizerPainter(recognizedText,
+          inputImage.metadata!.size, inputImage.metadata!.rotation);
+      _customPaint = CustomPaint(painter: painter);
+    } else {
+      _text = 'Recognized text:\n\n${recognizedText.text}';
+      // TODO: set _customPaint to draw boundingRect on top of image
+      _customPaint = null;
+    }
+    _isBusy = false;
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -183,37 +174,50 @@ class SearchBarGroupState extends State<SearchBarGroup> {
         SizedBox(
           width: 10,
         ),
-        // Container(
-        //   margin: EdgeInsets.only(right: 10),
-        //   padding: EdgeInsets.all(5),
-        //   decoration: BoxDecoration(
-        //       borderRadius: BorderRadius.all(Radius.circular(15)),
-        //       border: Border.all(color: AppColor.secondary, width: 2)),
-        //   child: GestureDetector(
-        //     child: Icon(
-        //       Icons.file_open_rounded,
-        //       size: 20,
-        //     ),
-        //     onTap: () {
-        //       this.getScanList();
-        //     },
-        //   ),
-        // ),
-        // Container(
-        //   padding: EdgeInsets.all(5),
-        //   decoration: BoxDecoration(
-        //       borderRadius: BorderRadius.all(Radius.circular(15)),
-        //       border: Border.all(color: AppColor.secondary, width: 2)),
-        //   child: GestureDetector(
-        //     child: Icon(
-        //       Icons.barcode_reader,
-        //       size: 20,
-        //     ),
-        //     onTap: () {
-        //       this.getCodeBar();
-        //     },
-        //   ),
-        // ),
+        Container(
+          margin: EdgeInsets.only(right: 10),
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              border: Border.all(color: AppColor.secondary, width: 2)),
+          child: GestureDetector(
+            child: Icon(
+              Icons.file_open_rounded,
+              size: 20,
+            ),
+            onTap: () {
+              // this.getScanList();
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return ChooseMLMethod(
+                    title: 'Text Detector',
+                    customPaint: _customPaint,
+                    text: _text,
+                    onImage: (inputImage) {
+                      processImage(inputImage);
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              border: Border.all(color: AppColor.secondary, width: 2)),
+          child: GestureDetector(
+            child: Icon(
+              Icons.barcode_reader,
+              size: 20,
+            ),
+            onTap: () {
+              this.getCodeBar();
+            },
+          ),
+        ),
       ],
     );
   }

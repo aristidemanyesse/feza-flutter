@@ -77,6 +77,9 @@ class HomeScreenState extends State<HomeScreen> {
           body: SingleChildScrollView(
             child: Column(
               children: [
+                SizedBox(
+                  height: 15,
+                ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   height: Helper.getScreenHeight(context) * 0.3,
