@@ -13,17 +13,10 @@ import '../screens/medicamentScreen.dart';
 class PharmaciesGardeExpanded extends StatefulWidget {
   static const routeName = "/searchPageExpanded";
   final GlobalKey backgroundKey;
-  final List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines;
-  final Map<OfficineModel, int> ratioTableaux;
   final Map<OfficineModel, String> distanceTableaux;
-  final List<ProduitModel> initialProduits;
+
   const PharmaciesGardeExpanded(
-      {Key? key,
-      required this.backgroundKey,
-      required this.tableauxOfficines,
-      required this.ratioTableaux,
-      required this.initialProduits,
-      required this.distanceTableaux})
+      {Key? key, required this.backgroundKey, required this.distanceTableaux})
       : super(key: key);
 
   @override
@@ -53,12 +46,12 @@ class _PharmaciesGardeExpandedState extends State<PharmaciesGardeExpanded> {
   @override
   void didUpdateWidget(covariant PharmaciesGardeExpanded oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.tableauxOfficines.isNotEmpty) {
-      for (var item in widget.tableauxOfficines) {
-        containerKeys[item.keys.first.id!] = GlobalKey();
-        setState(() {});
-      }
-    }
+    // if (widget.tableauxOfficines.isNotEmpty) {
+    //   for (var item in widget.tableauxOfficines) {
+    //     containerKeys[item.keys.first.id!] = GlobalKey();
+    //     setState(() {});
+    //   }
+    // }
     sharedPreferencesService
         .watchString('scrollToContainerIndex')
         .listen((value) async {
@@ -175,103 +168,6 @@ class _PharmaciesGardeExpandedState extends State<PharmaciesGardeExpanded> {
                     color: AppColor.placeholder,
                     thickness: 1.5,
                   ),
-                ),
-                PharmacieItemCard2(
-                  name: "Pharmacie Sainte Barita",
-                  lieu: "Derrière wharf, casier",
-                  circonscription: "Port-Bouet",
-                  distance: "9 km",
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 3),
-                  child: Divider(
-                    color: AppColor.placeholder,
-                    thickness: 1.5,
-                  ),
-                ),
-                PharmacieItemCard2(
-                  name: "Pharmacie du soleil",
-                  lieu: "en face de la cité verte",
-                  circonscription: "Marcory",
-                  distance: "1.2 km",
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 3),
-                  child: Divider(
-                    color: AppColor.placeholder,
-                    thickness: 1.5,
-                  ),
-                ),
-                PharmacieItemCard2(
-                  name: "Pharmacie BBLeau",
-                  lieu: "New belle, carrefour chien",
-                  circonscription: "Treichville",
-                  distance: "25 km",
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 3),
-                  child: Divider(
-                    color: AppColor.placeholder,
-                    thickness: 1.5,
-                  ),
-                ),
-                PharmacieItemCard2(
-                  name: "Pharmacie Deloacder",
-                  lieu: "marché centre, face à mairie",
-                  circonscription: "Treichville",
-                  distance: "25 km",
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 3),
-                  child: Divider(
-                    color: AppColor.placeholder,
-                    thickness: 1.5,
-                  ),
-                ),
-                PharmacieItemCard2(
-                  name: "Pharmacie BBLeau",
-                  lieu: "New belle, carrefour chien",
-                  circonscription: "Treichville",
-                  distance: "25 km",
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 3),
-                  child: Divider(
-                    color: AppColor.placeholder,
-                    thickness: 1.5,
-                  ),
-                ),
-                PharmacieItemCard2(
-                  name: "Pharmacie Deloacder",
-                  lieu: "marché centre, face à mairie",
-                  circonscription: "Treichville",
-                  distance: "25 km",
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 3),
-                  child: Divider(
-                    color: AppColor.placeholder,
-                    thickness: 1.5,
-                  ),
-                ),
-                PharmacieItemCard2(
-                  name: "Pharmacie BBLeau",
-                  lieu: "New belle, carrefour chien",
-                  circonscription: "Treichville",
-                  distance: "25 km",
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 3),
-                  child: Divider(
-                    color: AppColor.placeholder,
-                    thickness: 1.5,
-                  ),
-                ),
-                PharmacieItemCard2(
-                  name: "Pharmacie Deloacder",
-                  lieu: "marché centre, face à mairie",
-                  circonscription: "Treichville",
-                  distance: "25 km",
                 ),
               ],
             ),

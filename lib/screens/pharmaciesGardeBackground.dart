@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:ipi/models/OfficineModel.dart';
-import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/loader.dart';
 import 'package:ipi/widgets/mapPopupPin.dart';
@@ -15,19 +14,13 @@ import 'package:location/location.dart';
 
 class PharmaciesGardeBackground extends StatefulWidget {
   static const routeName = "/PharmaciesGardeBackground";
-  final List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines;
   final Map<String, dynamic> routesOfficines;
-  final Map<OfficineModel, int> ratioTableaux;
   final Map<OfficineModel, String> distanceTableaux;
-  final List<ProduitModel> initialProduits;
   late LatLng position = LatLng(5.307600, -3.972112);
 
   PharmaciesGardeBackground(
       {Key? key,
-      required this.tableauxOfficines,
-      required this.initialProduits,
       required this.routesOfficines,
-      required this.ratioTableaux,
       required this.distanceTableaux,
       required this.position})
       : super(key: key);
@@ -109,11 +102,11 @@ class PharmaciesGardeBackgroundState extends State<PharmaciesGardeBackground>
   void didUpdateWidget(covariant PharmaciesGardeBackground oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Vérifiez si widget.tableauxOfficines est disponible
-    if (widget.tableauxOfficines.isNotEmpty) {
+    if (widget.distanceTableaux.isNotEmpty) {
       // Les données sont disponibles, vous pouvez exécuter votre code ici
       center = widget.position;
-      for (var item in widget.tableauxOfficines) {
-        OfficineModel officine = item.keys.first;
+      for (var item in widget.distanceTableaux.keys) {
+        OfficineModel officine = item;
         allMarkers.add(
             CustomMyMarker(LatLng(officine.lon!, officine.lat!), officine));
         allMarkersLatLng.add(LatLng(officine.lon!, officine.lat!));
@@ -303,8 +296,7 @@ class PharmaciesGardeBackgroundState extends State<PharmaciesGardeBackground>
                                       return MapMinPharmaciePopup(
                                         marker: marker,
                                         officine: element.officine,
-                                        ratio:
-                                            "${widget.ratioTableaux[element.officine].toString()}/${widget.initialProduits.length}",
+                                        ratio: "",
                                         distance: widget.distanceTableaux[
                                             element.officine]!,
                                         ittineraireFunction: () {

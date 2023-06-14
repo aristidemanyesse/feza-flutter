@@ -3,9 +3,13 @@ import 'dart:convert';
 
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:ipi/models/GardeModel.dart';
+import 'package:ipi/models/OfficineDeGardeModel.dart';
 import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/GardeProvider.dart';
+import 'package:ipi/provider/OfficineDEGardeProvider.dart';
 import 'package:ipi/provider/OfficineProvider.dart';
 import 'package:ipi/provider/ProduitInOfficineProvider.dart';
 import 'package:ipi/provider/ProduitProvider.dart';
@@ -26,13 +30,9 @@ class PharmaciesGarde extends StatefulWidget {
 }
 
 class _PharmaciesGardeState extends State<PharmaciesGarde> {
-  List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines = [];
-  Map<OfficineModel, int> ratioTableaux = {};
   Map<OfficineModel, String> distanceTableaux = {};
   Map<String, dynamic> routesOfficines = {};
-  List<ProduitModel> initialProduits = [];
   late LatLng myPosition = LatLng(5.307600, -3.972112);
-  late List<String>? datasGetted = [];
 
   final GlobalKey _previewdKey = GlobalKey();
   final GlobalKey _backgroundKey = GlobalKey();
@@ -47,14 +47,6 @@ class _PharmaciesGardeState extends State<PharmaciesGarde> {
   void initState() {
     super.initState();
     getData();
-
-    _sharedPreferencesSubscription = sharedPreferencesService
-        .watchString('produitsIDSelected')
-        .listen((value) async {
-      datasGetted =
-          await sharedPreferencesService.getStringList('produitsIDSelected');
-      setState(() {});
-    });
   }
 
   @override
@@ -65,7 +57,6 @@ class _PharmaciesGardeState extends State<PharmaciesGarde> {
 
   Future<void> getData() async {
     await sharedPreferencesService.init();
-
     String? userId = await sharedPreferencesService.getString('userId');
     String uniq = await UtilisateurProvider.getUniqID();
     List<UtilisateurModel> users =
@@ -76,38 +67,34 @@ class _PharmaciesGardeState extends State<PharmaciesGarde> {
     dynamic lon = await sharedPreferencesService.getString('lon');
     myPosition = LatLng(double.parse(lat), double.parse(lon));
 
-    datasGetted =
-        await sharedPreferencesService.getStringList('produitsIDSelected');
-    tableauxOfficines = [];
-    ratioTableaux = {};
     distanceTableaux = {};
-    List<dynamic> datas =
-        await ProduitInOfficineProvider.searchProduitsAvialableInOfficine({
-      "circonscription": user.circonscription!.id,
-      "produits": datasGetted,
-      "longitude": myPosition.longitude,
-      "latitude": myPosition.latitude
+    DateTime today = new DateTime.now().toLocal();
+    List<GardeModel> gardes = await GardeProvider.all({
+      "fin": "${today.year}-${today.month}-${today.day}",
+      "circonscription": user.circonscription!.id
     });
 
-    if (datas.length > 0) {
-      initialProduits =
-          await ProduitProvider.specificAll({"produits": datasGetted});
+    if (gardes.length > 0) {
+      GardeModel garde = gardes[0];
 
-      for (var element in datas) {
-        List<OfficineModel> officines =
-            await OfficineProvider.all({"id": element["officine"]});
-        OfficineModel officine = officines[0];
-        List<ProduitModel> produits = await ProduitProvider.specificAll(
-            {"produits": element["produits"]});
+      List<OfficineDeGardeModel> datas = await OfficineDeGardeProvider.all(
+          {"garde": garde.id, "circonscription": user.circonscription!.id});
 
-        tableauxOfficines.add({officine: produits});
-        ratioTableaux[officine] = element["ratio"];
-        routesOfficines[officine.id!] = jsonDecode(element["route"]);
+      for (var elem in datas) {
+        distanceTableaux[elem.officine!] = "";
+      }
+      // double distance = element["distance"];
+      //   distanceTableaux[officine] = distance < 1
+      //       ? "${distance * 1000} m"
+      //       : "${distance.toStringAsFixed(2)} km";
 
-        double distance = element["distance"];
-        distanceTableaux[officine] = distance < 1
-            ? "${distance * 1000} m"
-            : "${distance.toStringAsFixed(2)} km";
+      if (distanceTableaux.length > 0) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return NoPharmacieAvialable();
+          },
+        );
       }
     } else {
       showDialog(
@@ -129,20 +116,14 @@ class _PharmaciesGardeState extends State<PharmaciesGarde> {
         barrierDismissible: false,
         barrierColor: Colors.transparent,
         previewWidget: PharmaciesGardePreview(
-            key: _previewdKey, tableauxOfficines: tableauxOfficines),
+            key: _previewdKey, distanceTableaux: distanceTableaux),
         expandedWidget: PharmaciesGardeExpanded(
             key: _expandedKey,
-            ratioTableaux: ratioTableaux,
             distanceTableaux: distanceTableaux,
-            tableauxOfficines: tableauxOfficines,
-            initialProduits: initialProduits,
             backgroundKey: _backgroundKey),
         backgroundWidget: PharmaciesGardeBackground(
             key: _backgroundKey,
-            tableauxOfficines: tableauxOfficines,
-            ratioTableaux: ratioTableaux,
             distanceTableaux: distanceTableaux,
-            initialProduits: initialProduits,
             routesOfficines: routesOfficines,
             position: myPosition),
         duration: const Duration(milliseconds: 10),

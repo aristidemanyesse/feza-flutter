@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/OfficineModel.dart';
-import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/widgets/bounceAnimation.dart';
 import 'package:ipi/widgets/indicator.dart';
 import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 
 class PharmaciesGardePreview extends StatefulWidget {
   static const routeName = "/PharmaciesGardePreview";
-  final List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines;
-  const PharmaciesGardePreview({Key? key, required this.tableauxOfficines})
+  late Map<OfficineModel, String> distanceTableaux = {};
+  PharmaciesGardePreview({Key? key, required this.distanceTableaux})
       : super(key: key);
 
   @override
@@ -56,11 +55,11 @@ class _PharmaciesGardePreviewState extends State<PharmaciesGardePreview> {
                   color: Colors.grey.shade300,
                   margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
                 ),
-                widget.tableauxOfficines.length > 0
+                widget.distanceTableaux.length > 0
                     ? Container(
                         alignment: Alignment.center,
                         child: Text(
-                          "${widget.tableauxOfficines.length} pharmacies de garde trouvées",
+                          "${widget.distanceTableaux.length} pharmacies de garde trouvées",
                           style: TextStyle(
                               color: AppColor.green,
                               fontWeight: FontWeight.bold),
