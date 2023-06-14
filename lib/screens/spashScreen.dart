@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/introScreen.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/myLogo.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/helper.dart';
@@ -80,7 +81,25 @@ class _SplashScreenState extends State<SplashScreen> {
         'lon', position!.longitude.toString());
   }
 
-  Future<void> getDatas() {}
+  Future<void> getDatas() async {
+    await sharedPreferencesService.init();
+    List<ProduitModel> produits = [];
+    produits = await sharedPreferencesService.getObjectList(
+        'produits',
+        // ignore: sdk_version_constructor_tearoffs
+        ProduitModel.fromJson);
+    print("================================================");
+    print(produits.length);
+    if (produits.length == 0) {
+      produits = await ProduitProvider.all({});
+      List<String> nomsProduits =
+          produits.map((produit) => produit.name).toList();
+
+      sharedPreferencesService.setObjectList(
+          'produits', produits, ProduitModel.toJsonMap);
+      sharedPreferencesService.setStringList('nomsProduits', nomsProduits);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

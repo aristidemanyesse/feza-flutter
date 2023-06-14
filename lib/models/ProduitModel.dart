@@ -65,4 +65,8 @@ class ProduitModel {
         "createAt": createAt,
         "updateAt": updateAt
       };
+
+  static dynamic toJsonMap(ProduitModel element) => element.toJson();
+  static dynamic fromJsonMap(Map<String, dynamic> json) =>
+      ProduitModel.fromJson(json);
 }

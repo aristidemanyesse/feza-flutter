@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesService {
@@ -44,5 +45,53 @@ class SharedPreferencesService {
   Stream<List<String>> watchStringList(String key) {
     return _valueStreamController.stream
         .map((value) => value.split(',').map((item) => item.trim()).toList());
+  }
+
+  Future<List<Map<String, dynamic>>> getMapList(String key) async {
+    final jsonString = _prefs?.getString(key) ?? '';
+    if (jsonString.isEmpty) {
+      return [];
+    }
+    final jsonList = jsonDecode(jsonString);
+    return List<Map<String, dynamic>>.from(jsonList);
+  }
+
+  Future<void> setMapList(String key, List<Map<String, dynamic>> value) async {
+    final jsonString = jsonEncode(value);
+    await _prefs?.setString(key, jsonString);
+    _valueStreamController.add(jsonString);
+  }
+
+  Stream<List<Map<String, dynamic>>> watchMapList(String key) {
+    return _valueStreamController.stream.map((jsonString) {
+      final jsonList = jsonDecode(jsonString);
+      return List<Map<String, dynamic>>.from(jsonList);
+    });
+  }
+
+  Future<List<T>> getObjectList<T>(
+      String key, T Function(Map<String, dynamic>) fromJson) async {
+    final jsonString = _prefs?.getString(key) ?? '';
+    if (jsonString.isEmpty) {
+      return [];
+    }
+    final jsonArray = jsonDecode(jsonString);
+    return List<T>.from(jsonArray.map((json) => fromJson(json)));
+  }
+
+  Future<void> setObjectList<T>(
+      String key, List<T> value, dynamic Function(T) toJson) async {
+    final jsonArray = value.map((item) => toJson(item)).toList();
+    final jsonString = jsonEncode(jsonArray);
+    await _prefs?.setString(key, jsonString);
+    _valueStreamController.add(jsonString);
+  }
+
+  Stream<List<T>> watchObjectList<T>(
+      String key, T Function(Map<String, dynamic>) fromJson) {
+    return _valueStreamController.stream.map((jsonString) {
+      final jsonArray = jsonDecode(jsonString);
+      return List<T>.from(jsonArray.map((json) => fromJson(json)));
+    });
   }
 }
