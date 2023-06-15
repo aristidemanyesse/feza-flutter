@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/OfficineModel.dart';
-import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/utils/helper.dart';

@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import '../utils/helper.dart';
 
 class NoPharmacieAvialable extends StatelessWidget {
   NoPharmacieAvialable();
@@ -26,7 +23,7 @@ class NoPharmacieAvialable extends StatelessWidget {
                       padding: EdgeInsets.only(bottom: 5),
                       alignment: Alignment.center,
                       child: Text(
-                        "😩😟 Hhmmm !",
+                        "😩😟 Ooohhh !",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,

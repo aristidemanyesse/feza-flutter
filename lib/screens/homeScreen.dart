@@ -6,6 +6,7 @@ import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/searchPage.dart';
+import 'package:ipi/screens/test.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/SuggestionItemCard.dart';
 import 'package:ipi/widgets/confirmExitDialog.dart';
@@ -234,7 +235,7 @@ class HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                _selectedOptions.length > 2
+                                _selectedOptions.length >= 2
                                     ? Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
@@ -281,10 +282,11 @@ class HomeScreenState extends State<HomeScreen> {
                         ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 10,
                 ),
                 _selectedOptions.length > 0
                     ? Container(
+                        margin: EdgeInsets.only(bottom: 10),
                         height: Helper.getScreenHeight(context) * 0.1,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

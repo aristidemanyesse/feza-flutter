@@ -174,44 +174,44 @@ class SearchBarGroupState extends State<SearchBarGroup> {
         SizedBox(
           width: 10,
         ),
+        // Container(
+        //   margin: EdgeInsets.only(right: 10),
+        //   padding: EdgeInsets.all(5),
+        //   decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.all(Radius.circular(15)),
+        //       border: Border.all(color: AppColor.secondary, width: 2)),
+        //   child: GestureDetector(
+        //     child: Icon(
+        //       Icons.file_open_rounded,
+        //       size: 20,
+        //     ),
+        //     onTap: () {
+        //       // this.getScanList();
+        //       showDialog(
+        //         context: context,
+        //         builder: (BuildContext context) {
+        //           return ChooseMLMethod(
+        //             title: 'Text Detector',
+        //             customPaint: _customPaint,
+        //             text: _text,
+        //             onImage: (inputImage) {
+        //               processImage(inputImage);
+        //             },
+        //           );
+        //         },
+        //       );
+        //     },
+        //   ),
+        // ),
         Container(
-          margin: EdgeInsets.only(right: 10),
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              border: Border.all(color: AppColor.secondary, width: 2)),
-          child: GestureDetector(
-            child: Icon(
-              Icons.file_open_rounded,
-              size: 20,
-            ),
-            onTap: () {
-              // this.getScanList();
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return ChooseMLMethod(
-                    title: 'Text Detector',
-                    customPaint: _customPaint,
-                    text: _text,
-                    onImage: (inputImage) {
-                      processImage(inputImage);
-                    },
-                  );
-                },
-              );
-            },
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
+              borderRadius: BorderRadius.all(Radius.circular(50)),
               border: Border.all(color: AppColor.secondary, width: 2)),
           child: GestureDetector(
             child: Icon(
               Icons.barcode_reader,
-              size: 20,
+              size: 26,
             ),
             onTap: () {
               this.getCodeBar();

@@ -1,59 +1,63 @@
-import 'dart:async';
-import 'dart:convert';
-
-import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:ipi/models/GardeModel.dart';
 import 'package:ipi/models/OfficineDeGardeModel.dart';
-import 'package:ipi/models/OfficineModel.dart';
-import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/GardeProvider.dart';
-import 'package:ipi/provider/OfficineDEGardeProvider.dart';
+import 'package:ipi/provider/OfficineDeGardeProvider.dart';
 import 'package:ipi/provider/OfficineProvider.dart';
 import 'package:ipi/provider/ProduitInOfficineProvider.dart';
 import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
-import 'package:ipi/screens/pharmaciesGardeBackground.dart';
-import 'package:ipi/screens/pharmaciesGardeExpanded.dart';
-import 'package:ipi/screens/pharmaciesGardePreview.dart';
-import 'package:ipi/utils/sharedpre.dart';
+import 'package:ipi/widgets/indicator.dart';
+import 'package:ipi/widgets/loader.dart';
 import 'package:ipi/widgets/noPharmacieAvialable.dart';
+import 'package:ipi/widgets/pharmacieItemCard.dart';
+import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/utils/helper.dart';
+import 'package:ipi/utils/sharedpre.dart';
+import 'package:ipi/widgets/mapPin.dart';
+import 'package:ipi/widgets/mapPopupPin.dart';
+import 'package:flutter_map/plugin_api.dart';
+import 'dart:convert';
 
 class PharmaciesGarde extends StatefulWidget {
-  PharmaciesGarde({Key? key}) : super(key: key);
-  static const routeName = "/searchPage";
+  static const routeName = "/PharmaciesGarde";
+
+  PharmaciesGarde({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<PharmaciesGarde> createState() => _PharmaciesGardeState();
+  State<PharmaciesGarde> createState() => PharmaciesGardeState();
 }
 
-class _PharmaciesGardeState extends State<PharmaciesGarde> {
-  Map<OfficineModel, String> distanceTableaux = {};
-  Map<String, dynamic> routesOfficines = {};
-  late LatLng myPosition = LatLng(5.307600, -3.972112);
+class PharmaciesGardeState extends State<PharmaciesGarde>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
+  late List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines = [];
+  List<OfficineModel> officines = [];
+  late Map<String, dynamic> routesOfficines = {};
+  late Map<OfficineModel, int> ratioTableaux = {};
+  late Map<OfficineModel, String> distanceTableaux = {};
+  late List<ProduitModel> initialProduits = [];
+  late LatLng position = LatLng(5.307600, -3.972112);
 
-  final GlobalKey _previewdKey = GlobalKey();
-  final GlobalKey _backgroundKey = GlobalKey();
-  final GlobalKey _expandedKey = GlobalKey();
-
-  late StreamSubscription<String> _sharedPreferencesSubscription;
-
+  MapController mapController = MapController();
+  final PopupController _popupLayerController = PopupController();
+  LatLng center = LatLng(5.260298, -3.9522842);
+  LatLng myPosition = LatLng(5.260298, -3.9522842);
   SharedPreferencesService sharedPreferencesService =
       SharedPreferencesService();
 
-  @override
-  void initState() {
-    super.initState();
-    getData();
-  }
-
-  @override
-  void dispose() {
-    _sharedPreferencesSubscription.cancel();
-    super.dispose();
-  }
+  List<CustomMyMarker> markers = [];
+  List<LatLng> markersLatLng = [];
+  Polyline routeCoordinates = Polyline(points: []);
+  bool ready = false;
 
   Future<void> getData() async {
     await sharedPreferencesService.init();
@@ -83,13 +87,13 @@ class _PharmaciesGardeState extends State<PharmaciesGarde> {
       for (var elem in datas) {
         distanceTableaux[elem.officine!] = "";
       }
-      // double distance = element["distance"];
-      //   distanceTableaux[officine] = distance < 1
-      //       ? "${distance * 1000} m"
-      //       : "${distance.toStringAsFixed(2)} km";
 
       if (distanceTableaux.length > 0) {
         showDialog(
+          // double distance = element["distance"];
+          //   distanceTableaux[officine] = distance < 1
+          //       ? "${distance * 1000} m"
+          //       : "${distance.toStringAsFixed(2)} km";
           context: context,
           builder: (BuildContext context) {
             return NoPharmacieAvialable();
@@ -106,29 +110,401 @@ class _PharmaciesGardeState extends State<PharmaciesGarde> {
     }
   }
 
+  static const _startedId = 'AnimatedMapController#MoveStarted';
+  static const _inProgressId = 'AnimatedMapController#MoveInProgress';
+  static const _finishedId = 'AnimatedMapController#MoveFinished';
+
+  void _animatedMapMove(LatLng destLocation, double destZoom) {
+    // Create some tweens. These serve to split up the transition from one location to another.
+    // In our case, we want to split the transition be<tween> our current map center and the destination.
+    final latTween = Tween<double>(
+        begin: mapController.center.latitude, end: destLocation.latitude);
+    final lngTween = Tween<double>(
+        begin: mapController.center.longitude, end: destLocation.longitude);
+    final zoomTween = Tween<double>(begin: mapController.zoom, end: destZoom);
+
+    // Create a animation controller that has a duration and a TickerProvider.
+    final controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    // The animation determines what path the animation will take. You can try different Curves values, although I found
+    // fastOutSlowIn to be my favorite.
+    final Animation<double> animation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+
+    // Note this method of encoding the target destination is a workaround.
+    // When proper animated movement is supported (see #1263) we should be able
+    // to detect an appropriate animated movement event which contains the
+    // target zoom/center.
+    final startIdWithTarget =
+        '$_startedId#${destLocation.latitude},${destLocation.longitude},$destZoom';
+    bool hasTriggeredMove = false;
+
+    controller.addListener(() {
+      final String id;
+      if (animation.value == 1.0) {
+        id = _finishedId;
+      } else if (!hasTriggeredMove) {
+        id = startIdWithTarget;
+      } else {
+        id = _inProgressId;
+      }
+
+      hasTriggeredMove |= mapController.move(
+        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+        zoomTween.evaluate(animation),
+        id: id,
+      );
+    });
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.dispose();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.dispose();
+      }
+    });
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
+  void targetMarker(String? id) {
+    for (var marker in markers) {
+      if (marker.officine.id == id) {
+        scrollToContainer(id!);
+        _animatedMapMove(marker.point, 13);
+      }
+    }
+  }
+
+  void scrollToContainer(String index) async {
+    await sharedPreferencesService.init();
+    await sharedPreferencesService.setString('scrollToContainerIndex', index);
+    var geojson = routesOfficines[index];
+    List<LatLng> points = [];
+    for (var element in jsonDecode(geojson)["geometry"]["coordinates"]) {
+      points.add(LatLng(element[1], element[0]));
+    }
+
+    routeCoordinates = Polyline(
+        points: points,
+        color: Colors.orange,
+        borderStrokeWidth: 3,
+        strokeWidth: 3,
+        borderColor: Colors.white);
+    mapController.fitBounds(getBoundsFromCoordinates(routeCoordinates.points));
+    Navigator.pop(context);
+    setState(() {});
+  }
+
+  LatLngBounds getBoundsFromCoordinates(List<LatLng> coordinates) {
+    double minLat = double.infinity;
+    double maxLat = -double.infinity;
+    double minLng = double.infinity;
+    double maxLng = -double.infinity;
+
+    for (LatLng coordinate in coordinates) {
+      if (coordinate.latitude < minLat) minLat = coordinate.latitude;
+      if (coordinate.latitude > maxLat) maxLat = coordinate.latitude;
+      if (coordinate.longitude < minLng) minLng = coordinate.longitude;
+      if (coordinate.longitude > maxLng) maxLng = coordinate.longitude;
+    }
+
+    return LatLngBounds(
+      LatLng(minLat, minLng),
+      LatLng(maxLat, maxLng),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: DraggableBottomSheet(
-        minExtent: MediaQuery.of(context).size.height * 0.15,
-        useSafeArea: false,
-        curve: Curves.easeIn,
-        barrierDismissible: false,
-        barrierColor: Colors.transparent,
-        previewWidget: PharmaciesGardePreview(
-            key: _previewdKey, distanceTableaux: distanceTableaux),
-        expandedWidget: PharmaciesGardeExpanded(
-            key: _expandedKey,
-            distanceTableaux: distanceTableaux,
-            backgroundKey: _backgroundKey),
-        backgroundWidget: PharmaciesGardeBackground(
-            key: _backgroundKey,
-            distanceTableaux: distanceTableaux,
-            routesOfficines: routesOfficines,
-            position: myPosition),
-        duration: const Duration(milliseconds: 10),
-        maxExtent: MediaQuery.of(context).size.height * 0.5,
-        onDragging: (pos) {},
+      body: Stack(
+        children: [
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        child: Stack(
+                          children: [
+                            FlutterMap(
+                              mapController: mapController,
+                              options: MapOptions(
+                                center: center,
+                                zoom: 13,
+                                minZoom: 6,
+                                maxZoom: 22,
+                                scrollWheelVelocity: 2.0,
+                                interactiveFlags: InteractiveFlag.all &
+                                    ~InteractiveFlag.rotate,
+                                onTap: (_, __) =>
+                                    _popupLayerController.hideAllPopups(),
+                              ),
+                              children: [
+                                TileLayer(
+                                  urlTemplate:
+                                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                  subdomains: const ['a', 'b', 'c'],
+                                ),
+                                PolylineLayer(
+                                  polylines: [routeCoordinates],
+                                ),
+                                PopupMarkerLayer(
+                                  options: PopupMarkerLayerOptions(
+                                    popupController: _popupLayerController,
+                                    markers: markers
+                                        .map((element) => Marker(
+                                              point: element.point,
+                                              width: 35,
+                                              height: 35,
+                                              builder: (context) =>
+                                                  PharmacieMapPin(),
+                                              anchorPos: AnchorPos.align(
+                                                  AnchorAlign.top),
+                                            ))
+                                        .toList(),
+                                    popupDisplayOptions: PopupDisplayOptions(
+                                      builder: (BuildContext context,
+                                          Marker marker) {
+                                        CustomMyMarker element =
+                                            markers.firstWhere((element) =>
+                                                element.point == marker.point);
+                                        return MapMinPharmaciePopup(
+                                          marker: marker,
+                                          officine: element.officine,
+                                          ratio:
+                                              "${ratioTableaux[element.officine].toString()}/${initialProduits.length}",
+                                          distance: distanceTableaux[
+                                              element.officine]!,
+                                          ittineraireFunction: () {
+                                            // scrollToContainer(
+                                            //     element.officine.id!);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                PopupMarkerLayer(
+                                  options: PopupMarkerLayerOptions(
+                                    // popupController: _popupLayerController,
+                                    markers: [
+                                      Marker(
+                                        point: myPosition,
+                                        width: 35,
+                                        height: 35,
+                                        builder: (context) => MyPinInMap(),
+                                        anchorPos:
+                                            AnchorPos.align(AnchorAlign.top),
+                                      )
+                                    ],
+                                    popupDisplayOptions: PopupDisplayOptions(
+                                        builder: (BuildContext context,
+                                            Marker marker) {
+                                      return Container(
+                                        padding: EdgeInsets.all(7),
+                                        margin: EdgeInsets.all(7),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Text("Vous êtes ici !"),
+                                      );
+                                    }),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Visibility(
+                              child: LoaderScreen(),
+                              visible: !ready,
+                            ),
+                          ],
+                        )),
+                    Container(
+                      height: Helper.getScreenHeight(context) * 0.09,
+                      width: Helper.getScreenWidth(context),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0.0, 0.4],
+                          colors: [
+                            Colors.black.withOpacity(0.9),
+                            Colors.black.withOpacity(0.0),
+                          ],
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 12),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100))),
+                                child: Icon(
+                                  Icons.arrow_back_ios_rounded,
+                                  size: 20,
+                                  color: AppColor.blue,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ready
+                        ? Positioned(
+                            bottom: 20,
+                            right: 40,
+                            left: 40,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                    useSafeArea: true,
+                                    showDragHandle: true,
+                                    backgroundColor: Colors.transparent,
+                                    context: context,
+                                    builder: (context) {
+                                      return Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(15, 10, 15, 5),
+                                        margin:
+                                            EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                        decoration: ShapeDecoration(
+                                          color: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(40),
+                                              topRight: Radius.circular(40),
+                                            ),
+                                          ),
+                                        ),
+                                        child: Container(
+                                          child: Column(
+                                            children: [
+                                              Indicator(),
+                                              const SizedBox(height: 15),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text("Circonscription"),
+                                                  SelectCirconscriptionBloc(),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 15),
+                                              Container(
+                                                height: 5,
+                                                color: Colors.grey.shade300,
+                                                margin: EdgeInsets.fromLTRB(
+                                                    0, 0, 0, 7),
+                                              ),
+                                              const SizedBox(height: 16),
+                                              Expanded(
+                                                  child: SingleChildScrollView(
+                                                child: Column(
+                                                  children: tableauxOfficines
+                                                      .map((element) {
+                                                    OfficineModel officine =
+                                                        element.keys.first;
+                                                    List<ProduitModel>
+                                                        produits = element[
+                                                                element.keys
+                                                                    .first] ??
+                                                            [];
+
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        targetMarker(
+                                                            officine.id);
+                                                      },
+                                                      child: Container(
+                                                        color:
+                                                            Colors.transparent,
+                                                        child: Column(
+                                                          children: [
+                                                            PharmacieItemCard(
+                                                              officine:
+                                                                  officine,
+                                                              produits:
+                                                                  produits,
+                                                              initialProduits:
+                                                                  initialProduits,
+                                                              distance:
+                                                                  distanceTableaux[
+                                                                          officine] ??
+                                                                      "",
+                                                              ratio: ratioTableaux[
+                                                                      officine]
+                                                                  .toString(),
+                                                            ),
+                                                            Container(
+                                                              margin: EdgeInsets
+                                                                  .symmetric(
+                                                                      vertical:
+                                                                          3),
+                                                              child: Divider(
+                                                                color: AppColor
+                                                                    .placeholder,
+                                                                thickness: 1.5,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ))
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
+                              child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 7),
+                                  child: Text(
+                                    'Voir la liste des pharmacies de garde (${tableauxOfficines.length}) ',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                        letterSpacing: 0.6),
+                                  )),
+                            ),
+                          )
+                        : Container()
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

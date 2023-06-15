@@ -134,9 +134,9 @@ class _MenuScreen extends State<MenuScreen> {
                               // ),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                      ProfileScreen.routeName,
-                                      arguments: {"user": user});
+                                  // Navigator.of(context).pushNamed(
+                                  //     ProfileScreen.routeName,
+                                  //     arguments: {"user": user});
                                 },
                                 child: MenuCard(
                                   imageShape: ClipPath(

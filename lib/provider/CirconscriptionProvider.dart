@@ -18,12 +18,4 @@ class CirconscriptionProvider extends ChangeNotifier {
     }
     return circonscriptions;
   }
-
-  Future<void> one(String userid) async {
-    Map<String, dynamic> variables = {};
-    Map<String, dynamic>? circonscriptions;
-    circonscriptions =
-        await ApiService.request(CirconscriptionSchema.ALL, variables);
-    notifyListeners();
-  }
 }

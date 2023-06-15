@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import '../utils/helper.dart';
 
 class ConfirmExitDialog extends StatelessWidget {
   ConfirmExitDialog();
@@ -11,7 +10,7 @@ class ConfirmExitDialog extends StatelessWidget {
     return Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          height: 175,
+          height: 185,
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
@@ -49,7 +48,7 @@ class ConfirmExitDialog extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 25,
+                  height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,7 +67,7 @@ class ConfirmExitDialog extends StatelessWidget {
                           child: Text(
                             "Oui",
                             style: TextStyle(
-                                fontSize: 17,
+                                fontSize: 15,
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold),
                           )),
@@ -85,8 +84,8 @@ class ConfirmExitDialog extends StatelessWidget {
                             Navigator.pop(context);
                           },
                           child: Text(
-                            "Non, Annuler",
-                            style: TextStyle(fontSize: 17),
+                            "Non, je reste",
+                            style: TextStyle(fontSize: 15),
                           )),
                     )
                   ],

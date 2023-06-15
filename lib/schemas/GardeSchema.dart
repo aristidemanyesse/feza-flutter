@@ -1,4 +1,4 @@
-class OfficineSchema {
+class GardeSchema {
   static const String ALL = r"""
     query ($fin: CustomDate) {
       searchGarde(fin_Gte: $fin) {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/screens/medicamentScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
+import 'package:ipi/screens/test.dart';
 import 'package:ipi/widgets/testPage.dart';
+import 'package:page_transition/page_transition.dart';
 
 import './screens/spashScreen.dart';
 import './screens/landingScreen.dart';
@@ -89,7 +91,110 @@ class MyApp extends StatelessWidget {
           DessertScreen.routeName: (context) => DessertScreen(),
           MedicamentScreen.routeName: (context) => MedicamentScreen(),
           HomeScreen.routeName: (context) => HomeScreen(),
-          TextRecognizerView.routeName: (context) => TextRecognizerView(),
+          // TextRecognizerView.routeName: (context) => TextRecognizerView(),
+          TextPage.routeName: (context) => TextPage(),
+        },
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case LandingScreen.routeName:
+              return PageTransition(
+                child: LandingScreen(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            case LoginScreen.routeName:
+              return PageTransition(
+                child: LoginScreen(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            case SendOTPScreen.routeName:
+              return PageTransition(
+                child: SendOTPScreen(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            case IntroScreen.routeName:
+              return PageTransition(
+                child: IntroScreen(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            case SearchPage.routeName:
+              return PageTransition(
+                child: SearchPage(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            case MenuScreen.routeName:
+              return PageTransition(
+                child: MenuScreen(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            case PharmaciesGarde.routeName:
+              return PageTransition(
+                child: PharmaciesGarde(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            case ProfileScreen.routeName:
+              return PageTransition(
+                child: ProfileScreen(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            case DessertScreen.routeName:
+              return PageTransition(
+                child: DessertScreen(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            case MedicamentScreen.routeName:
+              return PageTransition(
+                child: MedicamentScreen(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            case HomeScreen.routeName:
+              return PageTransition(
+                child: HomeScreen(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            case TextPage.routeName:
+              return PageTransition(
+                child: TextPage(),
+                type: PageTransitionType.leftToRightWithFade,
+                settings: settings,
+              );
+              break;
+
+            default:
+              return null;
+          }
         },
       ),
     );

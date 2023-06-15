@@ -82,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await sharedPreferencesService.setString(
         'lat', position!.latitude.toString());
     await sharedPreferencesService.setString(
-        'lon', position!.longitude.toString());
+        'lon', position.longitude.toString());
   }
 
   Future<void> getDatas() async {

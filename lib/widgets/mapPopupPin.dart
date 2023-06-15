@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/utils/helper.dart';
+import 'package:marquee_widget/marquee_widget.dart';
 
 class MapMinPharmaciePopup extends StatelessWidget {
   final Marker marker;
@@ -58,14 +59,20 @@ class MapMinPharmaciePopup extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text(
-                      officine.name!,
-                      overflow: TextOverflow.fade,
-                      softWrap: true,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
+                    Marquee(
+                      child: Text(
+                        officine.name!,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
                       ),
+                      direction: Axis.horizontal,
+                      textDirection: TextDirection.ltr,
+                      animationDuration: Duration(seconds: 4),
+                      backDuration: Duration(milliseconds: 5000),
+                      pauseDuration: Duration(milliseconds: 1000),
+                      directionMarguee: DirectionMarguee.oneDirection,
                     ),
                     const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
                     Text(

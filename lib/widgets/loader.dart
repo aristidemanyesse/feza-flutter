@@ -19,7 +19,7 @@ class _LoaderScreenState extends State<LoaderScreen>
       vsync: this,
       duration: Duration(seconds: 30),
     )..repeat(reverse: true);
-    _animation = Tween(begin: 2.5, end: 1.0).animate(
+    _animation = Tween(begin: 1.5, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeInOut,
@@ -57,7 +57,7 @@ class _LoaderScreenState extends State<LoaderScreen>
         Container(
           width: Helper.getScreenWidth(context),
           height: Helper.getScreenHeight(context),
-          color: Colors.white.withOpacity(0.75),
+          color: Colors.white.withOpacity(0.85),
         ),
         Center(
           child: Column(
@@ -68,7 +68,7 @@ class _LoaderScreenState extends State<LoaderScreen>
                 alignment: Alignment.center,
                 children: [
                   Lottie.asset("assets/lotties/search2.json",
-                      width: Helper.getScreenWidth(context) * 0.8)
+                      width: Helper.getScreenWidth(context) * 0.93)
                 ],
               ),
               Text(
@@ -77,7 +77,7 @@ class _LoaderScreenState extends State<LoaderScreen>
                 style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black),
+                    color: Colors.grey),
               )
             ],
           ),

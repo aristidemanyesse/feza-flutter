@@ -25,11 +25,4 @@ class ProduitInOfficineProvider extends ChangeNotifier {
         variables);
     return datas["searchProduitsAvialableInOfficine"];
   }
-
-  Future<void> one(String userid) async {
-    Map<String, dynamic> variables = {};
-    Map<String, dynamic>? produits;
-    produits = await ApiService.request(ProduitSchema.ALL, variables);
-    notifyListeners();
-  }
 }
