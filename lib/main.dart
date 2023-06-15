@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
       },
       child: MaterialApp(
         title: 'ipi App',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: "Metropolis",
           primarySwatch: Colors.blue,

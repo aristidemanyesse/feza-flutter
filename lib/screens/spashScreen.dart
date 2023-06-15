@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
         UtilisateurModel user = users[0];
         print(user);
         Navigator.of(context)
-            .pushNamed(HomeScreen.routeName, arguments: {"user": user});
+            .pushNamed(IntroScreen.routeName, arguments: {"user": user});
       }
     } else {
       Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);

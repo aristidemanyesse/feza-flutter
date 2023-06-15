@@ -88,6 +88,16 @@ class _SendOTPScreen extends State<SendOTPScreen> {
     }
   }
 
+  void sendOTP() {
+    Fluttertoast.showToast(
+        msg: "OTP : ${user.otp}",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey,
+        textColor: Colors.white,
+        fontSize: 14.0);
+  }
+
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
@@ -96,6 +106,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
     setState(() {
       numero = arguments["numero"];
       user = arguments["user"];
+      sendOTP();
     });
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
@@ -238,7 +249,9 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                         height: 15,
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          sendOTP();
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

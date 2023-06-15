@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
+import 'package:ipi/screens/intro1.dart';
+import 'package:ipi/screens/intro2.dart';
+import 'package:ipi/screens/intro3.dart';
 import 'package:ipi/screens/landingScreen.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:lottie/lottie.dart';
@@ -14,24 +17,7 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen> {
   var _controller;
   int count = 0;
-  final List<Map<String, String>> _pages = [
-    {
-      "image": "assets/lotties/barcode.json",
-      "title": "Scanne ton ordonnance",
-      "desc": "Accédez rapidement aux médicaments dont vous avez besoin"
-    },
-    {
-      "image": "assets/lotties/search.json",
-      "title": "Trouve les pharmarcies à proximité",
-      "desc":
-          "Localisez les pharmacies les plus proches avec vos médicaments en stock"
-    },
-    {
-      "image": "assets/lotties/economie.json",
-      "title": "Economise ton temps et ton argent",
-      "desc": "Économisez votre temps, votre argent et évitez les tracas"
-    },
-  ];
+  final List<Widget> _pages = [Intro1(), Intro2(), Intro3()];
 
   @override
   void initState() {
@@ -58,121 +44,85 @@ class _IntroScreenState extends State<IntroScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 245, 239, 235),
       body: Container(
         width: Helper.getScreenWidth(context),
         height: Helper.getScreenHeight(context),
         child: SafeArea(
             child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
+            Container(
               child: Column(
+                children: [],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: PageView.builder(
+                controller: _controller,
+                onPageChanged: (value) {
+                  setState(() {
+                    count = value;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  return _pages[count];
+                },
+                itemCount: _pages.length,
+              ),
+            ),
+            Container(
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Spacer(),
                   Container(
-                    height: 400,
-                    width: double.infinity,
-                    child: PageView.builder(
-                      controller: _controller,
-                      onPageChanged: (value) {
-                        setState(() {
-                          count = value;
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        return Lottie.asset(_pages[count]["image"]!);
-                      },
-                      itemCount: _pages.length,
+                    height: 2,
+                    width: 10,
+                  ),
+                  CircleAvatar(
+                    radius: 3,
+                    backgroundColor:
+                        count == 0 ? AppColor.blue : AppColor.placeholder,
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  CircleAvatar(
+                    radius: 3,
+                    backgroundColor:
+                        count == 1 ? AppColor.blue : AppColor.placeholder,
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  CircleAvatar(
+                    radius: 3,
+                    child: SizedBox(
+                      height: 1,
+                      width: 5,
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 2,
-                        width: 10,
-                      ),
-                      CircleAvatar(
-                        radius: 5,
-                        backgroundColor:
-                            count == 0 ? AppColor.blue : AppColor.placeholder,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      CircleAvatar(
-                        radius: 5,
-                        backgroundColor:
-                            count == 1 ? AppColor.blue : AppColor.placeholder,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      CircleAvatar(
-                        radius: 5,
-                        child: SizedBox(
-                          height: 1,
-                          width: 5,
-                        ),
-                        backgroundColor:
-                            count == 2 ? AppColor.blue : AppColor.placeholder,
-                      )
-                    ],
-                  ),
-                  Spacer(),
-                  Text(
-                    _pages[count]["title"]!,
-                    textAlign: TextAlign.center,
-                    style: Helper.getTheme(context).titleLarge,
-                  ),
-                  Spacer(),
-                  Text(
-                    _pages[count]["desc"]!,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(height: 1.5, fontSize: 15),
-                  ),
-                  Spacer(),
-                  SizedBox(
-                    height: 50,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          nextFunction(count);
-                        },
-                        child: count < 2
-                            ? Text("Suivant")
-                            : Text("Je suis prêt !")),
-                  ),
-                  Spacer()
+                    backgroundColor:
+                        count == 2 ? AppColor.blue : AppColor.placeholder,
+                  )
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed(LandingScreen.routeName);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    margin: EdgeInsets.all(15),
-                    child: Text(
-                      "Passer >>",
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: AppColor.blue.withOpacity(0.07)),
-                  ),
-                )
-              ],
-            ),
+            Positioned(
+              top: 7,
+              right: 10,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .pushReplacementNamed(LandingScreen.routeName);
+                },
+                child: Icon(
+                  Icons.close,
+                  size: 30,
+                  color: Colors.black,
+                ),
+              ),
+            )
           ],
         )),
       ),
