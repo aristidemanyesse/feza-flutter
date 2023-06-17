@@ -1,4 +1,3 @@
-import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
 import 'package:ipi/screens/loginScreen.dart';
 import 'package:ipi/widgets/myLogo.dart';
@@ -11,92 +10,96 @@ class LandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color.fromARGB(255, 244, 242, 240),
         body: Container(
-      width: Helper.getScreenWidth(context),
-      height: Helper.getScreenHeight(context),
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: CsShadow(
-              clipper: CustomClipperAppBar(),
-              shadow: BoxShadow(
-                  color: AppColor.placeholder,
-                  offset: Offset(0, 15),
-                  blurRadius: 5.0,
-                  spreadRadius: 4),
-              child: Container(
-                  width: double.infinity,
-                  height: Helper.getScreenHeight(context) * 0.45,
-                  decoration: ShapeDecoration(
-                    color: AppColor.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Image.asset(
-                    Helper.getAssetName("login_bg.png", "bg"),
-                    fit: BoxFit.cover,
-                  )),
-            ),
-          ),
-          MyLogo(
-            height: 100,
-            width: 100,
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              height: Helper.getScreenHeight(context) * 0.35,
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      "Recherchez parmi plus de 1000 médicaments, produits et services sur toute l'étendue du territoire ivoirien",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(height: 1.5, color: AppColor.primary),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(LoginScreen.routeName);
-                      },
-                      child: Text("Commençons !"),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    height: 20,
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("IPI @ Copyright 2023"),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  )
-                ],
+          width: Helper.getScreenWidth(context),
+          height: Helper.getScreenHeight(context),
+          child: Column(
+            children: [
+              Container(
+                height: Helper.getScreenHeight(context) * 0.15,
               ),
-            ),
+              Text(
+                "IPI",
+                textAlign: TextAlign.center,
+                style: Helper.getTheme(context)
+                    .headlineLarge
+                    ?.copyWith(fontWeight: FontWeight.bold, fontSize: 27),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "Ici, les Pharmacies Ivoiriennes",
+                textAlign: TextAlign.center,
+                style: Helper.getTheme(context)
+                    .headlineLarge
+                    ?.copyWith(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              Expanded(
+                child: Container(),
+              ),
+              MyLogo(
+                height: 150,
+                width: 150,
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          "Recherchez parmi plus de 1000 médicaments, produits et services sur toute l'étendue du territoire ivoirien",
+                          textAlign: TextAlign.center,
+                          style:
+                              TextStyle(height: 1.5, color: AppColor.primary),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(LoginScreen.routeName);
+                          },
+                          child: Text("Commençons !"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(),
+              ),
+              Container(
+                alignment: Alignment.center,
+                height: 20,
+                margin: EdgeInsets.symmetric(vertical: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("IPI @ Copyright 2023"),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              )
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }
 

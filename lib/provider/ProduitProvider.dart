@@ -29,11 +29,4 @@ class ProduitProvider extends ChangeNotifier {
     }
     return produits;
   }
-
-  Future<void> one(String userid) async {
-    Map<String, dynamic> variables = {};
-    Map<String, dynamic>? produits;
-    produits = await ApiService.request(ProduitSchema.ALL, variables);
-    notifyListeners();
-  }
 }

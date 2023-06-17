@@ -111,6 +111,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
         return Scaffold(
+          backgroundColor: Color.fromARGB(255, 245, 239, 235),
           body: SingleChildScrollView(
             child: Column(
               children: [

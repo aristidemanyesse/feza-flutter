@@ -7,13 +7,11 @@ import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/GardeProvider.dart';
 import 'package:ipi/provider/OfficineDeGardeProvider.dart';
 import 'package:ipi/provider/OfficineProvider.dart';
-import 'package:ipi/provider/ProduitInOfficineProvider.dart';
-import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/widgets/indicator.dart';
 import 'package:ipi/widgets/loader.dart';
 import 'package:ipi/widgets/noPharmacieAvialable.dart';
-import 'package:ipi/widgets/pharmacieItemCard.dart';
+import 'package:ipi/widgets/pharmacieItemCard2.dart';
 import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:ipi/const/colors.dart';
@@ -72,28 +70,35 @@ class PharmaciesGardeState extends State<PharmaciesGarde>
     myPosition = LatLng(double.parse(lat), double.parse(lon));
 
     distanceTableaux = {};
-    DateTime today = new DateTime.now().toLocal();
-    List<GardeModel> gardes = await GardeProvider.all({
-      "fin": "${today.year}-${today.month}-${today.day}",
-      "circonscription": user.circonscription!.id
-    });
+    List<GardeModel> gardes = await GardeProvider.all({});
 
     if (gardes.length > 0) {
       GardeModel garde = gardes[0];
-
       List<OfficineDeGardeModel> datas = await OfficineDeGardeProvider.all(
           {"garde": garde.id, "circonscription": user.circonscription!.id});
 
-      for (var elem in datas) {
-        distanceTableaux[elem.officine!] = "";
-      }
+      if (datas.length > 0) {
+        for (OfficineDeGardeModel elem in datas) {
+          OfficineModel officine = elem.officine!;
+          dynamic datas = await OfficineProvider.officineDistance({
+            "id": officine,
+            "longitude": myPosition.longitude,
+            "latitude": myPosition.latitude,
+          });
+          Map data = datas[0];
 
-      if (distanceTableaux.length > 0) {
+          distanceTableaux[officine] = data["distance"];
+          routesOfficines[officine.id!] = jsonDecode(data["route"]);
+
+          markers.add(
+              CustomMyMarker(LatLng(officine.lon!, officine.lat!), officine));
+          markersLatLng.add(LatLng(officine.lon!, officine.lat!));
+          LatLngBounds bounds = LatLngBounds.fromPoints(markersLatLng);
+          final centerZoom = mapController.centerZoomFitBounds(bounds);
+          _animatedMapMove(centerZoom.center, centerZoom.zoom);
+        }
+      } else {
         showDialog(
-          // double distance = element["distance"];
-          //   distanceTableaux[officine] = distance < 1
-          //       ? "${distance * 1000} m"
-          //       : "${distance.toStringAsFixed(2)} km";
           context: context,
           builder: (BuildContext context) {
             return NoPharmacieAvialable();
@@ -285,8 +290,7 @@ class PharmaciesGardeState extends State<PharmaciesGarde>
                                         return MapMinPharmaciePopup(
                                           marker: marker,
                                           officine: element.officine,
-                                          ratio:
-                                              "${ratioTableaux[element.officine].toString()}/${initialProduits.length}",
+                                          ratio: "",
                                           distance: distanceTableaux[
                                               element.officine]!,
                                           ittineraireFunction: () {
@@ -427,16 +431,9 @@ class PharmaciesGardeState extends State<PharmaciesGarde>
                                               Expanded(
                                                   child: SingleChildScrollView(
                                                 child: Column(
-                                                  children: tableauxOfficines
-                                                      .map((element) {
-                                                    OfficineModel officine =
-                                                        element.keys.first;
-                                                    List<ProduitModel>
-                                                        produits = element[
-                                                                element.keys
-                                                                    .first] ??
-                                                            [];
-
+                                                  children: distanceTableaux
+                                                      .keys
+                                                      .map((officine) {
                                                     return GestureDetector(
                                                       onTap: () {
                                                         targetMarker(
@@ -447,20 +444,13 @@ class PharmaciesGardeState extends State<PharmaciesGarde>
                                                             Colors.transparent,
                                                         child: Column(
                                                           children: [
-                                                            PharmacieItemCard(
+                                                            PharmacieItemCard2(
                                                               officine:
                                                                   officine,
-                                                              produits:
-                                                                  produits,
-                                                              initialProduits:
-                                                                  initialProduits,
                                                               distance:
                                                                   distanceTableaux[
                                                                           officine] ??
                                                                       "",
-                                                              ratio: ratioTableaux[
-                                                                      officine]
-                                                                  .toString(),
                                                             ),
                                                             Container(
                                                               margin: EdgeInsets

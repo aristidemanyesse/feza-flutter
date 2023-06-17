@@ -16,4 +16,11 @@ class OfficineProvider extends ChangeNotifier {
     }
     return officines;
   }
+
+  static Future<List<OfficineModel>> officineDistance(
+      Map<String, dynamic> variables) async {
+    dynamic datas =
+        await ApiService.request(OfficineSchema.OOFICINE_DISTANCE, variables);
+    return datas["searchOfficineDistance"];
+  }
 }

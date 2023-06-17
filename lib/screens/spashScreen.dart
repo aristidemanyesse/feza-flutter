@@ -2,11 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
-import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
-import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/introScreen.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/myLogo.dart';
@@ -49,9 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     String? userId = prefs.getString('userId');
     String uniq = await UtilisateurProvider.getUniqID();
-    print("*************************");
-    print(userId);
-    print(uniq);
+
     if (userId != null) {
       List<UtilisateurModel> users =
           await UtilisateurProvider.all({"id": userId, "imei": uniq});
@@ -59,7 +54,6 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
       } else {
         UtilisateurModel user = users[0];
-        print(user);
         Navigator.of(context)
             .pushNamed(IntroScreen.routeName, arguments: {"user": user});
       }
@@ -86,19 +80,17 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> getDatas() async {
-    await sharedPreferencesService.init();
-    List<ProduitModel> produits = [];
-    produits = await sharedPreferencesService.getProduitList('produits');
-    print("================================================");
-    print(produits.length);
-    if (produits.length == 0) {
-      produits = await ProduitProvider.all({});
-      List<String> nomsProduits =
-          produits.map((produit) => produit.name).toList();
+    // await sharedPreferencesService.init();
+    // List<ProduitModel> produits = [];
+    // produits = await sharedPreferencesService.getProduitList('produits');
+    // if (produits.length == 0) {
+    //   produits = await ProduitProvider.all({});
+    //   List<String> nomsProduits =
+    //       produits.map((produit) => produit.name).toList();
 
-      sharedPreferencesService.setProduitList('produits', produits);
-      sharedPreferencesService.setStringList('nomsProduits', nomsProduits);
-    }
+    //   sharedPreferencesService.setProduitList('produits', produits);
+    //   sharedPreferencesService.setStringList('nomsProduits', nomsProduits);
+    // }
   }
 
   @override

@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:ipi/models/OfficineModel.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class PharmacieItemCard2 extends StatelessWidget {
-  final String name;
-  final String lieu;
+  final OfficineModel officine;
   final String distance;
-  final String circonscription;
 
-  PharmacieItemCard2(
-      {required this.name,
-      required this.lieu,
-      required this.distance,
-      required this.circonscription});
+  PharmacieItemCard2({
+    required this.officine,
+    required this.distance,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +35,7 @@ class PharmacieItemCard2 extends StatelessWidget {
                         width: 5,
                       ),
                       Text(
-                        name,
+                        officine.name ?? "",
                         style: Helper.getTheme(context)
                             .headlineMedium
                             ?.copyWith(color: AppColor.primary, fontSize: 14),
@@ -55,7 +53,7 @@ class PharmacieItemCard2 extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              "$lieu",
+                              officine.localisation ?? "",
                               style: TextStyle(fontSize: 12),
                               overflow: TextOverflow.ellipsis,
                             )
@@ -65,7 +63,7 @@ class PharmacieItemCard2 extends StatelessWidget {
                           height: 3.5,
                         ),
                         Text(
-                          "+225 01 02 030 405  / +225 01 02 030 405",
+                          "${officine.contact}  / ${officine.contact2}",
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontSize: 11),
                         ),

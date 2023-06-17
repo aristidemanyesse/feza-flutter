@@ -6,7 +6,6 @@ import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/searchPage.dart';
-import 'package:ipi/screens/test.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/SuggestionItemCard.dart';
 import 'package:ipi/widgets/confirmExitDialog.dart';
@@ -75,6 +74,7 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
+          backgroundColor: Color.fromARGB(255, 245, 239, 235),
           body: SingleChildScrollView(
             child: Column(
               children: [
