@@ -1,8 +1,5 @@
-import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
-import 'package:ipi/screens/landingScreen.dart';
 import 'package:ipi/screens/loginScreen.dart';
-import 'package:ipi/widgets/myLogo.dart';
 import 'package:lottie/lottie.dart';
 
 import '../const/colors.dart';
@@ -27,9 +24,10 @@ class Intro3 extends StatelessWidget {
               children: [
                 Text(
                   "Economise ton temps et ton argent !",
-                  style: Helper.getTheme(context)
-                      .headlineLarge
-                      ?.copyWith(fontWeight: FontWeight.bold, fontSize: 27),
+                  style: Helper.getTheme(context).headlineLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 27,
+                      color: Color.fromARGB(255, 21, 67, 111)),
                 ),
                 SizedBox(
                   height: 10,
@@ -44,7 +42,7 @@ class Intro3 extends StatelessWidget {
           ),
           Expanded(
               child: Center(
-            child: Lottie.asset("assets/lotties/search.json",
+            child: Lottie.asset("assets/lotties/economie.json",
                 height: Helper.getScreenHeight(context) * 0.7,
                 width: Helper.getScreenWidth(context) * 0.9),
           )),
@@ -61,7 +59,7 @@ class Intro3 extends StatelessWidget {
                     child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(context)
-                              .pushReplacementNamed(LandingScreen.routeName);
+                              .pushReplacementNamed(LoginScreen.routeName);
                         },
                         child: Text(
                           "Je suis prêt !",

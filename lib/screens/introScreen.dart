@@ -5,7 +5,6 @@ import 'package:ipi/screens/intro2.dart';
 import 'package:ipi/screens/intro3.dart';
 import 'package:ipi/screens/landingScreen.dart';
 import 'package:ipi/utils/helper.dart';
-import 'package:lottie/lottie.dart';
 
 class IntroScreen extends StatefulWidget {
   static const routeName = "/introScreen";

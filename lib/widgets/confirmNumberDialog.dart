@@ -8,7 +8,7 @@ import '../utils/helper.dart';
 
 class ConfirmNumberDialog extends StatelessWidget {
   final String number;
-  late String uniq;
+  late String uniq = "";
 
   ConfirmNumberDialog(this.number);
 

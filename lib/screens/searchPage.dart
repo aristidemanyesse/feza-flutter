@@ -295,8 +295,8 @@ class SearchPageState extends State<SearchPage>
                                           distance: distanceTableaux[
                                               element.officine]!,
                                           ittineraireFunction: () {
-                                            // scrollToContainer(
-                                            //     element.officine.id!);
+                                            scrollToContainer(
+                                                element.officine.id!);
                                           },
                                         );
                                       },

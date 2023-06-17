@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
+import 'package:ipi/models/GardeModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/GardeProvider.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
-import 'package:ipi/screens/profileScreen.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/widgets/menuCard.dart';
 import 'package:ipi/widgets/myLogo.dart';
+import 'package:ipi/widgets/noPharmacieAvialable.dart';
 
 class MenuScreen extends StatefulWidget {
   static const routeName = "/menuScreen";
@@ -15,10 +17,33 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreen extends State<MenuScreen> {
   late UtilisateurModel user;
+  late GardeModel garde = new GardeModel();
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
+  Future<void> getData() async {
+    List<GardeModel> gardes = await GardeProvider.all({});
+
+    if (gardes.length > 0) {
+      garde = gardes[0];
+      setState(() {});
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return NoPharmacieAvialable();
+        },
+      );
+    }
   }
 
   @override
@@ -45,7 +70,7 @@ class _MenuScreen extends State<MenuScreen> {
           Container(
             height: double.infinity,
             width: double.infinity,
-            color: Colors.white.withOpacity(0.85),
+            color: Color.fromARGB(255, 245, 239, 235).withOpacity(0.85),
           ),
           SafeArea(
             child: Column(
@@ -101,7 +126,8 @@ class _MenuScreen extends State<MenuScreen> {
                                     ),
                                   ),
                                   name: "Pharmarcies de garde",
-                                  subtitle: "Du 22 Mai au 29 Mai",
+                                  subtitle:
+                                      "Du ${garde.debut ?? '..'} au ${garde.fin ?? '..'}",
                                 ),
                               ),
                               SizedBox(

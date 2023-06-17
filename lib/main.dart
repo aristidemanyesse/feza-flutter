@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ipi/screens/medicamentScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
 import 'package:ipi/screens/test.dart';
-import 'package:ipi/widgets/testPage.dart';
 import 'package:page_transition/page_transition.dart';
 
 import './screens/spashScreen.dart';
@@ -103,7 +102,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             case LoginScreen.routeName:
               return PageTransition(
@@ -111,7 +109,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             case SendOTPScreen.routeName:
               return PageTransition(
@@ -119,7 +116,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             case IntroScreen.routeName:
               return PageTransition(
@@ -127,7 +123,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             case SearchPage.routeName:
               return PageTransition(
@@ -135,7 +130,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             case MenuScreen.routeName:
               return PageTransition(
@@ -143,7 +137,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             case PharmaciesGarde.routeName:
               return PageTransition(
@@ -151,7 +144,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             case ProfileScreen.routeName:
               return PageTransition(
@@ -159,7 +151,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             case DessertScreen.routeName:
               return PageTransition(
@@ -167,7 +158,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             case MedicamentScreen.routeName:
               return PageTransition(
@@ -175,7 +165,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             case HomeScreen.routeName:
               return PageTransition(
@@ -183,7 +172,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             case TextPage.routeName:
               return PageTransition(
@@ -191,7 +179,6 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.leftToRightWithFade,
                 settings: settings,
               );
-              break;
 
             default:
               return null;

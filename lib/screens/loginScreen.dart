@@ -80,6 +80,7 @@ class _LoginScreen extends State<LoginScreen> {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
+        backgroundColor: Color.fromARGB(255, 245, 239, 235),
         body: SingleChildScrollView(
           child: SafeArea(
             child: Column(

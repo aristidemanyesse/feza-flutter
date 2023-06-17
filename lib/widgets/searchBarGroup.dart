@@ -8,7 +8,6 @@ import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/SuggestionItemCard.dart';
-import 'package:ipi/widgets/chooseMLMethod.dart';
 import 'package:ipi/widgets/painters.dart';
 import 'package:learning_text_recognition/learning_text_recognition.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
@@ -60,7 +59,7 @@ class SearchBarGroupState extends State<SearchBarGroup> {
 
   Future<void> getCodeBar() async {
     String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", "Annuler", true, ScanMode.BARCODE);
+        "#ff6666", "Annuler", false, ScanMode.BARCODE);
     var datas = await ProduitProvider.all({"codebarre": barcodeScanRes});
     _selectedOptions.add(datas[0].name);
     await sharedPreferencesService.setStringList(

@@ -60,13 +60,6 @@ class UtilisateurProvider extends ChangeNotifier {
     return response;
   }
 
-  Future<void> one(String userid) async {
-    Map<String, dynamic> variables = {};
-    Map<String, dynamic>? utilisateurs;
-    utilisateurs = await ApiService.request(UtilisateurSchema.ALL, variables);
-    notifyListeners();
-  }
-
   static Future<String> getUniqID() async {
     if (Platform.isIOS) {
       final udid =

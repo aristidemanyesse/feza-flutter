@@ -1,7 +1,4 @@
-import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
-import 'package:ipi/screens/loginScreen.dart';
-import 'package:ipi/widgets/myLogo.dart';
 import 'package:lottie/lottie.dart';
 
 import '../const/colors.dart';
@@ -25,9 +22,10 @@ class Intro2 extends StatelessWidget {
               children: [
                 Text(
                   "Recherche simple et troooop facile !",
-                  style: Helper.getTheme(context)
-                      .headlineLarge
-                      ?.copyWith(fontWeight: FontWeight.bold, fontSize: 27),
+                  style: Helper.getTheme(context).headlineLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 27,
+                      color: Color.fromARGB(255, 21, 67, 111)),
                 ),
                 SizedBox(
                   height: 10,
@@ -42,9 +40,9 @@ class Intro2 extends StatelessWidget {
           ),
           Expanded(
               child: Center(
-            child: Lottie.asset("assets/lotties/search.json",
-                height: Helper.getScreenHeight(context) * 0.7,
-                width: Helper.getScreenWidth(context) * 0.9),
+            child: Lottie.asset("assets/lotties/barcode.json",
+                height: Helper.getScreenHeight(context) * 0.6,
+                width: Helper.getScreenWidth(context) * 0.8),
           )),
           Align(
             alignment: Alignment.bottomCenter,

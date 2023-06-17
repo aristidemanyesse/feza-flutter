@@ -1,13 +1,18 @@
-import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
-import 'package:ipi/screens/loginScreen.dart';
-import 'package:ipi/widgets/myLogo.dart';
 import 'package:lottie/lottie.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
-class Intro1 extends StatelessWidget {
+class Intro1 extends StatefulWidget {
+  static const routeName = "/Intro1";
+  Intro1({Key? key}) : super(key: key);
+
+  @override
+  State<Intro1> createState() => Intro1State();
+}
+
+class Intro1State extends State<Intro1> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,9 +28,10 @@ class Intro1 extends StatelessWidget {
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Text(
                 "Où trouver le médicament que je cherche ...",
-                style: Helper.getTheme(context)
-                    .headlineLarge
-                    ?.copyWith(fontWeight: FontWeight.bold, fontSize: 27),
+                style: Helper.getTheme(context).headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 27,
+                    color: Color.fromARGB(255, 21, 67, 111)),
               ),
               SizedBox(
                 height: 10,
@@ -39,9 +45,9 @@ class Intro1 extends StatelessWidget {
           ),
           Expanded(
               child: Center(
-            child: Lottie.asset("assets/lotties/search.json",
-                height: Helper.getScreenHeight(context) * 0.7,
-                width: Helper.getScreenWidth(context) * 0.9),
+            child: Lottie.asset("assets/lotties/intro1.json",
+                height: Helper.getScreenHeight(context) * 0.6,
+                width: Helper.getScreenWidth(context) * 0.8),
           )),
           Align(
             alignment: Alignment.bottomCenter,

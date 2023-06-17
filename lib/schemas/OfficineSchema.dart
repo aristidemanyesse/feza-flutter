@@ -35,6 +35,16 @@ class OfficineSchema {
     }
   """;
 
+  static const String OOFICINE_DISTANCE = r"""
+    query ($id: String, $longitude: Float, $latitude: Float) {
+      searchOfficineDistance(id: $id, longitude: $longitude, latitude: $latitude) {
+        distance
+        officine
+        route
+      }
+    }
+  """;
+
   static const String GET_ONE = """
     query{
       countries(filter:{currency:{eq:"EGP"}}){
