@@ -3,9 +3,10 @@ import 'package:ipi/const/colors.dart';
 
 class Ligne extends StatelessWidget {
   final String title;
+  final String forme;
   final bool active;
 
-  Ligne({required this.title, required this.active});
+  Ligne({required this.title, required this.forme, required this.active});
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +21,29 @@ class Ligne extends StatelessWidget {
           SizedBox(
             width: 20,
           ),
-          Text(
-            this.title,
-            style: TextStyle(
-              fontWeight: active ? FontWeight.w600 : FontWeight.normal,
-              fontSize: 14,
-              color: active ? Colors.black : Colors.grey,
-              decoration:
-                  active ? TextDecoration.none : TextDecoration.lineThrough,
-              decorationThickness: 2.0,
-            ),
-          ),
+          Column(
+            children: [
+              Text(
+                this.title,
+                style: TextStyle(
+                  fontWeight: active ? FontWeight.w600 : FontWeight.normal,
+                  fontSize: 14,
+                  color: active ? Colors.black : Colors.grey,
+                  decoration:
+                      active ? TextDecoration.none : TextDecoration.lineThrough,
+                  decorationThickness: 2.0,
+                ),
+              ),
+              SizedBox(
+                height: 2,
+              ),
+              Text(
+                forme,
+                style: TextStyle(fontSize: 12),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          )
         ],
       ),
     );

@@ -2,15 +2,11 @@ import 'dart:async';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/SuggestionItemCard.dart';
-import 'package:ipi/widgets/painters.dart';
-import 'package:learning_text_recognition/learning_text_recognition.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class SearchBarGroup extends StatefulWidget {
   static const routeName = "/SearchBarGroup";
@@ -29,22 +25,17 @@ class SearchBarGroupState extends State<SearchBarGroup> {
   late List<String> _selectedOptionsID = [];
   late List<String> _nomsProduits = [];
 
-  final TextRecognizer _textRecognizer =
-      TextRecognizer(script: TextRecognitionScript.latin);
-  bool _canProcess = true;
-  bool _isBusy = false;
-  CustomPaint? _customPaint;
-  String? _text;
-
   late StreamSubscription<String> _sharedPreferencesSubscription;
   SharedPreferencesService sharedPreferencesService =
       SharedPreferencesService();
 
-  TextRecognition? _textRecognition = TextRecognition();
-
   Future<void> getData() async {
-    _produits = await ProduitProvider.all({});
-    _nomsProduits = _produits.map((produit) => produit.name).toList();
+    await sharedPreferencesService.init();
+    _produits = await sharedPreferencesService.getProduitList('produits');
+    _nomsProduits =
+        await sharedPreferencesService.getStringList('nomsProduits');
+    // _produits = await ProduitProvider.all({});
+    // _nomsProduits = _produits.map((produit) => produit.name).toList();
     _textField.updateSuggestions(_nomsProduits);
 
     await sharedPreferencesService.init();
@@ -68,7 +59,6 @@ class SearchBarGroupState extends State<SearchBarGroup> {
 
   @override
   void dispose() {
-    _textRecognition?.dispose();
     _sharedPreferencesSubscription.cancel(); // Arrêter le StreamSubscription
     super.dispose();
   }
@@ -79,6 +69,7 @@ class SearchBarGroupState extends State<SearchBarGroup> {
     getData();
 
     _textField = AutoCompleteTextField(
+      suggestionsAmount: 7,
       key: key,
       controller: _textFieldController,
       itemBuilder: (context, item) {
@@ -136,30 +127,6 @@ class SearchBarGroupState extends State<SearchBarGroup> {
     }
     await sharedPreferencesService.setStringList(
         'produitsIDSelected', _selectedOptionsID);
-  }
-
-  Future<void> processImage(InputImage inputImage) async {
-    if (!_canProcess) return;
-    if (_isBusy) return;
-    _isBusy = true;
-    setState(() {
-      _text = '';
-    });
-    final recognizedText = await _textRecognizer.processImage(inputImage);
-    if (inputImage.metadata?.size != null &&
-        inputImage.metadata?.rotation != null) {
-      final painter = TextRecognizerPainter(recognizedText,
-          inputImage.metadata!.size, inputImage.metadata!.rotation);
-      _customPaint = CustomPaint(painter: painter);
-    } else {
-      _text = 'Recognized text:\n\n${recognizedText.text}';
-      // TODO: set _customPaint to draw boundingRect on top of image
-      _customPaint = null;
-    }
-    _isBusy = false;
-    if (mounted) {
-      setState(() {});
-    }
   }
 
   @override

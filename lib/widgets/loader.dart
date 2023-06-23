@@ -47,12 +47,14 @@ class _LoaderScreenState extends State<LoaderScreen>
             );
           },
           child: Center(
-              child: Image.asset(
-            'assets/images/bg/carte_bg.png',
-            repeat: ImageRepeat.repeatY,
-            width: Helper.getScreenWidth(context),
-            height: Helper.getScreenHeight(context),
-          )), // Remplacez par votre propre image
+            child: Container(),
+            // child: Image.asset(
+            //   'assets/images/bg/carte_bg.png',
+            //   repeat: ImageRepeat.repeatY,
+            //   width: Helper.getScreenWidth(context),
+            //   height: Helper.getScreenHeight(context),
+            // ),
+          ), // Remplacez par votre propre image
         ),
         Container(
           width: Helper.getScreenWidth(context),
@@ -64,13 +66,8 @@ class _LoaderScreenState extends State<LoaderScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Lottie.asset("assets/lotties/search2.json",
-                      width: Helper.getScreenWidth(context) * 0.93)
-                ],
-              ),
+              Lottie.asset("assets/lotties/search2.json",
+                  width: Helper.getScreenWidth(context) * 0.93),
               Text(
                 "IPI recherche les pharmacies ...",
                 textAlign: TextAlign.center,

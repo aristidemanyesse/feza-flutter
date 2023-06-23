@@ -19,7 +19,6 @@ import 'package:ipi/utils/helper.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/mapPin.dart';
 import 'package:ipi/widgets/mapPopupPin.dart';
-import 'package:ipi/widgets/searchedMedicamentListDialog.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'dart:convert';
 
@@ -186,6 +185,7 @@ class SearchPageState extends State<SearchPage>
       if (marker.officine.id == id) {
         scrollToContainer(id!);
         _animatedMapMove(marker.point, 13);
+        Navigator.pop(context);
       }
     }
   }
@@ -206,7 +206,6 @@ class SearchPageState extends State<SearchPage>
         strokeWidth: 3,
         borderColor: Colors.white);
     mapController.fitBounds(getBoundsFromCoordinates(routeCoordinates.points));
-    Navigator.pop(context);
     setState(() {});
   }
 
@@ -251,7 +250,7 @@ class SearchPageState extends State<SearchPage>
                                 center: center,
                                 zoom: 13,
                                 minZoom: 6,
-                                maxZoom: 22,
+                                maxZoom: 26,
                                 scrollWheelVelocity: 2.0,
                                 interactiveFlags: InteractiveFlag.all &
                                     ~InteractiveFlag.rotate,
@@ -261,8 +260,9 @@ class SearchPageState extends State<SearchPage>
                               children: [
                                 TileLayer(
                                   urlTemplate:
-                                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                  subdomains: const ['a', 'b', 'c'],
+                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                  userAgentPackageName:
+                                      'dev.fleaflet.flutter_map.example',
                                 ),
                                 PolylineLayer(
                                   polylines: [routeCoordinates],
@@ -333,10 +333,7 @@ class SearchPageState extends State<SearchPage>
                                 ),
                               ],
                             ),
-                            Visibility(
-                              child: LoaderScreen(),
-                              visible: !ready,
-                            ),
+                            Visibility(child: LoaderScreen(), visible: !ready),
                           ],
                         )),
                     Container(
@@ -369,42 +366,26 @@ class SearchPageState extends State<SearchPage>
                                     color: Colors.white,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(100))),
-                                child: Icon(
-                                  Icons.arrow_back_ios_rounded,
-                                  size: 20,
-                                  color: AppColor.blue,
-                                ),
+                                child: Row(children: [
+                                  Icon(
+                                    Icons.arrow_back_ios_rounded,
+                                    size: 20,
+                                    color: AppColor.blue,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  ready
+                                      ? Text(
+                                          "Retour à la liste des médicaments (${initialProduits.length})",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      : SizedBox()
+                                ]),
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(right: 10),
-                            child: InkWell(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return SearchedMedicamentListDialog(
-                                          initialProduits: initialProduits);
-                                    },
-                                  );
-                                },
-                                child: initialProduits.length > 0
-                                    ? Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 12, vertical: 10),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: Text(
-                                          "Liste des médicaments (${initialProduits.length})",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      )
-                                    : Container()),
-                          )
                         ],
                       ),
                     ),

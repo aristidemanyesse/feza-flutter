@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'dart:math' as number;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:ipi/utils/color.dart';
 import 'package:ipi/utils/constant.dart';
 
@@ -44,37 +43,37 @@ class Utils {
     return finalDate;
   }
 
-  static void showProgress(
-      BuildContext context, ProgressDialog prDialog) async {
-    prDialog = ProgressDialog(context);
-    //For normal dialog
-    prDialog = ProgressDialog(context,
-        type: ProgressDialogType.normal, isDismissible: false, showLogs: false);
+  // static void showProgress(
+  //     BuildContext context, ProgressDialog prDialog) async {
+  //   prDialog = ProgressDialog(context);
+  //   //For normal dialog
+  //   prDialog = ProgressDialog(context,
+  //       type: ProgressDialogType.normal, isDismissible: false, showLogs: false);
 
-    prDialog.style(
-      message: "Veuillez patienter ...",
-      borderRadius: 5,
-      progressWidget: Container(
-        padding: const EdgeInsets.all(8),
-        child: const CircularProgressIndicator(),
-      ),
-      maxProgress: 100,
-      progressTextStyle: const TextStyle(
-        color: Colors.black,
-        fontSize: 13,
-        fontWeight: FontWeight.w400,
-      ),
-      backgroundColor: white,
-      insetAnimCurve: Curves.easeInOut,
-      messageTextStyle: const TextStyle(
-        color: black,
-        fontSize: 14,
-        fontWeight: FontWeight.normal,
-      ),
-    );
+  //   prDialog.style(
+  //     message: "Veuillez patienter ...",
+  //     borderRadius: 5,
+  //     progressWidget: Container(
+  //       padding: const EdgeInsets.all(8),
+  //       child: const CircularProgressIndicator(),
+  //     ),
+  //     maxProgress: 100,
+  //     progressTextStyle: const TextStyle(
+  //       color: Colors.black,
+  //       fontSize: 13,
+  //       fontWeight: FontWeight.w400,
+  //     ),
+  //     backgroundColor: white,
+  //     insetAnimCurve: Curves.easeInOut,
+  //     messageTextStyle: const TextStyle(
+  //       color: black,
+  //       fontSize: 14,
+  //       fontWeight: FontWeight.normal,
+  //     ),
+  //   );
 
-    await prDialog.show();
-  }
+  //   await prDialog.show();
+  // }
 
   /* ***************** generate Unique OrderID START ***************** */
   static String generateRandomOrderID() {

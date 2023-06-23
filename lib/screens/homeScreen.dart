@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
-import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/searchPage.dart';
@@ -60,7 +59,8 @@ class HomeScreenState extends State<HomeScreen> {
     List<UtilisateurModel> users =
         await UtilisateurProvider.all({"id": userId, "imei": uniq});
     user = users[0];
-    _produits = await ProduitProvider.all({});
+    _produits = await sharedPreferencesService.getProduitList('produits');
+    print(_produits.length);
     setState(() {});
   }
 

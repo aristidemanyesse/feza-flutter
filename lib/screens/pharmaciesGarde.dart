@@ -261,8 +261,9 @@ class PharmaciesGardeState extends State<PharmaciesGarde>
                               children: [
                                 TileLayer(
                                   urlTemplate:
-                                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                  subdomains: const ['a', 'b', 'c'],
+                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                  userAgentPackageName:
+                                      'dev.fleaflet.flutter_map.example',
                                 ),
                                 PolylineLayer(
                                   polylines: [routeCoordinates],

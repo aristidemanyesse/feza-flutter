@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/ProduitProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/introScreen.dart';
@@ -25,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    timer = Timer(Duration(milliseconds: 1000), () {
+    timer = Timer(Duration(milliseconds: 1500), () {
       getPosition();
       checkUser();
       getDatas();
@@ -81,17 +83,17 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> getDatas() async {
-    // await sharedPreferencesService.init();
-    // List<ProduitModel> produits = [];
-    // produits = await sharedPreferencesService.getProduitList('produits');
-    // if (produits.length == 0) {
-    //   produits = await ProduitProvider.all({});
-    //   List<String> nomsProduits =
-    //       produits.map((produit) => produit.name).toList();
-
-    //   sharedPreferencesService.setProduitList('produits', produits);
-    //   sharedPreferencesService.setStringList('nomsProduits', nomsProduits);
-    // }
+    await sharedPreferencesService.init();
+    List<ProduitModel> produits = [];
+    List<String> nomsProduits = [];
+    produits = await sharedPreferencesService.getProduitList('produits');
+    print(produits.length);
+    if (produits.length == 0) {
+      produits = await ProduitProvider.all({});
+    }
+    sharedPreferencesService.setProduitList('produits', produits);
+    nomsProduits = produits.map((produit) => produit.name).toList();
+    sharedPreferencesService.setStringList('nomsProduits', nomsProduits);
   }
 
   @override

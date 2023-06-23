@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ipi/screens/medicamentScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
 import 'package:ipi/screens/test.dart';
-import 'package:page_transition/page_transition.dart';
 
 import './screens/spashScreen.dart';
 import './screens/landingScreen.dart';
@@ -94,96 +93,96 @@ class MyApp extends StatelessWidget {
           // TextRecognizerView.routeName: (context) => TextRecognizerView(),
           TextPage.routeName: (context) => TextPage(),
         },
-        onGenerateRoute: (settings) {
-          switch (settings.name) {
-            case LandingScreen.routeName:
-              return PageTransition(
-                child: LandingScreen(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        // onGenerateRoute: (settings) {
+        //   switch (settings.name) {
+        //     case LandingScreen.routeName:
+        //       return PageTransition(
+        //         child: LandingScreen(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            case LoginScreen.routeName:
-              return PageTransition(
-                child: LoginScreen(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        //     case LoginScreen.routeName:
+        //       return PageTransition(
+        //         child: LoginScreen(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            case SendOTPScreen.routeName:
-              return PageTransition(
-                child: SendOTPScreen(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        //     case SendOTPScreen.routeName:
+        //       return PageTransition(
+        //         child: SendOTPScreen(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            case IntroScreen.routeName:
-              return PageTransition(
-                child: IntroScreen(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        //     case IntroScreen.routeName:
+        //       return PageTransition(
+        //         child: IntroScreen(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            case SearchPage.routeName:
-              return PageTransition(
-                child: SearchPage(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        //     case SearchPage.routeName:
+        //       return PageTransition(
+        //         child: SearchPage(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            case MenuScreen.routeName:
-              return PageTransition(
-                child: MenuScreen(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        //     case MenuScreen.routeName:
+        //       return PageTransition(
+        //         child: MenuScreen(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            case PharmaciesGarde.routeName:
-              return PageTransition(
-                child: PharmaciesGarde(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        //     case PharmaciesGarde.routeName:
+        //       return PageTransition(
+        //         child: PharmaciesGarde(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            case ProfileScreen.routeName:
-              return PageTransition(
-                child: ProfileScreen(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        //     case ProfileScreen.routeName:
+        //       return PageTransition(
+        //         child: ProfileScreen(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            case DessertScreen.routeName:
-              return PageTransition(
-                child: DessertScreen(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        //     case DessertScreen.routeName:
+        //       return PageTransition(
+        //         child: DessertScreen(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            case MedicamentScreen.routeName:
-              return PageTransition(
-                child: MedicamentScreen(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        //     case MedicamentScreen.routeName:
+        //       return PageTransition(
+        //         child: MedicamentScreen(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            case HomeScreen.routeName:
-              return PageTransition(
-                child: HomeScreen(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        //     case HomeScreen.routeName:
+        //       return PageTransition(
+        //         child: HomeScreen(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            case TextPage.routeName:
-              return PageTransition(
-                child: TextPage(),
-                type: PageTransitionType.leftToRightWithFade,
-                settings: settings,
-              );
+        //     case TextPage.routeName:
+        //       return PageTransition(
+        //         child: TextPage(),
+        //         type: PageTransitionType.leftToRightWithFade,
+        //         settings: settings,
+        //       );
 
-            default:
-              return null;
-          }
-        },
+        //     default:
+        //       return null;
+        //   }
+        // },
       ),
     );
   }

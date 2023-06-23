@@ -132,6 +132,7 @@ class PharmacieItemCard extends StatelessWidget {
                 return AvialableMedicamentListDialog(
                     officine: officine,
                     produits: produits,
+                    distance: distance,
                     ratio: "$ratio/${initialProduits.length}",
                     initialProduits: initialProduits);
               },

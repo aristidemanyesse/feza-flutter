@@ -10,19 +10,21 @@ class AvialableMedicamentListDialog extends StatelessWidget {
   final List<ProduitModel> initialProduits;
   final List<ProduitModel> produits;
   final String ratio;
+  final String distance;
 
-  AvialableMedicamentListDialog(
-      {required this.initialProduits,
-      required this.produits,
-      required this.officine,
-      required this.ratio});
+  AvialableMedicamentListDialog({
+    required this.initialProduits,
+    required this.produits,
+    required this.officine,
+    required this.ratio,
+    required this.distance,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          height: Helper.getScreenHeight(context) * 0.5,
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
@@ -75,7 +77,7 @@ class AvialableMedicamentListDialog extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                "${officine.circonscription?.name}, à 900 m",
+                                "${officine.circonscription?.name}, à $distance",
                                 style: TextStyle(fontSize: 12),
                               ),
                               Text(
@@ -123,6 +125,7 @@ class AvialableMedicamentListDialog extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: initialProduits.map((item) {
                         bool test = false;
                         for (var i in produits) {
@@ -131,7 +134,10 @@ class AvialableMedicamentListDialog extends StatelessWidget {
                             break;
                           }
                         }
-                        return Ligne(title: item.name, active: test);
+                        return Ligne(
+                            title: item.name,
+                            forme: item.forme ?? "",
+                            active: test);
                       }).toList(),
                     ),
                   ),
