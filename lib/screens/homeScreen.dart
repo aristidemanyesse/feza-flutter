@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:ipi/models/ProduitModel.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:ipi/main.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/searchPage.dart';
 import 'package:ipi/utils/sharedpre.dart';
-import 'package:ipi/widgets/SuggestionItemCard.dart';
 import 'package:ipi/widgets/confirmExitDialog.dart';
-import 'package:ipi/widgets/searchBarGroup.dart';
 import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
+import 'package:lottie/lottie.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
@@ -28,20 +28,12 @@ class HomeScreenState extends State<HomeScreen> {
       SharedPreferencesService();
 
   UtilisateurModel? user;
-  late List<ProduitModel> _produits = [];
-  late List<String> _selectedOptions = [];
+  late List<String> demandes = [];
 
   @override
   void initState() {
     super.initState();
     getData();
-    _sharedPreferencesSubscription = sharedPreferencesService
-        .watchString('produitsSelected')
-        .listen((value) async {
-      _selectedOptions =
-          await sharedPreferencesService.getStringList('produitsSelected');
-      setState(() {});
-    });
   }
 
   @override
@@ -50,24 +42,38 @@ class HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  Future<void> showNotification() async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'ipi2106', // Remplacez 'channel_id' par un identifiant unique pour votre canal de notification
+      'ipi Notificaition', // Remplacez 'channel_name' par le nom du canal de notification
+      channelDescription:
+          'lorem  ipsiumm frkje uidfjkbj', // Remplacez 'channel_description' par la description du canal de notification
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+      5465466,
+      'Titre de la notification',
+      'Contenu de la notification',
+      platformChannelSpecifics,
+      payload: 'Notification payload',
+    );
+  }
+
   Future<void> getData() async {
     await sharedPreferencesService.init();
-    _selectedOptions =
-        await sharedPreferencesService.getStringList('produitsSelected');
     String? userId = await sharedPreferencesService.getString('userId');
     String uniq = await UtilisateurProvider.getUniqID();
     List<UtilisateurModel> users =
         await UtilisateurProvider.all({"id": userId, "imei": uniq});
     user = users[0];
-    _produits = await sharedPreferencesService.getProduitList('produits');
-    print(_produits.length);
     setState(() {});
-  }
-
-  void removeInselectedOptionsID(String text) async {
-    _selectedOptions.remove(text);
-    await sharedPreferencesService.setStringList(
-        'produitsSelected', _selectedOptions);
   }
 
   @override
@@ -75,7 +81,9 @@ class HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
         child: Scaffold(
           backgroundColor: Color.fromARGB(255, 245, 239, 235),
-          body: SingleChildScrollView(
+          body: Container(
+            height: Helper.getScreenHeight(context),
+            width: Helper.getScreenWidth(context),
             child: Column(
               children: [
                 SizedBox(
@@ -164,8 +172,17 @@ class HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 40,
                       ),
-                      Center(
-                        child: SearchBarGroup(),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          "Vos demandes en cours ...",
+                          style: Helper.getTheme(context)
+                              .headlineLarge
+                              ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                  color: Color.fromARGB(255, 21, 67, 111)),
+                        ),
                       ),
                     ],
                   ),
@@ -173,152 +190,71 @@ class HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  height: Helper.getScreenHeight(context) * 0.55,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  margin: EdgeInsets.all(10),
-                  child: _selectedOptions.isEmpty
-                      ? Text(
-                          "Saisissez le médicament que vous recherchez\n ou appuyer sur @ pour scanner votre ordonnance ou le code barre du medicament",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(height: 1.5),
-                        )
-                      : Column(
-                          children: [
-                            Column(
-                              children: [
-                                Container(
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: _selectedOptions.map((text) {
-                                        ProduitModel? produitTrouve;
-                                        if (_produits.isNotEmpty) {
-                                          produitTrouve = _produits.firstWhere(
-                                              (produit) =>
-                                                  produit.name == text);
-                                        }
-
-                                        return Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                  child: SuggestionItemCard(
-                                                      produit: produitTrouve ??
-                                                          ProduitModel(
-                                                              name: "",
-                                                              description: "",
-                                                              image: "",
-                                                              codebarre: ""))),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  removeInselectedOptionsID(
-                                                      text);
-                                                },
-                                                child: Icon(
-                                                  Icons.delete_forever_outlined,
-                                                  color: Colors.red,
-                                                  size: 27,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    margin: EdgeInsets.all(10),
+                    child: demandes.isEmpty
+                        ? Center(
+                            child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Center(
+                                child: Lottie.asset(
+                                  "assets/lotties/empty.json",
                                 ),
-                                _selectedOptions.length >= 2
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          InkWell(
-                                            onTap: () async {
-                                              _selectedOptions = [];
-                                              await sharedPreferencesService
-                                                  .setStringList(
-                                                      'produitsSelected', []);
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 5, vertical: 7),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.delete_forever,
-                                                    size: 22,
-                                                    color: Colors.red.shade400,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  Text(
-                                                    "Vider",
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Colors
-                                                            .red.shade400),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    : Container()
-                              ],
+                              ),
+                              Text(
+                                "Aucune demande pour le moment ...",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(height: 1.5),
+                              ),
+                            ],
+                          ))
+                        : SingleChildScrollView(
+                            child: Column(
+                              children: [],
                             ),
-                          ],
-                        ),
+                          ),
+                  ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                _selectedOptions.length > 0
-                    ? Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        height: Helper.getScreenHeight(context) * 0.1,
+                Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  height: Helper.getScreenHeight(context) * 0.1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          // showNotification();
+                          Navigator.of(context).pushNamed(SearchPage.routeName);
+                        },
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context)
-                                    .pushNamed(SearchPage.routeName);
-                              },
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.search,
-                                    size: 24,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    "Rechercher ${_selectedOptions.length} médicament(s)",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  )
-                                ],
-                              ),
+                            Icon(
+                              Icons.add,
+                              size: 24,
+                              color: Colors.white,
                             ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Faire une nouvelle recherche",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            )
                           ],
                         ),
-                      )
-                    : Container()
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),

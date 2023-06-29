@@ -26,7 +26,7 @@ class MyPinInMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      Helper.getAssetName("loc.png", "icons"),
+      Helper.getAssetName("icon_me.png", "icons"),
     );
   }
 }

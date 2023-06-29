@@ -35,7 +35,7 @@ class OfficineSchema {
     }
   """;
 
-  static const String OOFICINE_DISTANCE = r"""
+  static const String OFFICINE_DISTANCE = r"""
     query ($id: String, $longitude: Float, $latitude: Float) {
       searchOfficineDistance(id: $id, longitude: $longitude, latitude: $latitude) {
         distance
@@ -45,10 +45,12 @@ class OfficineSchema {
     }
   """;
 
-  static const String GET_ONE = """
-    query{
-      countries(filter:{currency:{eq:"EGP"}}){
-        name
+  static const String OFFICINES_AVIALABLE = r"""
+    query ($id: String, $longitude: Float, $latitude: Float, $distance: Float,  $circonscription: UUID,) {
+      searchOfficineDistance(id: $id, longitude: $longitude, latitude: $latitude, distance: $distance, circonscription: $circonscription) {
+        distance
+        officine
+        route
       }
     }
   """;

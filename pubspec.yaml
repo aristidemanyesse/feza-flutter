@@ -47,6 +47,13 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   flutter_launcher_icons: ^0.11.0
   marquee_widget: ^1.2.0
+  flutter_local_notifications: ^9.6.0
+  # flutter_local_notifications: 
+  rxdart:
+  image_picker: 
+  sensors: ^2.0.3
+  sensors_plus: ^3.0.2
+  smooth_compass: ^2.0.17
 
 dev_dependencies:
   flutter_test:

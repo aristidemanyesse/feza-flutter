@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ipi/const/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
-import 'package:ipi/widgets/circonscriptionChoicesDialog.dart';
+import 'package:ipi/widgets/zoneChoicesDialog.dart';
 
 class SelectCirconscriptionBloc extends StatefulWidget {
   SelectCirconscriptionBloc({Key? key}) : super(key: key);
@@ -63,15 +64,16 @@ class _SelectCirconscriptionBlocState extends State<SelectCirconscriptionBloc> {
             children: [
               Text(
                 circonscription,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.blue),
               ),
               SizedBox(
                 width: 10,
               ),
-              Icon(
-                Icons.maps_home_work_outlined,
-                size: 20,
-              ),
+              Icon(Icons.maps_home_work_outlined,
+                  size: 20, color: AppColor.blue),
             ],
           )),
     );

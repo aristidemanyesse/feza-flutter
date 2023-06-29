@@ -38,28 +38,10 @@ class _LoaderScreenState extends State<LoaderScreen>
     return Stack(
       alignment: Alignment.center,
       children: [
-        AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return Transform.scale(
-              scale: _animation.value,
-              child: child,
-            );
-          },
-          child: Center(
-            child: Container(),
-            // child: Image.asset(
-            //   'assets/images/bg/carte_bg.png',
-            //   repeat: ImageRepeat.repeatY,
-            //   width: Helper.getScreenWidth(context),
-            //   height: Helper.getScreenHeight(context),
-            // ),
-          ), // Remplacez par votre propre image
-        ),
         Container(
           width: Helper.getScreenWidth(context),
           height: Helper.getScreenHeight(context),
-          color: Colors.white.withOpacity(0.85),
+          color: Colors.white.withOpacity(0.5),
         ),
         Center(
           child: Column(

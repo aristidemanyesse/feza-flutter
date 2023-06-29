@@ -220,6 +220,7 @@ class Ligne extends StatelessWidget {
       },
       child: Container(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               margin: EdgeInsets.fromLTRB(5, 7, 0, 7),

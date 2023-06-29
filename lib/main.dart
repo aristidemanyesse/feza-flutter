@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ipi/screens/medicamentScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
 import 'package:ipi/screens/test.dart';
-
 import './screens/spashScreen.dart';
 import './screens/landingScreen.dart';
 import './screens/loginScreen.dart';
@@ -15,7 +15,22 @@ import './screens/dessertScreen.dart';
 import './const/colors.dart';
 import 'screens/searchPage.dart';
 
-void main() {
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> initialize() async {
+  var initializationSettingsAndroid = AndroidInitializationSettings(
+      'ic_launcher'); // Remplacez 'app_icon' par le nom de votre icône d'application
+  var initializationSettingsIOS = IOSInitializationSettings();
+  var initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initialize();
   runApp(MyApp());
 }
 
@@ -91,7 +106,7 @@ class MyApp extends StatelessWidget {
           MedicamentScreen.routeName: (context) => MedicamentScreen(),
           HomeScreen.routeName: (context) => HomeScreen(),
           // TextRecognizerView.routeName: (context) => TextRecognizerView(),
-          TextPage.routeName: (context) => TextPage(),
+          TestPage.routeName: (context) => TestPage(),
         },
         // onGenerateRoute: (settings) {
         //   switch (settings.name) {
@@ -172,9 +187,9 @@ class MyApp extends StatelessWidget {
         //         settings: settings,
         //       );
 
-        //     case TextPage.routeName:
+        //     case TestPage.routeName:
         //       return PageTransition(
-        //         child: TextPage(),
+        //         child: TestPage(),
         //         type: PageTransitionType.leftToRightWithFade,
         //         settings: settings,
         //       );

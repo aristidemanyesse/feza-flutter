@@ -1,82 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
-import 'package:latlong2/latlong.dart';
 
-class TextPage extends StatefulWidget {
-  static const routeName = '/test';
-
-  const TextPage({Key? key}) : super(key: key);
-
-  @override
-  State<TextPage> createState() => _TextPageState();
+void main() async {
+  runApp(TestPage());
 }
 
-class _TextPageState extends State<TextPage> {
-  late final List<Marker> _markers;
-
-  /// Used to trigger showing/hiding of popups.
-  final PopupController _popupLayerController = PopupController();
-
+class TestPage extends StatefulWidget {
+  static const routeName = "/test";
   @override
-  void initState() {
-    super.initState();
-    _markers = [
-      LatLng(44.421, 10.404),
-      LatLng(45.683, 10.839),
-      LatLng(45.246, 5.783),
-    ]
-        .map(
-          (markerPosition) => Marker(
-            point: markerPosition,
-            width: 40,
-            height: 40,
-            builder: (_) => const Icon(Icons.location_on, size: 40),
-            anchorPos: AnchorPos.align(AnchorAlign.top),
-            rotateAlignment: AnchorAlign.top.rotationAlignment,
-          ),
-        )
-        .toList();
-  }
+  State<StatefulWidget> createState() => _TestPageState();
+}
 
-  @override
-  void dispose() {
-    _popupLayerController.dispose();
-    super.dispose();
-  }
+class _TestPageState extends State<TestPage> {
+  static const List<Color> colors = [
+    Colors.red,
+    Colors.green,
+    Colors.blue,
+  ];
+
+  static const double minExtent = 0.2;
+  static const double maxExtent = 0.6;
+
+  bool isExpanded = false;
+  double initialExtent = minExtent;
+  late BuildContext draggableSheetContext;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Simple map with popups'),
+    return MaterialApp(
+      home: Scaffold(
+        body: _buildBody(),
       ),
-      body: FlutterMap(
-        options: MapOptions(
-          zoom: 5.0,
-          center: LatLng(44.421, 10.404),
-          scrollWheelVelocity: 2.0,
-          interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-          onTap: (_, __) => _popupLayerController
-              .hideAllPopups(), // Hide popup when the map is tapped.
+    );
+  }
+
+  Widget _buildBody() {
+    return InkWell(
+      onTap: _toggleDraggableScrollableSheet,
+      child: DraggableScrollableActuator(
+        child: DraggableScrollableSheet(
+          key: Key(initialExtent.toString()),
+          minChildSize: minExtent,
+          maxChildSize: maxExtent,
+          initialChildSize: initialExtent,
+          builder: _draggableScrollableSheetBuilder,
         ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: const ['a', 'b', 'c'],
-          ),
-          PopupMarkerLayer(
-            options: PopupMarkerLayerOptions(
-              popupController: _popupLayerController,
-              markers: _markers,
-              popupDisplayOptions: PopupDisplayOptions(
-                builder: (BuildContext context, Marker marker) => Card(
-                  child: Text("Hello wold !"),
-                ),
-              ),
-            ),
-          ),
-        ],
+      ),
+    );
+  }
+
+  void _toggleDraggableScrollableSheet() {
+    setState(() {
+      initialExtent = isExpanded ? minExtent : maxExtent;
+      isExpanded = !isExpanded;
+    });
+    DraggableScrollableActuator.reset(draggableSheetContext);
+  }
+
+  Widget _draggableScrollableSheetBuilder(
+    BuildContext context,
+    ScrollController scrollController,
+  ) {
+    draggableSheetContext = context;
+    return SingleChildScrollView(
+      controller: scrollController,
+      child: Column(
+        children: colors
+            .map((color) => Container(
+                  height: 200,
+                  width: double.infinity,
+                  color: color,
+                ))
+            .toList(),
       ),
     );
   }

@@ -10,7 +10,9 @@ import 'package:ipi/widgets/SuggestionItemCard.dart';
 
 class SearchBarGroup extends StatefulWidget {
   static const routeName = "/SearchBarGroup";
-  SearchBarGroup({Key? key}) : super(key: key);
+  late bool scan = true;
+  late bool camera = true;
+  SearchBarGroup({Key? key, scan, camera}) : super(key: key);
 
   @override
   State<SearchBarGroup> createState() => SearchBarGroupState();
@@ -131,60 +133,6 @@ class SearchBarGroupState extends State<SearchBarGroup> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Expanded(
-          child: _textField,
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        // Container(
-        //   margin: EdgeInsets.only(right: 10),
-        //   padding: EdgeInsets.all(5),
-        //   decoration: BoxDecoration(
-        //       borderRadius: BorderRadius.all(Radius.circular(15)),
-        //       border: Border.all(color: AppColor.secondary, width: 2)),
-        //   child: GestureDetector(
-        //     child: Icon(
-        //       Icons.file_open_rounded,
-        //       size: 20,
-        //     ),
-        //     onTap: () {
-        //       // this.getScanList();
-        //       showDialog(
-        //         context: context,
-        //         builder: (BuildContext context) {
-        //           return ChooseMLMethod(
-        //             title: 'Text Detector',
-        //             customPaint: _customPaint,
-        //             text: _text,
-        //             onImage: (inputImage) {
-        //               processImage(inputImage);
-        //             },
-        //           );
-        //         },
-        //       );
-        //     },
-        //   ),
-        // ),
-        Container(
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(50)),
-              border: Border.all(color: AppColor.secondary, width: 2)),
-          child: GestureDetector(
-            child: Icon(
-              Icons.barcode_reader,
-              size: 26,
-            ),
-            onTap: () {
-              this.getCodeBar();
-            },
-          ),
-        ),
-      ],
-    );
+    return _textField;
   }
 }

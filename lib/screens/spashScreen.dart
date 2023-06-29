@@ -50,6 +50,9 @@ class _SplashScreenState extends State<SplashScreen> {
     String? userId = prefs.getString('userId');
     String uniq = await UtilisateurProvider.getUniqID();
 
+    Navigator.of(context)
+        .pushNamed(HomeScreen.routeName, arguments: {"user": ""});
+
     if (userId != null) {
       List<UtilisateurModel> users =
           await UtilisateurProvider.all({"id": userId, "imei": uniq});

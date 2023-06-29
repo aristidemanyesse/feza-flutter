@@ -2,10 +2,10 @@ import 'package:graphql/client.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class ApiService {
-  // static const BASE_URL = "http://192.168.0.101:8005/";
+  static const BASE_URL = "http://192.168.0.100:8005/";
   // static const BASE_URL = "http://192.168.166.117:8005/";
   // static const BASE_URL = "http://192.168.1.45:8005/";
-  static const BASE_URL = "http://aristidemanyesse.pythonanywhere.com/";
+  // static const BASE_URL = "http://aristidemanyesse.pythonanywhere.com/";
   static const GRAPH_URL = BASE_URL + "graphql/";
 
   static Future<Map<String, dynamic>?> request(
