@@ -46,8 +46,8 @@ class OfficineSchema {
   """;
 
   static const String OFFICINES_AVIALABLE = r"""
-    query ($id: String, $longitude: Float, $latitude: Float, $distance: Float,  $circonscription: UUID,) {
-      searchOfficineDistance(id: $id, longitude: $longitude, latitude: $latitude, distance: $distance, circonscription: $circonscription) {
+    query ($longitude: Float, $latitude: Float, $distance: Int,  $circonscription: UUID,) {
+      searchOfficineAvialable(longitude: $longitude, latitude: $latitude, distance: $distance, circonscription: $circonscription) {
         distance
         officine
         route

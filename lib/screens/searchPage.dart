@@ -1,6 +1,11 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:typed_data';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:ipi/models/DemandeModel.dart';
+import 'package:ipi/models/ResponseModel.dart';
+import 'package:ipi/provider/DemandeProvider.dart';
 import 'package:ipi/provider/OfficineProvider.dart';
 import 'package:ipi/provider/ProduitInOfficineProvider.dart';
 import 'package:ipi/widgets/noPharmacieAvialable.dart';
@@ -28,9 +33,8 @@ import 'package:flutter_map/plugin_api.dart';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
-import 'package:sensors_plus/sensors_plus.dart';
 import 'package:smooth_compass/utils/src/compass_ui.dart';
+import 'dart:convert';
 
 class SearchPage extends StatefulWidget {
   static const routeName = "/SearchPage";
@@ -65,9 +69,12 @@ class SearchPageState extends State<SearchPage>
   List<CustomMyMarker> markers = [];
   List<LatLng> markersLatLng = [];
   Polyline routeCoordinates = Polyline(points: []);
+  bool wait = false;
   bool ready = true;
-  bool isOrdonnance = true;
+  bool isOrdonnance = false;
   double distance = 0;
+  late File file;
+  late String base64 = "";
 
   static const _startedId = 'AnimatedMapController#MoveStarted';
   static const _inProgressId = 'AnimatedMapController#MoveInProgress';
@@ -132,7 +139,9 @@ class SearchPageState extends State<SearchPage>
         sharedPreferencesService.watchString('distance').listen((value) {
       setState(() {
         distance = double.parse(value);
+        wait = true;
       });
+      officinesAvialable();
       locateMe();
     });
 
@@ -169,63 +178,57 @@ class SearchPageState extends State<SearchPage>
   }
 
   void makeDemande() async {
-    List<String> produitsSelected =
-        await sharedPreferencesService.getStringList('produitsIDSelected');
-    List<dynamic> datas =
-        await ProduitInOfficineProvider.searchProduitsAvialableInOfficine({
-      "circonscription": user.circonscription!.id,
-      "produits": produitsSelected,
-      "longitude": myPosition.longitude,
-      "latitude": myPosition.latitude
+    setState(() {
+      ready = false;
     });
 
-    // if (datas.length > 0) {
-    //   initialProduits =
-    //       await ProduitProvider.specificAll({"produits": produitsSelected});
-    //   for (var element in datas) {
-    //     officines = await OfficineProvider.all({"id": element["officine"]});
-    //     OfficineModel officine = officines[0];
-    //     List<ProduitModel> produits = await ProduitProvider.specificAll(
-    //         {"produits": element["produits"]});
+    print(base64);
+    for (var officine in officines) {
+      ResponseModel response = await DemandeProvider.createDemande({
+        "utilisateur": user.id,
+        "officine": officine.id,
+        "commentaire": "",
+        "base64": base64,
+      });
+      if (response.ok) {
+        DemandeModel demande = response.data;
+        List<String> produitsSelected =
+            await sharedPreferencesService.getStringList('produitsIDSelected');
+        for (var pro in produitsSelected) {
+          ResponseModel response = await DemandeProvider.createLigneDemande(
+              {"produit": pro, "demande": demande.id});
 
-    //     double distance = element["distance"];
-    //     distanceTableaux[officine] = distance < 1
-    //         ? "${distance * 1000} m"
-    //         : "${distance.toStringAsFixed(2)} km";
+          if (!response.ok) {
+            Fluttertoast.showToast(
+              msg: response.message ?? "Ouups, Produit Veuillez recommencer !",
+              gravity: ToastGravity.BOTTOM,
+            );
+          }
+        }
+      } else {
+        Fluttertoast.showToast(
+          msg: response.message ?? "Ouups, Veuillez recommencer !",
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+    }
 
-    //     tableauxOfficines.add({officine: produits});
-    //     ratioTableaux[officine] = element["ratio"];
-    //     routesOfficines[officine.id!] = jsonDecode(element["route"]);
-    //     markers.add(
-    //         CustomMyMarker(LatLng(officine.lon!, officine.lat!), officine));
-    //     markersLatLng.add(LatLng(officine.lon!, officine.lat!));
-    //     LatLngBounds bounds = LatLngBounds.fromPoints(markersLatLng);
-    //     final centerZoom = mapController.centerZoomFitBounds(bounds);
-    //     _animatedMapMove(centerZoom.center, centerZoom.zoom);
-    //   }
-    //   ready = true;
-    //   setState(() {});
-    // } else {
-    //   showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return NoPharmacieAvialable();
-    //     },
-    //   );
-    // }
+    setState(() {
+      ready = true;
+    });
   }
 
   void officinesAvialable() async {
-    setState(() {
-      officines = [];
-      ready = false;
-    });
     List<dynamic> datas = await OfficineProvider.avialable({
       "circonscription": user.circonscription!.id,
       "distance": distance,
-      "longitude": myPosition.longitude,
-      "latitude": myPosition.latitude
+      // "longitude": myPosition.longitude,
+      // "latitude": myPosition.latitude
+      "longitude": -3.260223,
+      "latitude": 5.965418
     });
+
+    officines = [];
     if (datas.length > 0) {
       for (var element in datas) {
         var offs = await OfficineProvider.all({"id": element["officine"]});
@@ -245,8 +248,11 @@ class SearchPageState extends State<SearchPage>
         final centerZoom = mapController.centerZoomFitBounds(bounds);
         _animatedMapMove(centerZoom.center, centerZoom.zoom);
       }
-      ready = true;
-      setState(() {});
+      setState(() {
+        wait = false;
+        officines;
+      });
+      print(officines);
     } else {
       showDialog(
         context: context,
@@ -301,15 +307,25 @@ class SearchPageState extends State<SearchPage>
   late Future<XFile?> pickedFile = Future.value(null);
 
   Future<void> _captureImageFromCamera() async {
-    if (_selectedOptions.length > 0) {
-    } else {
-      pickedFile = picker
-          .pickImage(source: ImageSource.camera)
-          .whenComplete(() => setState(() {}));
-    }
+    // if (_selectedOptions.length > 0) {
+    // } else {
+    //   pickedFile = picker
+    //       .pickImage(source: ImageSource.camera)
+    //       .whenComplete(() => setState(() {}));
+    // }
     pickedFile = picker
         .pickImage(source: ImageSource.camera)
-        .whenComplete(() => setState(() {}));
+        .whenComplete(() => setState(() {
+              setState(() {});
+            }));
+    pickedFile.then((value) {
+      setState(() {
+        isOrdonnance = true;
+        file = File(value!.path);
+        List<int> imageBytes = file.readAsBytesSync();
+        base64 = "data:image/png;base64," + base64Encode(imageBytes);
+      });
+    });
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -318,6 +334,14 @@ class SearchPageState extends State<SearchPage>
           source: ImageSource.gallery,
         )
         .whenComplete(() => setState(() {}));
+    pickedFile.then((value) {
+      setState(() {
+        isOrdonnance = true;
+        file = File(value!.path);
+        List<int> imageBytes = file.readAsBytesSync();
+        base64 = base64Encode(imageBytes);
+      });
+    });
   }
 
   void fitBoundsOnCircle(LatLng center, double radius) {
@@ -362,6 +386,19 @@ class SearchPageState extends State<SearchPage>
                         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'dev.fleaflet.flutter_map.example',
                   ),
+                  CircleLayer(
+                    circles: [
+                      CircleMarker(
+                        point: myPosition, // Coordonnées du cercle
+                        radius: distance * 1000,
+                        useRadiusInMeter: true,
+                        borderColor: Colors.grey,
+                        borderStrokeWidth: 1.5,
+                        color:
+                            Colors.grey.withOpacity(0.20), // Couleur du cercle
+                      ),
+                    ],
+                  ),
                   PolylineLayer(
                     polylines: [routeCoordinates],
                   ),
@@ -394,19 +431,6 @@ class SearchPageState extends State<SearchPage>
                         },
                       ),
                     ),
-                  ),
-                  CircleLayer(
-                    circles: [
-                      CircleMarker(
-                        point: myPosition, // Coordonnées du cercle
-                        radius: distance * 1000,
-                        useRadiusInMeter: true,
-                        borderColor: Colors.grey,
-                        borderStrokeWidth: 2.0,
-                        color:
-                            Colors.grey.withOpacity(0.35), // Couleur du cercle
-                      ),
-                    ],
                   ),
                   PopupMarkerLayer(
                     options: PopupMarkerLayerOptions(
@@ -623,6 +647,192 @@ class SearchPageState extends State<SearchPage>
                             height: 20,
                           ),
                           Row(
+                            children: [
+                              Expanded(
+                                  child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color(0xffe4f3e4),
+                                            Color(0xfff9978f)
+                                          ],
+                                          stops: [0, 1],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          _selectedOptions.length.toString(),
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.grey[700],
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(width: 7),
+                                        Text(
+                                          "médicaments",
+                                          style: TextStyle(
+                                              color: Colors.grey[700],
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Container(
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color(0xffe4f3e4),
+                                            Color(0xfff9978f)
+                                          ],
+                                          stops: [0, 1],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          isOrdonnance ? "1" : "0",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.grey[700],
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(width: 7),
+                                        Text(
+                                          "ordonnance",
+                                          style: TextStyle(
+                                              color: Colors.grey[700],
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                width: Helper.getScreenWidth(context) * 0.25,
+                                height: 110,
+                                decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xffe4f3e4),
+                                        Color(0xff92cf94)
+                                      ],
+                                      stops: [0, 1],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: !wait
+                                    ? Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            officines.length.toString(),
+                                            style: TextStyle(
+                                                fontSize: 55,
+                                                color: Colors.grey[700],
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            "pharmacies trouvées",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.grey[700],
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      )
+                                    : Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Container(
+                                                height: 35,
+                                                width: 35,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color: Colors.grey,
+                                                )),
+                                            const SizedBox(height: 15),
+                                            Text(
+                                              "patientez...",
+                                              textAlign: TextAlign.center,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                width: Helper.getScreenWidth(context) * 0.2,
+                                height: 110,
+                                decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xffd1d1d1),
+                                        Color(0xffffffff)
+                                      ],
+                                      stops: [0, 1],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                  child: FutureBuilder<XFile?>(
+                                    future: pickedFile,
+                                    builder: (context, data) {
+                                      if (data.hasData) {
+                                        file = File(data.data!.path);
+                                        return Container(
+                                          height: 200.0,
+                                          child: Image.file(
+                                            file,
+                                            fit: BoxFit.contain,
+                                            height: 200.0,
+                                          ),
+                                          color: Colors.blue,
+                                        );
+                                      }
+                                      return Text("...");
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
@@ -693,126 +903,6 @@ class SearchPageState extends State<SearchPage>
                             ],
                           ),
                           SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                width: Helper.getScreenWidth(context) * 0.3,
-                                height: 110,
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xffe4f3e4),
-                                        Color(0xfff9978f)
-                                      ],
-                                      stops: [0, 1],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      isOrdonnance
-                                          ? "1"
-                                          : _selectedOptions.length.toString(),
-                                      style: TextStyle(
-                                          fontSize: 55,
-                                          color: Colors.grey[700],
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      isOrdonnance
-                                          ? "ordonnance"
-                                          : "médicaments",
-                                      style: TextStyle(
-                                          color: Colors.grey[700],
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                width: Helper.getScreenWidth(context) * 0.3,
-                                height: 110,
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xffe4f3e4),
-                                        Color(0xff92cf94)
-                                      ],
-                                      stops: [0, 1],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      officines.length.toString(),
-                                      style: TextStyle(
-                                          fontSize: 55,
-                                          color: Colors.grey[700],
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      "pharmacies",
-                                      style: TextStyle(
-                                          color: Colors.grey[700],
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  height: 110,
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xffd1d1d1),
-                                          Color(0xffffffff)
-                                        ],
-                                        stops: [0, 1],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Center(
-                                    child: FutureBuilder<XFile?>(
-                                      future: pickedFile,
-                                      builder: (context, snap) {
-                                        if (snap.hasData) {
-                                          setState(() {
-                                            isOrdonnance = true;
-                                          });
-                                          return ClipRect(
-                                            child: Image.file(
-                                              File(snap.data!.path),
-                                              fit: BoxFit.contain,
-                                            ),
-                                          );
-                                        }
-                                        return Text("...");
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
                             height: 25,
                           ),
                           Row(
@@ -820,7 +910,7 @@ class SearchPageState extends State<SearchPage>
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  officinesAvialable();
+                                  makeDemande();
                                 },
                                 child: Row(
                                   children: [

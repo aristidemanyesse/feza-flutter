@@ -1,7 +1,7 @@
 class ReponseSchema {
   static const String ALL = r"""
-      query($user:UUID){
-        searchReponse(deleted: false, demande_Id:$user){
+      query($demande:UUID){
+        searchReponse(deleted: false, demande_Id:$demande){
           results{
             id
             commentaire
@@ -54,8 +54,8 @@ class ReponseSchema {
   """;
 
   static const String LIGNE_REPONSE = r"""
-      query($user:UUID){
-        searchLigneReponse(deleted: false, reponse_Id:$user){
+      query($reponse:UUID){
+        searchLigneReponse(deleted: false, reponse_Id:$reponse){
           results{
             id
             status

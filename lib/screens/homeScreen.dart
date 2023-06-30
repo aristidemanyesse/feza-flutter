@@ -2,12 +2,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ipi/main.dart';
+import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/DemandeProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/searchPage.dart';
 import 'package:ipi/utils/sharedpre.dart';
+import 'package:ipi/widgets/DemandeItemCard.dart';
 import 'package:ipi/widgets/confirmExitDialog.dart';
+import 'package:ipi/widgets/pharmacieItemCard.dart';
 import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 import 'package:lottie/lottie.dart';
 import '../const/colors.dart';
@@ -28,7 +32,7 @@ class HomeScreenState extends State<HomeScreen> {
       SharedPreferencesService();
 
   UtilisateurModel? user;
-  late List<String> demandes = [];
+  late List<DemandeModel> demandes = [];
 
   @override
   void initState() {
@@ -73,6 +77,10 @@ class HomeScreenState extends State<HomeScreen> {
     List<UtilisateurModel> users =
         await UtilisateurProvider.all({"id": userId, "imei": uniq});
     user = users[0];
+
+    demandes = await DemandeProvider.all({"user": userId});
+    user = users[0];
+
     setState(() {});
   }
 
@@ -193,7 +201,7 @@ class HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     margin: EdgeInsets.all(10),
                     child: demandes.isEmpty
                         ? Center(
@@ -214,7 +222,9 @@ class HomeScreenState extends State<HomeScreen> {
                           ))
                         : SingleChildScrollView(
                             child: Column(
-                              children: [],
+                              children: demandes.map((demande) {
+                                return DemandeItemCard(demande);
+                              }).toList(),
                             ),
                           ),
                   ),
