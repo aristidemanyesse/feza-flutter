@@ -134,10 +134,7 @@ class AvialableMedicamentListDialog extends StatelessWidget {
                             break;
                           }
                         }
-                        return Ligne(
-                            title: item.name,
-                            forme: item.forme ?? "",
-                            active: test);
+                        return Ligne(produit: item, active: test);
                       }).toList(),
                     ),
                   ),

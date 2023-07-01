@@ -13,7 +13,7 @@ class UtilisateurModel {
     this.image,
     this.deleted,
     this.protected,
-    this.createAt,
+    this.createdAt,
     this.updateAt,
   });
 
@@ -28,7 +28,7 @@ class UtilisateurModel {
   String? image;
   bool? deleted;
   bool? protected;
-  String? createAt;
+  String? createdAt;
   String? updateAt;
 
   static UtilisateurModel fromJson(Map<String, dynamic> json) =>
@@ -46,7 +46,7 @@ class UtilisateurModel {
           image: json["image"],
           deleted: json["deleted"],
           protected: json["protected"],
-          createAt: json["createAt"],
+          createdAt: json["createdAt"],
           updateAt: json["updateAt"]);
 
   Map<String, dynamic> toJson() => {
@@ -61,7 +61,7 @@ class UtilisateurModel {
         "circonscription": circonscription?.toJson(),
         "deleted": deleted,
         "protected": protected,
-        "createAt": createAt,
+        "createdAt": createdAt,
         "updateAt": updateAt
       };
 }

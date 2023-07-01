@@ -6,7 +6,9 @@ class DemandeSchema {
             id
             status
             ordonnance
+            base64
             commentaire
+            createdAt
             utilisateur{
               id
               fullname
@@ -22,28 +24,6 @@ class DemandeSchema {
                 name
               }
             }
-            officine{
-              id
-                name
-                contact
-                contact2
-                localisation
-                geometryJson
-                lat
-                lon
-                type {
-                  id
-                  name
-                  etiquette
-                }
-                image
-                image2
-                image3
-                circonscription {
-                  id
-                  name
-                }
-            }
           }
         }
       }
@@ -51,13 +31,11 @@ class DemandeSchema {
 
   static const String CREATE_DEMANDE = r"""
       mutation(
-        $officine:ID!,
         $utilisateur:ID!,
         $commentaire:String,
         $base64:String){
         createDemande(
           newDemande:{
-            officine: $officine,
             commentaire:$commentaire,
             base64: $base64,
             utilisateur: $utilisateur
@@ -71,8 +49,10 @@ class DemandeSchema {
           demande{
             id
             status
+            base64
             ordonnance
             commentaire
+            createdAt
             utilisateur{
               id
               fullname
@@ -88,28 +68,6 @@ class DemandeSchema {
                 name
               }
             }
-            officine{
-              id
-                name
-                contact
-                contact2
-                localisation
-                geometryJson
-                lat
-                lon
-                type {
-                  id
-                  name
-                  etiquette
-                }
-                image
-                image2
-                image3
-                circonscription {
-                  id
-                  name
-                }
-            }
           }
         }
       }
@@ -121,6 +79,29 @@ class DemandeSchema {
           results{
             id
             status
+            demande{
+              id
+              status
+              base64
+              ordonnance
+              commentaire
+              createdAt
+              utilisateur{
+                id
+                fullname
+                contact
+                imei
+                createdAt
+                image
+                isValide
+                otp
+                geometryJson
+                circonscription {
+                  id
+                  name
+                }
+              }
+            }
             produit{
               id
               name
@@ -160,6 +141,29 @@ class DemandeSchema {
           lignedemande{
             id
             status
+            demande{
+              id
+              status
+              base64
+              ordonnance
+              commentaire
+              createdAt
+              utilisateur{
+                id
+                fullname
+                contact
+                imei
+                createdAt
+                image
+                isValide
+                otp
+                geometryJson
+                circonscription {
+                  id
+                  name
+                }
+              }
+            }
             produit{
               id
               name
@@ -179,5 +183,127 @@ class DemandeSchema {
           }
         }
       }
+  """;
+
+  static const String OFFICINE_DEMANDE = r"""
+      query ($demande: UUID, $officine: UUID) {
+        searchOfficineDemande(
+          deleted: false
+          demande_Id: $demande
+          officine_Id: $officine
+        ) {
+          results {
+            id
+            status
+            demande {
+              id
+              status
+              base64
+              ordonnance
+              commentaire
+              utilisateur {
+                id
+                fullname
+                contact
+                imei
+                createdAt
+                image
+                isValide
+                otp
+                geometryJson
+                circonscription {
+                  id
+                  name
+                }
+              }
+            }
+            officine {
+              id
+              name
+              contact
+              contact2
+              localisation
+              geometryJson
+              lat
+              lon
+              type {
+                id
+                name
+                etiquette
+              }
+              image
+              image2
+              image3
+              circonscription {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+  """;
+
+  static const String CREATE_OFFICINE_DEMANDE = r"""
+      mutation ($demande: ID!, $officine: ID!) {
+        createOfficineDemande(
+          newOfficinedemande: { demande: $demande, officine: $officine }
+        ) {
+          ok
+          errors {
+            field
+            messages
+          }
+          officinedemande {
+            id
+            status
+            demande {
+              id
+              status
+              base64
+              ordonnance
+              commentaire
+              utilisateur {
+                id
+                fullname
+                contact
+                imei
+                createdAt
+                image
+                isValide
+                otp
+                geometryJson
+                circonscription {
+                  id
+                  name
+                }
+              }
+            }
+            officine {
+              id
+              name
+              contact
+              contact2
+              localisation
+              geometryJson
+              lat
+              lon
+              type {
+                id
+                name
+                etiquette
+              }
+              image
+              image2
+              image3
+              circonscription {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+
   """;
 }

@@ -29,6 +29,7 @@ class ProduitsListeState extends State<ProduitsListe> {
   @override
   void initState() {
     super.initState();
+
     getData();
     _sharedPreferencesSubscription = sharedPreferencesService
         .watchString('produitsSelected')

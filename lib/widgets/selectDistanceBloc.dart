@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/distanceChoicesDialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectDistanceBloc extends StatefulWidget {
   SelectDistanceBloc({Key? key}) : super(key: key);

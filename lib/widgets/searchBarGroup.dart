@@ -31,48 +31,28 @@ class SearchBarGroupState extends State<SearchBarGroup> {
   SharedPreferencesService sharedPreferencesService =
       SharedPreferencesService();
 
-  Future<void> getData() async {
-    await sharedPreferencesService.init();
-    _produits = await sharedPreferencesService.getProduitList('produits');
-    _nomsProduits =
-        await sharedPreferencesService.getStringList('nomsProduits');
-    // _produits = await ProduitProvider.all({});
-    // _nomsProduits = _produits.map((produit) => produit.name).toList();
-    _textField.updateSuggestions(_nomsProduits);
-
-    await sharedPreferencesService.init();
-    _selectedOptions =
-        await sharedPreferencesService.getStringList('produitsSelected');
-    _sharedPreferencesSubscription = sharedPreferencesService
-        .watchString('produitsSelected')
-        .listen((value) {
-      selectedOptionsID();
-    });
-  }
-
-  Future<void> getCodeBar() async {
-    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", "Annuler", false, ScanMode.BARCODE);
-    var datas = await ProduitProvider.all({"codebarre": barcodeScanRes});
-    _selectedOptions.add(datas[0].name);
-    await sharedPreferencesService.setStringList(
-        'produitsSelected', _selectedOptions);
-  }
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _sharedPreferencesSubscription.cancel(); // Arrêter le StreamSubscription
     super.dispose();
   }
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_focusNode);
+    });
+
     super.initState();
     getData();
 
     _textField = AutoCompleteTextField(
       suggestionsAmount: 7,
       key: key,
+      focusNode: _focusNode,
       controller: _textFieldController,
       itemBuilder: (context, item) {
         ProduitModel produitTrouve =
@@ -114,8 +94,37 @@ class SearchBarGroupState extends State<SearchBarGroup> {
         _selectedOptions.add(selectedOption);
         await sharedPreferencesService.setStringList(
             'produitsSelected', _selectedOptions);
+        FocusScope.of(context).requestFocus(_focusNode);
       },
     );
+  }
+
+  Future<void> getData() async {
+    await sharedPreferencesService.init();
+    _produits = await sharedPreferencesService.getProduitList('produits');
+    _nomsProduits =
+        await sharedPreferencesService.getStringList('nomsProduits');
+    // _produits = await ProduitProvider.all({});
+    // _nomsProduits = _produits.map((produit) => produit.name).toList();
+    _textField.updateSuggestions(_nomsProduits);
+
+    await sharedPreferencesService.init();
+    _selectedOptions =
+        await sharedPreferencesService.getStringList('produitsSelected');
+    _sharedPreferencesSubscription = sharedPreferencesService
+        .watchString('produitsSelected')
+        .listen((value) {
+      selectedOptionsID();
+    });
+  }
+
+  Future<void> getCodeBar() async {
+    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+        "#ff6666", "Annuler", false, ScanMode.BARCODE);
+    var datas = await ProduitProvider.all({"codebarre": barcodeScanRes});
+    _selectedOptions.add(datas[0].name);
+    await sharedPreferencesService.setStringList(
+        'produitsSelected', _selectedOptions);
   }
 
   void selectedOptionsID() async {

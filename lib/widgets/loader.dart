@@ -49,14 +49,14 @@ class _LoaderScreenState extends State<LoaderScreen>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Lottie.asset("assets/lotties/search2.json",
-                  width: Helper.getScreenWidth(context) * 0.93),
+                  width: Helper.getScreenWidth(context) * 0.5),
               Text(
                 "IPI recherche les pharmacies ...",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 17,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey),
+                    color: Colors.black87),
               )
             ],
           ),

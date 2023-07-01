@@ -1,43 +1,46 @@
-import 'package:ipi/models/BaseModel.dart';
-import 'package:ipi/models/GardeModel.dart';
+import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/OfficineModel.dart';
 
-class OfficineDeGardeModel extends BaseModel {
-  OfficineDeGardeModel({
+class OfficineDemandeModel {
+  OfficineDemandeModel({
     this.id,
-    this.garde,
+    this.demande,
     this.officine,
+    this.status,
     this.deleted,
     this.protected,
-    this.createdAt,
+    this.createAt,
     this.updateAt,
   });
 
   String? id;
-  GardeModel? garde;
+  DemandeModel? demande;
   OfficineModel? officine;
+  bool? status;
   bool? deleted;
   bool? protected;
-  String? createdAt;
+  String? createAt;
   String? updateAt;
 
-  factory OfficineDeGardeModel.fromJson(Map<String, dynamic> json) =>
-      OfficineDeGardeModel(
+  factory OfficineDemandeModel.fromJson(Map<String, dynamic> json) =>
+      OfficineDemandeModel(
           id: json["id"],
-          garde: GardeModel.fromJson(json["garde"]),
+          status: json["status"],
+          demande: DemandeModel.fromJson(json["demande"]),
           officine: OfficineModel.fromJson(json["officine"]),
           deleted: json["deleted"],
           protected: json["protected"],
-          createdAt: json["createdAt"],
+          createAt: json["createAt"],
           updateAt: json["updateAt"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "garde": garde?.toJson(),
+        "status": status,
         "officine": officine?.toJson(),
+        "demande": demande?.toJson(),
         "deleted": deleted,
         "protected": protected,
-        "createdAt": createdAt,
+        "createAt": createAt,
         "updateAt": updateAt
       };
 }

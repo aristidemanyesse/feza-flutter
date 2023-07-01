@@ -46,6 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove("produitsSelected");
     await prefs.remove("produitsIDSelected");
+    // await prefs.remove("produits");
 
     String? userId = prefs.getString('userId');
     String uniq = await UtilisateurProvider.getUniqID();
@@ -90,7 +91,6 @@ class _SplashScreenState extends State<SplashScreen> {
     List<ProduitModel> produits = [];
     List<String> nomsProduits = [];
     produits = await sharedPreferencesService.getProduitList('produits');
-    print(produits.length);
     if (produits.length == 0) {
       produits = await ProduitProvider.all({});
     }

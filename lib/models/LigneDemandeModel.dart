@@ -9,7 +9,7 @@ class LigneDemandeModel {
     this.status,
     this.deleted,
     this.protected,
-    this.createAt,
+    this.createdAt,
     this.updateAt,
   });
 
@@ -19,7 +19,7 @@ class LigneDemandeModel {
   bool? status;
   bool? deleted;
   bool? protected;
-  String? createAt;
+  String? createdAt;
   String? updateAt;
 
   factory LigneDemandeModel.fromJson(Map<String, dynamic> json) =>
@@ -27,10 +27,10 @@ class LigneDemandeModel {
           id: json["id"],
           status: json["status"],
           demande: DemandeModel.fromJson(json["demande"]),
-          produit: ProduitModel.fromJson(json["officine"]),
+          produit: ProduitModel.fromJson(json["produit"]),
           deleted: json["deleted"],
           protected: json["protected"],
-          createAt: json["createAt"],
+          createdAt: json["createdAt"],
           updateAt: json["updateAt"]);
 
   Map<String, dynamic> toJson() => {
@@ -40,7 +40,7 @@ class LigneDemandeModel {
         "status": status,
         "deleted": deleted,
         "protected": protected,
-        "createAt": createAt,
+        "createdAt": createdAt,
         "updateAt": updateAt
       };
 }

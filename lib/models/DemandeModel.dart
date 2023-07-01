@@ -1,4 +1,3 @@
-import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 
 class DemandeModel {
@@ -8,46 +7,46 @@ class DemandeModel {
     this.commentaire,
     this.status,
     this.utilisateur,
-    this.officine,
+    this.base64,
     this.deleted,
     this.protected,
-    this.createAt,
+    this.createdAt,
     this.updateAt,
   });
 
   String? id;
   UtilisateurModel? utilisateur;
-  OfficineModel? officine;
   bool? status;
   String? commentaire;
   String? ordonnance;
+  String? base64;
   bool? deleted;
   bool? protected;
-  String? createAt;
+  String? createdAt;
   String? updateAt;
 
   factory DemandeModel.fromJson(Map<String, dynamic> json) => DemandeModel(
       id: json["id"],
       commentaire: json["commentaire"],
       ordonnance: json["ordonnance"],
+      base64: json["base64"],
       status: json["status"],
       utilisateur: UtilisateurModel.fromJson(json["utilisateur"]),
-      officine: OfficineModel.fromJson(json["officine"]),
       deleted: json["deleted"],
       protected: json["protected"],
-      createAt: json["createAt"],
+      createdAt: json["createdAt"],
       updateAt: json["updateAt"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "commentaire": commentaire,
         "ordonnance": ordonnance,
+        "base64": base64,
         "status": status,
-        "officine": officine?.toJson(),
         "utilisateur": utilisateur?.toJson(),
         "deleted": deleted,
         "protected": protected,
-        "createAt": createAt,
+        "createdAt": createdAt,
         "updateAt": updateAt
       };
 }

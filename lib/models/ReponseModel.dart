@@ -1,40 +1,44 @@
-import 'package:ipi/models/DemandeModel.dart';
+import 'package:ipi/models/OfficineDemandeModel.dart';
 
 class ReponseModel {
   ReponseModel({
     this.id,
     this.demande,
     this.commentaire,
+    this.read,
     this.deleted,
     this.protected,
-    this.createAt,
+    this.createdAt,
     this.updateAt,
   });
 
   String? id;
-  DemandeModel? demande;
+  OfficineDemandeModel? demande;
   String? commentaire;
+  bool? read;
   bool? deleted;
   bool? protected;
-  String? createAt;
+  String? createdAt;
   String? updateAt;
 
   factory ReponseModel.fromJson(Map<String, dynamic> json) => ReponseModel(
       id: json["id"],
+      read: json["read"],
       commentaire: json["commentaire"],
-      demande: DemandeModel.fromJson(json["demande"]),
+      demande: OfficineDemandeModel.fromJson(json["demande"]),
       deleted: json["deleted"],
       protected: json["protected"],
-      createAt: json["createAt"],
+      createdAt: json["createdAt"],
       updateAt: json["updateAt"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "read": read,
         "commentaire": commentaire,
         "demande": demande?.toJson(),
         "deleted": deleted,
         "protected": protected,
-        "createAt": createAt,
+        "createdAt": createdAt,
         "updateAt": updateAt
       };
 }

@@ -7,7 +7,7 @@ class GardeModel extends BaseModel {
     this.fin,
     this.deleted,
     this.protected,
-    this.createAt,
+    this.createdAt,
     this.updateAt,
   });
 
@@ -16,7 +16,7 @@ class GardeModel extends BaseModel {
   String? fin;
   bool? deleted;
   bool? protected;
-  String? createAt;
+  String? createdAt;
   String? updateAt;
 
   factory GardeModel.fromJson(Map<String, dynamic> json) => GardeModel(
@@ -25,7 +25,7 @@ class GardeModel extends BaseModel {
       fin: json["fin"],
       deleted: json["deleted"],
       protected: json["protected"],
-      createAt: json["createAt"],
+      createdAt: json["createdAt"],
       updateAt: json["updateAt"]);
 
   Map<String, dynamic> toJson() => {
@@ -34,7 +34,7 @@ class GardeModel extends BaseModel {
         "fin": fin,
         "deleted": deleted,
         "protected": protected,
-        "createAt": createAt,
+        "createdAt": createdAt,
         "updateAt": updateAt
       };
 }

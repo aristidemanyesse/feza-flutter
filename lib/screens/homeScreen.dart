@@ -11,7 +11,6 @@ import 'package:ipi/screens/searchPage.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/DemandeItemCard.dart';
 import 'package:ipi/widgets/confirmExitDialog.dart';
-import 'package:ipi/widgets/pharmacieItemCard.dart';
 import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 import 'package:lottie/lottie.dart';
 import '../const/colors.dart';
@@ -80,7 +79,6 @@ class HomeScreenState extends State<HomeScreen> {
 
     demandes = await DemandeProvider.all({"user": userId});
     user = users[0];
-
     setState(() {});
   }
 
@@ -180,29 +178,38 @@ class HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 40,
                       ),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          "Vos demandes en cours ...",
-                          style: Helper.getTheme(context)
-                              .headlineLarge
-                              ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 22,
-                                  color: Color.fromARGB(255, 21, 67, 111)),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              "Vos demandes en cours ...",
+                              style: Helper.getTheme(context)
+                                  .headlineLarge
+                                  ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22,
+                                      color: Color.fromARGB(255, 21, 67, 111)),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(right: 10),
+                            child: GestureDetector(
+                              onTap: () => Navigator.of(context)
+                                  .pushReplacementNamed(HomeScreen.routeName),
+                              child: Icon(Icons.refresh),
+                            ),
+                          )
+                        ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
                 Expanded(
                   child: Container(
-                    alignment: Alignment.center,
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    margin: EdgeInsets.all(10),
+                    margin: EdgeInsets.symmetric(horizontal: 10),
                     child: demandes.isEmpty
                         ? Center(
                             child: Column(
@@ -240,7 +247,6 @@ class HomeScreenState extends State<HomeScreen> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          // showNotification();
                           Navigator.of(context).pushNamed(SearchPage.routeName);
                         },
                         child: Row(

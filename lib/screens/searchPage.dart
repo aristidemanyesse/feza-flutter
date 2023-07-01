@@ -1,15 +1,11 @@
 import 'dart:async';
-import 'dart:math';
-import 'dart:typed_data';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/provider/DemandeProvider.dart';
 import 'package:ipi/provider/OfficineProvider.dart';
-import 'package:ipi/provider/ProduitInOfficineProvider.dart';
+import 'package:ipi/widgets/felicitation.dart';
 import 'package:ipi/widgets/noPharmacieAvialable.dart';
-import 'package:location/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
@@ -34,7 +30,6 @@ import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:smooth_compass/utils/src/compass_ui.dart';
-import 'dart:convert';
 
 class SearchPage extends StatefulWidget {
   static const routeName = "/SearchPage";
@@ -57,6 +52,7 @@ class SearchPageState extends State<SearchPage>
 
   late List<Map<OfficineModel, List<ProduitModel>>> tableauxOfficines = [];
   List<OfficineModel> officines = [];
+  List<ProduitModel> _produits = [];
   late Map<String, dynamic> routesOfficines = {};
   late Map<OfficineModel, int> ratioTableaux = {};
   late Map<OfficineModel, String> distanceTableaux = {};
@@ -135,11 +131,11 @@ class SearchPageState extends State<SearchPage>
   @override
   void initState() {
     getData();
+
     _sharedPreferencesSubscription =
         sharedPreferencesService.watchString('distance').listen((value) {
       setState(() {
         distance = double.parse(value);
-        wait = true;
       });
       officinesAvialable();
       locateMe();
@@ -148,7 +144,6 @@ class SearchPageState extends State<SearchPage>
     _sharedPreferencesSubscription = sharedPreferencesService
         .watchString('produitsSelected')
         .listen((value) async {
-      isOrdonnance = false;
       _selectedOptions =
           await sharedPreferencesService.getStringList('produitsSelected');
       setState(() {});
@@ -171,36 +166,48 @@ class SearchPageState extends State<SearchPage>
 
     distance =
         double.parse(await sharedPreferencesService.getString('distance'));
+    _produits = await sharedPreferencesService.getProduitList('produits');
     _selectedOptions =
         await sharedPreferencesService.getStringList('produitsSelected');
     setState(() {});
     fitBoundsOnCircle(myPosition, 1000);
+    officinesAvialable();
   }
 
   void makeDemande() async {
-    setState(() {
-      ready = false;
-    });
+    if (officines.length > 0) {
+      setState(() {
+        ready = false;
+      });
 
-    print(base64);
-    for (var officine in officines) {
       ResponseModel response = await DemandeProvider.createDemande({
         "utilisateur": user.id,
-        "officine": officine.id,
         "commentaire": "",
         "base64": base64,
       });
       if (response.ok) {
         DemandeModel demande = response.data;
-        List<String> produitsSelected =
-            await sharedPreferencesService.getStringList('produitsIDSelected');
-        for (var pro in produitsSelected) {
-          ResponseModel response = await DemandeProvider.createLigneDemande(
-              {"produit": pro, "demande": demande.id});
 
+        for (var pro in _selectedOptions) {
+          ProduitModel? produitTrouve =
+              _produits.firstWhere((produit) => produit.name == pro);
+
+          ResponseModel response = await DemandeProvider.createLigneDemande(
+              {"produit": produitTrouve.id, "demande": demande.id});
           if (!response.ok) {
             Fluttertoast.showToast(
               msg: response.message ?? "Ouups, Produit Veuillez recommencer !",
+              gravity: ToastGravity.BOTTOM,
+            );
+          }
+        }
+
+        for (var officine in officines) {
+          ResponseModel response = await DemandeProvider.createOfficineDemande(
+              {"officine": officine.id, "demande": demande.id});
+          if (!response.ok) {
+            Fluttertoast.showToast(
+              msg: response.message ?? "Ouups, officine Veuillez recommencer !",
               gravity: ToastGravity.BOTTOM,
             );
           }
@@ -211,21 +218,35 @@ class SearchPageState extends State<SearchPage>
           gravity: ToastGravity.BOTTOM,
         );
       }
-    }
+      setState(() {
+        ready = true;
+      });
 
-    setState(() {
-      ready = true;
-    });
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext context) {
+          return FelicitationScreen();
+        },
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: "Aucune pharmacie n'a été trouvé dans ce périmètre de recherche !",
+        gravity: ToastGravity.BOTTOM,
+      );
+    }
   }
 
   void officinesAvialable() async {
+    setState(() {
+      wait = true;
+    });
     List<dynamic> datas = await OfficineProvider.avialable({
       "circonscription": user.circonscription!.id,
       "distance": distance,
-      // "longitude": myPosition.longitude,
-      // "latitude": myPosition.latitude
-      "longitude": -3.260223,
-      "latitude": 5.965418
+      "longitude": myPosition.longitude,
+      "latitude": myPosition.latitude
     });
 
     officines = [];
@@ -252,7 +273,6 @@ class SearchPageState extends State<SearchPage>
         wait = false;
         officines;
       });
-      print(officines);
     } else {
       showDialog(
         context: context,
@@ -307,12 +327,6 @@ class SearchPageState extends State<SearchPage>
   late Future<XFile?> pickedFile = Future.value(null);
 
   Future<void> _captureImageFromCamera() async {
-    // if (_selectedOptions.length > 0) {
-    // } else {
-    //   pickedFile = picker
-    //       .pickImage(source: ImageSource.camera)
-    //       .whenComplete(() => setState(() {}));
-    // }
     pickedFile = picker
         .pickImage(source: ImageSource.camera)
         .whenComplete(() => setState(() {
@@ -368,125 +382,130 @@ class SearchPageState extends State<SearchPage>
           children: [
             Container(
               height: Helper.getScreenHeight(context) * 0.65,
-              child: FlutterMap(
-                mapController: mapController,
-                options: MapOptions(
-                  center: myPosition,
-                  zoom: 16,
-                  minZoom: 6,
-                  maxZoom: 26,
-                  scrollWheelVelocity: 2.0,
-                  interactiveFlags:
-                      InteractiveFlag.all & ~InteractiveFlag.rotate,
-                  onTap: (_, __) => _popupLayerController.hideAllPopups(),
-                ),
+              child: Stack(
                 children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'dev.fleaflet.flutter_map.example',
-                  ),
-                  CircleLayer(
-                    circles: [
-                      CircleMarker(
-                        point: myPosition, // Coordonnées du cercle
-                        radius: distance * 1000,
-                        useRadiusInMeter: true,
-                        borderColor: Colors.grey,
-                        borderStrokeWidth: 1.5,
-                        color:
-                            Colors.grey.withOpacity(0.20), // Couleur du cercle
-                      ),
-                    ],
-                  ),
-                  PolylineLayer(
-                    polylines: [routeCoordinates],
-                  ),
-                  PopupMarkerLayer(
-                    options: PopupMarkerLayerOptions(
-                      popupController: _popupLayerController,
-                      markers: markers
-                          .map((element) => Marker(
-                                point: element.point,
-                                width: 35,
-                                height: 35,
-                                builder: (context) => PharmacieMapPin(),
-                                anchorPos: AnchorPos.align(AnchorAlign.top),
-                              ))
-                          .toList(),
-                      popupDisplayOptions: PopupDisplayOptions(
-                        builder: (BuildContext context, Marker marker) {
-                          CustomMyMarker element = markers.firstWhere(
-                              (element) => element.point == marker.point);
-                          return MapMinPharmaciePopup(
-                            marker: marker,
-                            officine: element.officine,
-                            ratio:
-                                "${ratioTableaux[element.officine].toString()}/${initialProduits.length}",
-                            distance: distanceTableaux[element.officine]!,
-                            ittineraireFunction: () {
-                              scrollToContainer(element.officine.id!);
-                            },
-                          );
-                        },
-                      ),
+                  FlutterMap(
+                    mapController: mapController,
+                    options: MapOptions(
+                      center: myPosition,
+                      zoom: 16,
+                      minZoom: 6,
+                      maxZoom: 26,
+                      scrollWheelVelocity: 2.0,
+                      interactiveFlags:
+                          InteractiveFlag.all & ~InteractiveFlag.rotate,
+                      onTap: (_, __) => _popupLayerController.hideAllPopups(),
                     ),
-                  ),
-                  PopupMarkerLayer(
-                    options: PopupMarkerLayerOptions(
-                      // popupController: _popupLayerController,
-                      markers: [
-                        Marker(
-                          point: myPosition,
-                          width: 35,
-                          height: 35,
-                          builder: (context) => MyPinInMap(),
-                          anchorPos: AnchorPos.align(AnchorAlign.top),
-                        ),
-                        Marker(
-                          point: myPosition, // Coordonnées du marqueur
-                          anchorPos: AnchorPos.align(AnchorAlign.top),
-                          builder: (ctx) => SmoothCompass(
-                            compassBuilder: (context, snapshot, child) {
-                              return Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    AnimatedRotation(
-                                      turns: snapshot?.data?.turns ?? 0,
-                                      duration:
-                                          const Duration(milliseconds: 400),
-                                      child: Transform.rotate(
-                                        angle: 0 *
-                                            3.1415926535897932 /
-                                            180, // Conversion de 90 degrés en radians
-                                        child: Icon(
-                                          Icons.arrow_upward,
-                                          color: Colors.red,
-                                          size: 30.0,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        userAgentPackageName:
+                            'dev.fleaflet.flutter_map.example',
+                      ),
+                      CircleLayer(
+                        circles: [
+                          CircleMarker(
+                            point: myPosition, // Coordonnées du cercle
+                            radius: distance * 1000,
+                            useRadiusInMeter: true,
+                            borderColor: Colors.grey,
+                            borderStrokeWidth: 1.5,
+                            color: Colors.transparent, // Couleur du cercle
+                          ),
+                        ],
+                      ),
+                      PolylineLayer(
+                        polylines: [routeCoordinates],
+                      ),
+                      PopupMarkerLayer(
+                        options: PopupMarkerLayerOptions(
+                          popupController: _popupLayerController,
+                          markers: markers
+                              .map((element) => Marker(
+                                    point: element.point,
+                                    width: 35,
+                                    height: 35,
+                                    builder: (context) => PharmacieMapPin(),
+                                    anchorPos: AnchorPos.align(AnchorAlign.top),
+                                  ))
+                              .toList(),
+                          popupDisplayOptions: PopupDisplayOptions(
+                            builder: (BuildContext context, Marker marker) {
+                              CustomMyMarker element = markers.firstWhere(
+                                  (element) => element.point == marker.point);
+                              return MapMinPharmaciePopup(
+                                marker: marker,
+                                officine: element.officine,
+                                ratio:
+                                    "${ratioTableaux[element.officine].toString()}/${initialProduits.length}",
+                                distance: distanceTableaux[element.officine]!,
+                                ittineraireFunction: () {
+                                  scrollToContainer(element.officine.id!);
+                                },
                               );
                             },
                           ),
                         ),
-                      ],
-                      popupDisplayOptions: PopupDisplayOptions(
-                          builder: (BuildContext context, Marker marker) {
-                        return Container(
-                          padding: EdgeInsets.all(7),
-                          margin: EdgeInsets.all(7),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text("Vous êtes ici !"),
-                        );
-                      }),
-                    ),
+                      ),
+                      PopupMarkerLayer(
+                        options: PopupMarkerLayerOptions(
+                          // popupController: _popupLayerController,
+                          markers: [
+                            Marker(
+                              point: myPosition,
+                              width: 35,
+                              height: 35,
+                              builder: (context) => MyPinInMap(),
+                              anchorPos: AnchorPos.align(AnchorAlign.top),
+                            ),
+                            Marker(
+                              point: myPosition, // Coordonnées du marqueur
+                              anchorPos: AnchorPos.align(AnchorAlign.top),
+                              builder: (ctx) => SmoothCompass(
+                                compassBuilder: (context, snapshot, child) {
+                                  return Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        AnimatedRotation(
+                                          turns: snapshot?.data?.turns ?? 0,
+                                          duration:
+                                              const Duration(milliseconds: 400),
+                                          child: Transform.rotate(
+                                            angle: 0 *
+                                                3.1415926535897932 /
+                                                180, // Conversion de 90 degrés en radians
+                                            child: Icon(
+                                              Icons.arrow_upward,
+                                              color: Colors.red,
+                                              size: 30.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                          popupDisplayOptions: PopupDisplayOptions(
+                              builder: (BuildContext context, Marker marker) {
+                            return Container(
+                              padding: EdgeInsets.all(7),
+                              margin: EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text("Vous êtes ici !"),
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
                   ),
+                  Visibility(child: LoaderScreen(), visible: !ready),
                 ],
               ),
             ),
@@ -653,39 +672,42 @@ class SearchPageState extends State<SearchPage>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    height: 45,
-                                    decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Color(0xffe4f3e4),
-                                            Color(0xfff9978f)
-                                          ],
-                                          stops: [0, 1],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          _selectedOptions.length.toString(),
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.grey[700],
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        const SizedBox(width: 7),
-                                        Text(
-                                          "médicaments",
-                                          style: TextStyle(
-                                              color: Colors.grey[700],
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
+                                  GestureDetector(
+                                    onTap: () => showProduitsListe(context),
+                                    child: Container(
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Color(0xffe4f3e4),
+                                              Color(0xfff9978f)
+                                            ],
+                                            stops: [0, 1],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            _selectedOptions.length.toString(),
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.grey[700],
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          const SizedBox(width: 7),
+                                          Text(
+                                            "médicaments",
+                                            style: TextStyle(
+                                                color: Colors.grey[700],
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
@@ -903,36 +925,38 @@ class SearchPageState extends State<SearchPage>
                             ],
                           ),
                           SizedBox(
-                            height: 25,
+                            height: 20,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  makeDemande();
-                                },
-                                child: Row(
+                          ready
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
-                                      Icons.person_search,
-                                      size: 24,
-                                      color: Colors.white,
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        makeDemande();
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.person_search,
+                                            size: 24,
+                                            color: Colors.white,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            "Faire la demande ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      "Faire la demande ",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white),
-                                    )
                                   ],
-                                ),
-                              ),
-                            ],
-                          ),
+                                )
+                              : Container(),
                           SizedBox(height: 5),
                         ],
                       ),
@@ -941,7 +965,6 @@ class SearchPageState extends State<SearchPage>
                 );
               },
             ),
-            Visibility(child: LoaderScreen(), visible: !ready),
             Container(
               height: Helper.getScreenHeight(context) * 0.09,
               width: Helper.getScreenWidth(context),

@@ -14,7 +14,7 @@ class ProduitModel {
     this.voies,
     this.deleted,
     this.protected,
-    this.createAt,
+    this.createdAt,
     this.updateAt,
   });
 
@@ -30,7 +30,7 @@ class ProduitModel {
   TypeProduitModel? type;
   bool? deleted;
   bool? protected;
-  String? createAt;
+  String? createdAt;
   String? updateAt;
 
   factory ProduitModel.fromJson(Map<String, dynamic> json) => ProduitModel(
@@ -46,7 +46,7 @@ class ProduitModel {
       type: TypeProduitModel.fromJson(json["type"]),
       deleted: json["deleted"],
       protected: json["protected"],
-      createAt: json["createAt"],
+      createdAt: json["createdAt"],
       updateAt: json["updateAt"]);
 
   Map<String, dynamic> toJson() => {
@@ -62,7 +62,7 @@ class ProduitModel {
         "type": type?.toJson(),
         "deleted": deleted,
         "protected": protected,
-        "createAt": createAt,
+        "createdAt": createdAt,
         "updateAt": updateAt
       };
 }

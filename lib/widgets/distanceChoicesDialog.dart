@@ -1,10 +1,8 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:marquee_widget/marquee_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DistanceChoicesDialog extends StatefulWidget {
   const DistanceChoicesDialog({Key? key}) : super(key: key);

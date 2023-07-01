@@ -7,7 +7,7 @@ class CirconscriptionModel extends BaseModel {
     this.geometryJson,
     this.deleted,
     this.protected,
-    this.createAt,
+    this.createdAt,
     this.updateAt,
   });
 
@@ -16,7 +16,7 @@ class CirconscriptionModel extends BaseModel {
   String? geometryJson;
   bool? deleted;
   bool? protected;
-  String? createAt;
+  String? createdAt;
   String? updateAt;
 
   factory CirconscriptionModel.fromJson(Map<String, dynamic> json) =>
@@ -26,7 +26,7 @@ class CirconscriptionModel extends BaseModel {
           geometryJson: json["geometryJson"],
           deleted: json["deleted"],
           protected: json["protected"],
-          createAt: json["createAt"],
+          createdAt: json["createdAt"],
           updateAt: json["updateAt"]);
 
   Map<String, dynamic> toJson() => {
@@ -35,7 +35,7 @@ class CirconscriptionModel extends BaseModel {
         "geometryJson": geometryJson,
         "deleted": deleted,
         "protected": protected,
-        "createAt": createAt,
+        "createdAt": createdAt,
         "updateAt": updateAt
       };
 }

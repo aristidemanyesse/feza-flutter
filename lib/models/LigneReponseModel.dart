@@ -1,5 +1,5 @@
-import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/models/ReponseModel.dart';
 
 class LigneReponseModel {
   LigneReponseModel({
@@ -9,28 +9,28 @@ class LigneReponseModel {
     this.status,
     this.deleted,
     this.protected,
-    this.createAt,
+    this.createdAt,
     this.updateAt,
   });
 
   String? id;
-  DemandeModel? reponse;
+  ReponseModel? reponse;
   ProduitModel? produit;
   bool? status;
   bool? deleted;
   bool? protected;
-  String? createAt;
+  String? createdAt;
   String? updateAt;
 
   factory LigneReponseModel.fromJson(Map<String, dynamic> json) =>
       LigneReponseModel(
           id: json["id"],
           status: json["status"],
-          reponse: DemandeModel.fromJson(json["reponse"]),
-          produit: ProduitModel.fromJson(json["officine"]),
+          reponse: ReponseModel.fromJson(json["reponse"]),
+          produit: ProduitModel.fromJson(json["produit"]),
           deleted: json["deleted"],
           protected: json["protected"],
-          createAt: json["createAt"],
+          createdAt: json["createdAt"],
           updateAt: json["updateAt"]);
 
   Map<String, dynamic> toJson() => {
@@ -40,7 +40,7 @@ class LigneReponseModel {
         "status": status,
         "deleted": deleted,
         "protected": protected,
-        "createAt": createAt,
+        "createdAt": createdAt,
         "updateAt": updateAt
       };
 }

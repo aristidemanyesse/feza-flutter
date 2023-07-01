@@ -19,7 +19,7 @@ class OfficineModel extends BaseModel {
     this.image3,
     this.deleted,
     this.protected,
-    this.createAt,
+    this.createdAt,
     this.updateAt,
   });
 
@@ -38,7 +38,7 @@ class OfficineModel extends BaseModel {
   String? image3;
   bool? deleted;
   bool? protected;
-  String? createAt;
+  String? createdAt;
   String? updateAt;
 
   factory OfficineModel.fromJson(Map<String, dynamic> json) => OfficineModel(
@@ -57,7 +57,7 @@ class OfficineModel extends BaseModel {
       image3: json["image3"],
       deleted: json["deleted"],
       protected: json["protected"],
-      createAt: json["createAt"],
+      createdAt: json["createdAt"],
       updateAt: json["updateAt"]);
 
   Map<String, dynamic> toJson() => {
@@ -76,7 +76,7 @@ class OfficineModel extends BaseModel {
         "image3": image3,
         "deleted": deleted,
         "protected": protected,
-        "createAt": createAt,
+        "createdAt": createdAt,
         "updateAt": updateAt
       };
 }
