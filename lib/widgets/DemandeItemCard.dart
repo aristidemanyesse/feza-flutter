@@ -7,6 +7,7 @@ import 'package:ipi/provider/DemandeProvider.dart';
 import 'package:ipi/provider/ReponseProvider.dart';
 import 'package:ipi/screens/detailDemande.dart';
 import "package:intl/intl.dart";
+import 'package:ipi/widgets/animations.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
@@ -163,9 +164,12 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                   child: Container(
                 margin: EdgeInsets.only(right: 10),
                 child: news
-                    ? Icon(
-                        Icons.chat_rounded,
-                        color: Colors.green,
+                    ? Clignotement(
+                        milliseconds: 500,
+                        child: Icon(
+                          Icons.chat_rounded,
+                          color: Colors.green,
+                        ),
                       )
                     : Text(
                         "${reponses.length}/${officines.length}",

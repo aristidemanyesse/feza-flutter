@@ -61,6 +61,7 @@ class _SelectCirconscriptionBlocState extends State<SelectCirconscriptionBloc> {
             horizontal: 20,
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
                 circonscription,

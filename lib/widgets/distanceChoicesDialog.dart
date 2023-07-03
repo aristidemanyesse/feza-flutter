@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ipi/utils/sharedpre.dart';
@@ -13,7 +12,7 @@ class DistanceChoicesDialog extends StatefulWidget {
 }
 
 class _DistanceChoicesDialogState extends State<DistanceChoicesDialog> {
-  late List<String> distances = ["1", "2", "3", "5", "10"];
+  late List<String> distances = ["1", "2", "3"];
 
   _DistanceChoicesDialogState();
 
@@ -107,13 +106,13 @@ class Ligne extends StatelessWidget {
   void changeDistance(BuildContext context, int distance) async {
     await sharedPreferencesService.setString('distance', distance.toString());
 
-    Fluttertoast.showToast(
-        msg: "Votre périmètre de recherche est de : $distance Km ",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green.shade600,
-        textColor: Colors.white,
-        fontSize: 14.0);
+    // Fluttertoast.showToast(
+    //     msg: "Votre périmètre de recherche est de : $distance Km ",
+    //     toastLength: Toast.LENGTH_LONG,
+    //     gravity: ToastGravity.BOTTOM,
+    //     backgroundColor: Colors.green.shade600,
+    //     textColor: Colors.white,
+    //     fontSize: 14.0);
     Navigator.pop(context);
   }
 

@@ -57,6 +57,7 @@ class _SelectDistanceBlocState extends State<SelectDistanceBloc> {
             horizontal: 20,
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
                 "$distance Km",

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/models/ProduitModel.dart';
-import 'package:ipi/widgets/avialableMedicamentListDialog.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
@@ -126,17 +125,17 @@ class PharmacieItemCard extends StatelessWidget {
             ),
           ),
           onTap: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AvialableMedicamentListDialog(
-                    officine: officine,
-                    produits: produits,
-                    distance: distance,
-                    ratio: "$ratio/${initialProduits.length}",
-                    initialProduits: initialProduits);
-              },
-            );
+            // showDialog(
+            //   context: context,
+            //   builder: (BuildContext context) {
+            //     return AvialableMedicamentListDialog(
+            //         officine: officine,
+            //         produits: produits,
+            //         distance: distance,
+            //         ratio: "$ratio/${initialProduits.length}",
+            //         initialProduits: initialProduits);
+            //   },
+            // );
           },
         )
       ],

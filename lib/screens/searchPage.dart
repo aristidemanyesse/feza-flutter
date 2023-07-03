@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/provider/DemandeProvider.dart';
 import 'package:ipi/provider/OfficineProvider.dart';
+import 'package:ipi/provider/ProduitProvider.dart';
+import 'package:ipi/widgets/chooseCamera.dart';
 import 'package:ipi/widgets/felicitation.dart';
 import 'package:ipi/widgets/noPharmacieAvialable.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +70,7 @@ class SearchPageState extends State<SearchPage>
   Polyline routeCoordinates = Polyline(points: []);
   bool wait = false;
   bool ready = true;
+  bool isZone = true;
   bool isOrdonnance = false;
   double distance = 0;
   late File file;
@@ -323,8 +327,29 @@ class SearchPageState extends State<SearchPage>
     );
   }
 
+  Future<void> getCodeBar() async {
+    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+        "#ff6666", "Annuler", false, ScanMode.BARCODE);
+    var datas = await ProduitProvider.all({"codebarre": barcodeScanRes});
+    _selectedOptions.add(datas[0].name);
+    await sharedPreferencesService.setStringList(
+        'produitsSelected', _selectedOptions);
+  }
+
   final picker = ImagePicker();
   late Future<XFile?> pickedFile = Future.value(null);
+
+  void chooseCamera() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ChooseCamera(
+          cameraFunction: _captureImageFromCamera,
+          galleryFunction: _pickImageFromGallery,
+        );
+      },
+    );
+  }
 
   Future<void> _captureImageFromCamera() async {
     pickedFile = picker
@@ -340,6 +365,7 @@ class SearchPageState extends State<SearchPage>
         base64 = "data:image/png;base64," + base64Encode(imageBytes);
       });
     });
+    Navigator.of(context).pop();
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -356,6 +382,7 @@ class SearchPageState extends State<SearchPage>
         base64 = base64Encode(imageBytes);
       });
     });
+    Navigator.of(context).pop();
   }
 
   void fitBoundsOnCircle(LatLng center, double radius) {
@@ -510,37 +537,13 @@ class SearchPageState extends State<SearchPage>
               ),
             ),
             DraggableScrollableSheet(
-              minChildSize: 0.55,
-              initialChildSize: 0.55,
-              maxChildSize: 0.55,
+              minChildSize: 0.5,
+              initialChildSize: 0.5,
+              maxChildSize: 0.5,
               builder: (context, scrollController) {
                 return ListView(
                   controller: scrollController,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          margin: EdgeInsets.only(right: 10, bottom: 10),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100)),
-                              border: Border.all(
-                                  color: AppColor.secondary, width: 2)),
-                          child: GestureDetector(
-                            child: Icon(
-                              Icons.location_searching,
-                              size: 26,
-                            ),
-                            onTap: () {
-                              locateMe();
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
                     Container(
                       padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                       margin: EdgeInsets.fromLTRB(3, 0, 3, 0),
@@ -563,6 +566,164 @@ class SearchPageState extends State<SearchPage>
                           Indicator(),
                           SizedBox(
                             height: 15,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isZone = true;
+                                    });
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 15),
+                                        decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Color(0xfffddcda),
+                                                Color(0xffe9e1f6)
+                                              ],
+                                              stops: [0, 1],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Rechercher par zone",
+                                              style: TextStyle(
+                                                  color: Colors.grey[700],
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            SelectCirconscriptionBloc(),
+                                          ],
+                                        ),
+                                      ),
+                                      !isZone
+                                          ? Positioned(
+                                              top: 0,
+                                              right: 0,
+                                              left: 0,
+                                              bottom: 0,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 15),
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      Color.fromARGB(255, 155,
+                                                              145, 144)
+                                                          .withOpacity(0.85),
+                                                      Color.fromARGB(
+                                                              255, 56, 54, 59)
+                                                          .withOpacity(0.85)
+                                                    ],
+                                                    stops: [0, 1],
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isZone = false;
+                                    });
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 15),
+                                        decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Color(0xfffddcda),
+                                                Color(0xffe9e1f6)
+                                              ],
+                                              stops: [0, 1],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              "Dans un périmètre de  ",
+                                              style: TextStyle(
+                                                  color: Colors.grey[700],
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            SelectDistanceBloc(),
+                                          ],
+                                        ),
+                                      ),
+                                      isZone
+                                          ? Positioned(
+                                              top: 0,
+                                              right: 0,
+                                              left: 0,
+                                              bottom: 0,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 15),
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      Color.fromARGB(255, 155,
+                                                              145, 144)
+                                                          .withOpacity(0.85),
+                                                      Color.fromARGB(
+                                                              255, 56, 54, 59)
+                                                          .withOpacity(0.85)
+                                                    ],
+                                                    stops: [0, 1],
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
                           ),
                           Row(
                             children: [
@@ -603,62 +764,42 @@ class SearchPageState extends State<SearchPage>
                               SizedBox(
                                 width: 10,
                               ),
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    border: Border.all(
-                                        color: AppColor.secondary, width: 2)),
-                                child: GestureDetector(
-                                  child: Icon(
-                                    Icons.barcode_reader,
-                                    size: 26,
-                                  ),
-                                  onTap: () {
-                                    // ();
-                                  },
-                                ),
+                              GestureDetector(
+                                child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10)),
+                                        border: Border.all(
+                                            color: AppColor.secondary,
+                                            width: 2)),
+                                    child: Icon(
+                                      Icons.barcode_reader,
+                                      size: 26,
+                                    )),
+                                onTap: () {
+                                  getCodeBar();
+                                },
                               ),
                               SizedBox(
                                 width: 10,
                               ),
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    border: Border.all(
-                                        color: AppColor.secondary, width: 2)),
-                                child: GestureDetector(
+                              GestureDetector(
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      border: Border.all(
+                                          color: AppColor.secondary, width: 2)),
                                   child: Icon(
                                     Icons.camera_alt,
                                     size: 26,
                                   ),
-                                  onTap: () {
-                                    _captureImageFromCamera();
-                                  },
                                 ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    border: Border.all(
-                                        color: AppColor.secondary, width: 2)),
-                                child: GestureDetector(
-                                  child: Icon(
-                                    Icons.file_copy_sharp,
-                                    size: 26,
-                                  ),
-                                  onTap: () {
-                                    _pickImageFromGallery();
-                                  },
-                                ),
+                                onTap: () {
+                                  chooseCamera();
+                                },
                               ),
                             ],
                           ),
@@ -754,6 +895,44 @@ class SearchPageState extends State<SearchPage>
                                 width: 20,
                               ),
                               Container(
+                                width: Helper.getScreenWidth(context) * 0.2,
+                                height: 110,
+                                decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xffd1d1d1),
+                                        Color(0xffffffff)
+                                      ],
+                                      stops: [0, 1],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                  child: FutureBuilder<XFile?>(
+                                    future: pickedFile,
+                                    builder: (context, data) {
+                                      if (data.hasData) {
+                                        file = File(data.data!.path);
+                                        return Container(
+                                          height: 200.0,
+                                          child: Image.file(
+                                            file,
+                                            fit: BoxFit.contain,
+                                            height: 200.0,
+                                          ),
+                                          color: Colors.blue,
+                                        );
+                                      }
+                                      return Text("...");
+                                    },
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Container(
                                 width: Helper.getScreenWidth(context) * 0.25,
                                 height: 110,
                                 decoration: BoxDecoration(
@@ -811,117 +990,6 @@ class SearchPageState extends State<SearchPage>
                                         ),
                                       ),
                               ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                width: Helper.getScreenWidth(context) * 0.2,
-                                height: 110,
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xffd1d1d1),
-                                        Color(0xffffffff)
-                                      ],
-                                      stops: [0, 1],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Center(
-                                  child: FutureBuilder<XFile?>(
-                                    future: pickedFile,
-                                    builder: (context, data) {
-                                      if (data.hasData) {
-                                        file = File(data.data!.path);
-                                        return Container(
-                                          height: 200.0,
-                                          child: Image.file(
-                                            file,
-                                            fit: BoxFit.contain,
-                                            height: 200.0,
-                                          ),
-                                          color: Colors.blue,
-                                        );
-                                      }
-                                      return Text("...");
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 15),
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xfffddcda),
-                                          Color(0xffe9e1f6)
-                                        ],
-                                        stops: [0, 1],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Rechercher par zone",
-                                        style: TextStyle(
-                                            color: Colors.grey[700],
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      SelectCirconscriptionBloc(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 15),
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xfffddcda),
-                                          Color(0xffe9e1f6)
-                                        ],
-                                        stops: [0, 1],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        "Dans un périmètre de  ",
-                                        style: TextStyle(
-                                            color: Colors.grey[700],
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      SelectDistanceBloc(),
-                                    ],
-                                  ),
-                                ),
-                              ),
                             ],
                           ),
                           SizedBox(
@@ -965,47 +1033,49 @@ class SearchPageState extends State<SearchPage>
                 );
               },
             ),
-            Container(
-              height: Helper.getScreenHeight(context) * 0.09,
-              width: Helper.getScreenWidth(context),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.0, 0.4],
-                  colors: [
-                    Colors.black.withOpacity(0.9),
-                    Colors.black.withOpacity(0.0),
-                  ],
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 12),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(100))),
-                        child: Icon(
-                          Icons.arrow_back_ios_rounded,
-                          size: 20,
-                          color: AppColor.blue,
-                        ),
-                      ),
+            Positioned(
+              top: Helper.getScreenHeight(context) * 0.04,
+              left: 0,
+              child: Container(
+                margin: EdgeInsets.only(left: 12),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(100))),
+                    child: Icon(
+                      Icons.arrow_back_ios_rounded,
+                      size: 20,
+                      color: AppColor.blue,
                     ),
                   ),
-                ],
+                ),
               ),
             ),
+            Positioned(
+                top: Helper.getScreenHeight(context) * 0.45,
+                right: 5,
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  margin: EdgeInsets.only(right: 10, bottom: 10),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                      border: Border.all(color: AppColor.secondary, width: 2)),
+                  child: GestureDetector(
+                    child: Icon(
+                      Icons.location_searching,
+                      size: 26,
+                    ),
+                    onTap: () {
+                      locateMe();
+                    },
+                  ),
+                ))
           ],
         ),
       ),

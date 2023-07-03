@@ -5,6 +5,7 @@ import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/GardeProvider.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
 import 'package:ipi/utils/helper.dart';
+import 'package:ipi/widgets/confirmExitDialog.dart';
 import 'package:ipi/widgets/menuCard.dart';
 import 'package:ipi/widgets/myLogo.dart';
 import 'package:ipi/widgets/noPharmacieAvialable.dart';
@@ -190,7 +191,7 @@ class _MenuScreen extends State<MenuScreen> {
             ),
           ),
           Container(
-            height: Helper.getScreenHeight(context) * 0.2,
+            height: Helper.getScreenHeight(context) * 0.13,
             width: Helper.getScreenWidth(context),
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -228,6 +229,36 @@ class _MenuScreen extends State<MenuScreen> {
               ],
             ),
           ),
+          Positioned(
+              bottom: 20,
+              right: 0,
+              left: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.transparent,
+                    ),
+                    child: TextButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return DeconnexionDialog();
+                            },
+                          );
+                        },
+                        child: Text(
+                          "Se deconnecter",
+                          style: TextStyle(fontSize: 15, color: Colors.red),
+                        )),
+                  )
+                ],
+              ))
         ],
       ),
     );
