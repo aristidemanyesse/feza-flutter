@@ -6,6 +6,7 @@ import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/provider/DemandeProvider.dart';
 import 'package:ipi/provider/OfficineProvider.dart';
 import 'package:ipi/provider/ProduitProvider.dart';
+import 'package:ipi/widgets/animations.dart';
 import 'package:ipi/widgets/chooseCamera.dart';
 import 'package:ipi/widgets/felicitation.dart';
 import 'package:ipi/widgets/noPharmacieAvialable.dart';
@@ -70,7 +71,7 @@ class SearchPageState extends State<SearchPage>
   Polyline routeCoordinates = Polyline(points: []);
   bool wait = false;
   bool ready = true;
-  bool isZone = true;
+  bool isZone = false;
   bool isOrdonnance = false;
   double distance = 0;
   late File file;
@@ -174,7 +175,7 @@ class SearchPageState extends State<SearchPage>
     _selectedOptions =
         await sharedPreferencesService.getStringList('produitsSelected');
     setState(() {});
-    fitBoundsOnCircle(myPosition, 1000);
+    fitBoundsOnCircle(myPosition, distance * 1000);
     officinesAvialable();
   }
 
@@ -245,6 +246,11 @@ class SearchPageState extends State<SearchPage>
   void officinesAvialable() async {
     setState(() {
       wait = true;
+      officines = [];
+      markers = [];
+      distanceTableaux = {};
+      markersLatLng = [];
+      routesOfficines = {};
     });
     List<dynamic> datas = await OfficineProvider.avialable({
       "circonscription": user.circonscription!.id,
@@ -253,7 +259,6 @@ class SearchPageState extends State<SearchPage>
       "latitude": myPosition.latitude
     });
 
-    officines = [];
     if (datas.length > 0) {
       for (var element in datas) {
         var offs = await OfficineProvider.all({"id": element["officine"]});
@@ -261,9 +266,9 @@ class SearchPageState extends State<SearchPage>
         officines.add(officine);
 
         double distance = element["distance"];
-        distanceTableaux[officine] = distance < 1
-            ? "${distance * 1000} m"
-            : "${distance.toStringAsFixed(2)} km";
+        distanceTableaux[officine] = distance < 1000
+            ? "${distance} m"
+            : "${(distance / 1000).toStringAsFixed(2)} km";
 
         routesOfficines[officine.id!] = jsonDecode(element["route"]);
         markers.add(
@@ -483,39 +488,40 @@ class SearchPageState extends State<SearchPage>
                               point: myPosition,
                               width: 35,
                               height: 35,
-                              builder: (context) => MyPinInMap(),
+                              builder: (context) => Clignotement(
+                                  child: MyPinInMap(), milliseconds: 1000),
                               anchorPos: AnchorPos.align(AnchorAlign.top),
                             ),
-                            Marker(
-                              point: myPosition, // Coordonnées du marqueur
-                              anchorPos: AnchorPos.align(AnchorAlign.top),
-                              builder: (ctx) => SmoothCompass(
-                                compassBuilder: (context, snapshot, child) {
-                                  return Center(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        AnimatedRotation(
-                                          turns: snapshot?.data?.turns ?? 0,
-                                          duration:
-                                              const Duration(milliseconds: 400),
-                                          child: Transform.rotate(
-                                            angle: 0 *
-                                                3.1415926535897932 /
-                                                180, // Conversion de 90 degrés en radians
-                                            child: Icon(
-                                              Icons.arrow_upward,
-                                              color: Colors.red,
-                                              size: 30.0,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
+                            // Marker(
+                            //   point: myPosition, // Coordonnées du marqueur
+                            //   anchorPos: AnchorPos.align(AnchorAlign.top),
+                            //   builder: (ctx) => SmoothCompass(
+                            //     compassBuilder: (context, snapshot, child) {
+                            //       return Center(
+                            //         child: Column(
+                            //           mainAxisSize: MainAxisSize.min,
+                            //           children: [
+                            //             AnimatedRotation(
+                            //               turns: snapshot?.data?.turns ?? 0,
+                            //               duration:
+                            //                   const Duration(milliseconds: 400),
+                            //               child: Transform.rotate(
+                            //                 angle: 0 *
+                            //                     3.1415926535897932 /
+                            //                     180, // Conversion de 90 degrés en radians
+                            //                 child: Icon(
+                            //                   Icons.arrow_upward,
+                            //                   color: Colors.red,
+                            //                   size: 30.0,
+                            //                 ),
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       );
+                            //     },
+                            //   ),
+                            // ),
                           ],
                           popupDisplayOptions: PopupDisplayOptions(
                               builder: (BuildContext context, Marker marker) {
@@ -624,10 +630,10 @@ class SearchPageState extends State<SearchPage>
                                                     colors: [
                                                       Color.fromARGB(255, 155,
                                                               145, 144)
-                                                          .withOpacity(0.85),
+                                                          .withOpacity(0.8),
                                                       Color.fromARGB(
                                                               255, 56, 54, 59)
-                                                          .withOpacity(0.85)
+                                                          .withOpacity(0.8)
                                                     ],
                                                     stops: [0, 1],
                                                     begin: Alignment.topLeft,
@@ -701,10 +707,10 @@ class SearchPageState extends State<SearchPage>
                                                     colors: [
                                                       Color.fromARGB(255, 155,
                                                               145, 144)
-                                                          .withOpacity(0.85),
+                                                          .withOpacity(0.8),
                                                       Color.fromARGB(
                                                               255, 56, 54, 59)
-                                                          .withOpacity(0.85)
+                                                          .withOpacity(0.8)
                                                     ],
                                                     stops: [0, 1],
                                                     begin: Alignment.topLeft,

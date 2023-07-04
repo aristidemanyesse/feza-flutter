@@ -12,7 +12,7 @@ class DistanceChoicesDialog extends StatefulWidget {
 }
 
 class _DistanceChoicesDialogState extends State<DistanceChoicesDialog> {
-  late List<String> distances = ["1", "2", "3"];
+  late List<String> distances = ["1", "2", "3", "5"];
 
   _DistanceChoicesDialogState();
 

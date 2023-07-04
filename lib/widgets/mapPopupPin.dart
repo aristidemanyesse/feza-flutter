@@ -93,13 +93,13 @@ class MapMinPharmaciePopup extends StatelessWidget {
                   distance,
                   style: const TextStyle(fontSize: 14.0),
                 ),
-                Text(
-                  ratio,
-                  style: const TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.blue),
-                ),
+                // Text(
+                //   ratio,
+                //   style: const TextStyle(
+                //       fontSize: 15.0,
+                //       fontWeight: FontWeight.bold,
+                //       color: AppColor.blue),
+                // ),
                 TextButton(
                     onPressed: () {
                       ittineraireFunction();

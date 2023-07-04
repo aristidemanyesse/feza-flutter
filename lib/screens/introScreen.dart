@@ -5,6 +5,7 @@ import 'package:ipi/screens/intro2.dart';
 import 'package:ipi/screens/intro3.dart';
 import 'package:ipi/screens/landingScreen.dart';
 import 'package:ipi/utils/helper.dart';
+import 'package:ipi/utils/local_notifications.dart';
 
 class IntroScreen extends StatefulWidget {
   static const routeName = "/introScreen";
@@ -112,6 +113,8 @@ class _IntroScreenState extends State<IntroScreen> {
               right: 10,
               child: GestureDetector(
                 onTap: () {
+                  NotificationService().showNotification(
+                      title: 'Sample title', body: 'It works!');
                   Navigator.of(context)
                       .pushReplacementNamed(LandingScreen.routeName);
                 },

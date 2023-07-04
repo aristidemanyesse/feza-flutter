@@ -11,94 +11,118 @@ class LandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 244, 242, 240),
-        body: Container(
-          width: Helper.getScreenWidth(context),
-          height: Helper.getScreenHeight(context),
-          child: Column(
-            children: [
-              Container(
-                height: Helper.getScreenHeight(context) * 0.15,
-              ),
-              Text(
-                "IPI",
-                textAlign: TextAlign.center,
-                style: Helper.getTheme(context)
-                    .headlineLarge
-                    ?.copyWith(fontWeight: FontWeight.bold, fontSize: 27),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "Ici, les Pharmacies Ivoiriennes",
-                textAlign: TextAlign.center,
-                style: Helper.getTheme(context)
-                    .headlineLarge
-                    ?.copyWith(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              Expanded(
-                child: Container(),
-              ),
-              MyLogo(
-                height: 150,
-                width: 150,
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          "Recherchez parmi plus de 1000 médicaments, produits et services sur toute l'étendue du territoire ivoirien",
-                          textAlign: TextAlign.center,
-                          style:
-                              TextStyle(height: 1.5, color: AppColor.primary),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(LoginScreen.routeName);
-                          },
-                          child: Text("Commençons !"),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(),
-              ),
-              Container(
-                alignment: Alignment.center,
-                height: 20,
-                margin: EdgeInsets.symmetric(vertical: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        body: Stack(
+          children: [
+            Opacity(
+              opacity: 0.1,
+              child: Container(
+                width: Helper.getScreenWidth(context),
+                height: Helper.getScreenHeight(context),
+                child: Stack(
                   children: [
-                    Text("IPI @ Copyright 2023"),
+                    Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      child: Image.asset(
+                        Helper.getAssetName("landing.jpg", "bg"),
+                        fit: BoxFit.scaleDown,
+                        repeat: ImageRepeat.repeatY,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              SizedBox(
-                height: 10,
-              )
-            ],
-          ),
+            ),
+            Container(
+              width: Helper.getScreenWidth(context),
+              height: Helper.getScreenHeight(context),
+              child: Column(
+                children: [
+                  Container(
+                    height: Helper.getScreenHeight(context) * 0.15,
+                  ),
+                  Text(
+                    "IPI",
+                    textAlign: TextAlign.center,
+                    style: Helper.getTheme(context)
+                        .headlineLarge
+                        ?.copyWith(fontWeight: FontWeight.bold, fontSize: 27),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Ici, les Pharmacies Ivoiriennes",
+                    textAlign: TextAlign.center,
+                    style: Helper.getTheme(context)
+                        .headlineLarge
+                        ?.copyWith(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                  Expanded(
+                    child: Container(),
+                  ),
+                  MyLogo(
+                    height: 150,
+                    width: 150,
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              "Recherchez parmi plus de 1000 médicaments, produits et services sur toute l'étendue du territoire ivoirien",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  height: 1.5, color: AppColor.primary),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pushNamed(LoginScreen.routeName);
+                              },
+                              child: Text("Commençons !"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    height: 20,
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("IPI @ Copyright 2023"),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  )
+                ],
+              ),
+            ),
+          ],
         ));
   }
 }

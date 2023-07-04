@@ -37,7 +37,7 @@ class NoPharmacieAvialable extends StatelessWidget {
                     ),
                     Container(
                       child: Text(
-                        "Nous n'avons pas trouvé de pharmacie à proximité",
+                        "Nous n'avons pas trouvé de pharmacie dans cette zone de recherche",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 15, height: 1.5, color: Colors.black),

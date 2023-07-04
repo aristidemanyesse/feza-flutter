@@ -4,6 +4,7 @@ import 'package:ipi/screens/medicamentScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
 import 'package:ipi/screens/test.dart';
 import 'package:ipi/utils/helper.dart';
+import 'package:ipi/utils/local_notifications.dart';
 import './screens/spashScreen.dart';
 import './screens/landingScreen.dart';
 import './screens/loginScreen.dart';
@@ -18,22 +19,22 @@ import 'screens/searchPage.dart';
 import 'dart:async';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+// FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//     FlutterLocalNotificationsPlugin();
 
-Future<void> initialize() async {
-  var initializationSettingsAndroid = AndroidInitializationSettings(
-      'ic_launcher'); // Remplacez 'app_icon' par le nom de votre icône d'application
-  var initializationSettingsIOS = IOSInitializationSettings();
-  var initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+// Future<void> initialize() async {
+//   var initializationSettingsAndroid = AndroidInitializationSettings(
+//       'ic_launcher'); // Remplacez 'app_icon' par le nom de votre icône d'application
+//   var initializationSettingsIOS = IOSInitializationSettings();
+//   var initializationSettings = InitializationSettings(
+//       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-}
+//   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+// }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initialize();
+  NotificationService().initNotification();
   runApp(MyApp());
 }
 

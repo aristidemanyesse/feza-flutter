@@ -45,29 +45,29 @@ class HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  Future<void> showNotification() async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'ipi2106', // Remplacez 'channel_id' par un identifiant unique pour votre canal de notification
-      'ipi Notificaition', // Remplacez 'channel_name' par le nom du canal de notification
-      channelDescription:
-          'lorem  ipsiumm frkje uidfjkbj', // Remplacez 'channel_description' par la description du canal de notification
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics,
-    );
+  // Future<void> showNotification() async {
+  //   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+  //     'ipi2106', // Remplacez 'channel_id' par un identifiant unique pour votre canal de notification
+  //     'ipi Notificaition', // Remplacez 'channel_name' par le nom du canal de notification
+  //     channelDescription:
+  //         'lorem  ipsiumm frkje uidfjkbj', // Remplacez 'channel_description' par la description du canal de notification
+  //     importance: Importance.max,
+  //     priority: Priority.high,
+  //   );
+  //   var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+  //   var platformChannelSpecifics = NotificationDetails(
+  //     android: androidPlatformChannelSpecifics,
+  //     iOS: iOSPlatformChannelSpecifics,
+  //   );
 
-    await flutterLocalNotificationsPlugin.show(
-      5465466,
-      'Titre de la notification',
-      'Contenu de la notification',
-      platformChannelSpecifics,
-      payload: 'Notification payload',
-    );
-  }
+  //   await flutterLocalNotificationsPlugin.show(
+  //     5465466,
+  //     'Titre de la notification',
+  //     'Contenu de la notification',
+  //     platformChannelSpecifics,
+  //     payload: 'Notification payload',
+  //   );
+  // }
 
   Future<void> getData() async {
     await sharedPreferencesService.init();
