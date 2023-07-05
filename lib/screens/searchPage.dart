@@ -33,7 +33,6 @@ import 'package:flutter_map/plugin_api.dart';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:smooth_compass/utils/src/compass_ui.dart';
 
 class SearchPage extends StatefulWidget {
   static const routeName = "/SearchPage";
@@ -181,62 +180,77 @@ class SearchPageState extends State<SearchPage>
 
   void makeDemande() async {
     if (officines.length > 0) {
-      setState(() {
-        ready = false;
-      });
+      if (_selectedOptions.length > 0 || isOrdonnance) {
+        setState(() {
+          ready = false;
+        });
 
-      ResponseModel response = await DemandeProvider.createDemande({
-        "utilisateur": user.id,
-        "commentaire": "",
-        "base64": base64,
-      });
-      if (response.ok) {
-        DemandeModel demande = response.data;
+        ResponseModel response = await DemandeProvider.createDemande({
+          "utilisateur": user.id,
+          "commentaire": "",
+          "base64": base64,
+        });
+        if (response.ok) {
+          DemandeModel demande = response.data;
 
-        for (var pro in _selectedOptions) {
-          ProduitModel? produitTrouve =
-              _produits.firstWhere((produit) => produit.name == pro);
+          for (var pro in _selectedOptions) {
+            ProduitModel? produitTrouve =
+                _produits.firstWhere((produit) => produit.name == pro);
 
-          ResponseModel response = await DemandeProvider.createLigneDemande(
-              {"produit": produitTrouve.id, "demande": demande.id});
-          if (!response.ok) {
-            Fluttertoast.showToast(
-              msg: response.message ?? "Ouups, Produit Veuillez recommencer !",
-              gravity: ToastGravity.BOTTOM,
-            );
+            ResponseModel response = await DemandeProvider.createLigneDemande(
+                {"produit": produitTrouve.id, "demande": demande.id});
+            if (!response.ok) {
+              Fluttertoast.showToast(
+                msg:
+                    response.message ?? "Ouups, Produit Veuillez recommencer !",
+                gravity: ToastGravity.BOTTOM,
+              );
+            }
           }
-        }
 
-        for (var officine in officines) {
-          ResponseModel response = await DemandeProvider.createOfficineDemande(
-              {"officine": officine.id, "demande": demande.id});
-          if (!response.ok) {
-            Fluttertoast.showToast(
-              msg: response.message ?? "Ouups, officine Veuillez recommencer !",
-              gravity: ToastGravity.BOTTOM,
-            );
+          for (var officine in officines) {
+            ResponseModel response =
+                await DemandeProvider.createOfficineDemande(
+                    {"officine": officine.id, "demande": demande.id});
+            if (!response.ok) {
+              Fluttertoast.showToast(
+                msg: response.message ??
+                    "Ouups, officine Veuillez recommencer !",
+                gravity: ToastGravity.BOTTOM,
+              );
+            }
           }
+
+          setState(() {
+            ready = true;
+          });
+
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (BuildContext context) {
+              return FelicitationScreen();
+            },
+          );
+        } else {
+          Fluttertoast.showToast(
+            backgroundColor: Colors.red.withOpacity(0.85),
+            msg: response.message ?? "Ouups, Veuillez recommencer !",
+            gravity: ToastGravity.BOTTOM,
+          );
         }
       } else {
         Fluttertoast.showToast(
-          msg: response.message ?? "Ouups, Veuillez recommencer !",
+          backgroundColor: Colors.red.withOpacity(0.85),
+          msg:
+              "Veuillez selectionner les médicaments ou scanner votre ordonnance !",
           gravity: ToastGravity.BOTTOM,
         );
       }
-      setState(() {
-        ready = true;
-      });
-
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (BuildContext context) {
-          return FelicitationScreen();
-        },
-      );
     } else {
       Fluttertoast.showToast(
+        backgroundColor: Colors.red.withOpacity(0.85),
         msg: "Aucune pharmacie n'a été trouvé dans ce périmètre de recherche !",
         gravity: ToastGravity.BOTTOM,
       );
@@ -267,7 +281,7 @@ class SearchPageState extends State<SearchPage>
 
         double distance = element["distance"];
         distanceTableaux[officine] = distance < 1000
-            ? "${distance} m"
+            ? "$distance m"
             : "${(distance / 1000).toStringAsFixed(2)} km";
 
         routesOfficines[officine.id!] = jsonDecode(element["route"]);
@@ -922,12 +936,14 @@ class SearchPageState extends State<SearchPage>
                                         file = File(data.data!.path);
                                         return Container(
                                           height: 200.0,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
                                           child: Image.file(
                                             file,
-                                            fit: BoxFit.contain,
+                                            fit: BoxFit.cover,
                                             height: 200.0,
                                           ),
-                                          color: Colors.blue,
                                         );
                                       }
                                       return Text("...");

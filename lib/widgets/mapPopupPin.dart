@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:marquee_widget/marquee_widget.dart';

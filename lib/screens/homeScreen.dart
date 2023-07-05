@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:ipi/main.dart';
 import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/DemandeProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/searchPage.dart';
+import 'package:ipi/utils/local_notifications.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/DemandeItemCard.dart';
 import 'package:ipi/widgets/confirmExitDialog.dart';
@@ -25,8 +24,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  late StreamSubscription<String> _sharedPreferencesSubscription;
-
   SharedPreferencesService sharedPreferencesService =
       SharedPreferencesService();
 
@@ -37,11 +34,12 @@ class HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     getData();
+    NotificationService()
+        .showNotification(title: 'Sample title', body: 'It works!');
   }
 
   @override
   void dispose() {
-    _sharedPreferencesSubscription.cancel(); // Arrêter le StreamSubscription
     super.dispose();
   }
 
@@ -196,8 +194,12 @@ class HomeScreenState extends State<HomeScreen> {
                           Container(
                             margin: EdgeInsets.only(right: 10),
                             child: GestureDetector(
-                              onTap: () => Navigator.of(context)
-                                  .pushReplacementNamed(HomeScreen.routeName),
+                              onTap: () {
+                                NotificationService().showNotification(
+                                    title: 'Sample title', body: 'It works!');
+                                Navigator.of(context)
+                                    .pushReplacementNamed(HomeScreen.routeName);
+                              },
                               child: Icon(Icons.refresh),
                             ),
                           )

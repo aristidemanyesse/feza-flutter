@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 

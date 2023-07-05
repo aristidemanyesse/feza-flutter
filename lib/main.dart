@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ipi/screens/medicamentScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
 import 'package:ipi/screens/test.dart';
@@ -32,7 +31,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 //   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 // }
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initNotification();
   runApp(MyApp());

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ipi/screens/introScreen.dart';
-import 'package:ipi/screens/landingScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfirmExitDialog extends StatelessWidget {
