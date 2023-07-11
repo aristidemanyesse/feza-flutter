@@ -104,14 +104,6 @@ class Ligne extends StatelessWidget {
 
   void changeDistance(BuildContext context, int distance) async {
     await sharedPreferencesService.setString('distance', distance.toString());
-
-    // Fluttertoast.showToast(
-    //     msg: "Votre périmètre de recherche est de : $distance Km ",
-    //     toastLength: Toast.LENGTH_LONG,
-    //     gravity: ToastGravity.BOTTOM,
-    //     backgroundColor: Colors.green.shade600,
-    //     textColor: Colors.white,
-    //     fontSize: 14.0);
     Navigator.pop(context);
   }
 

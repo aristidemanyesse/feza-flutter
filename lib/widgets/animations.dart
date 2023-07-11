@@ -15,6 +15,7 @@ class _ClignotementState extends State<Clignotement> {
   _ClignotementState();
 
   bool visible = false;
+  Timer timer = Timer.periodic(Duration(milliseconds: 0), (timer) {});
 
   @override
   void initState() {
@@ -22,8 +23,15 @@ class _ClignotementState extends State<Clignotement> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
   void clignote() {
-    Timer.periodic(new Duration(milliseconds: widget.milliseconds), (timer) {
+    timer = Timer.periodic(new Duration(milliseconds: widget.milliseconds),
+        (timer) {
       setState(() {
         visible = !visible;
       });

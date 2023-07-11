@@ -51,7 +51,7 @@ class _LoaderScreenState extends State<LoaderScreen>
               Lottie.asset("assets/lotties/search2.json",
                   width: Helper.getScreenWidth(context) * 0.5),
               Text(
-                "IPI recherche les pharmacies ...",
+                "IPI envoie votre demande aux pharmacies sélectionnées...",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 15,

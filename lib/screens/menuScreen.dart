@@ -253,7 +253,7 @@ class _MenuScreen extends State<MenuScreen> {
                           );
                         },
                         child: Text(
-                          "Se deconnecter",
+                          "Se déconnecter",
                           style: TextStyle(fontSize: 15, color: Colors.red),
                         )),
                   )

@@ -36,10 +36,12 @@ class CustomTextInput extends StatelessWidget {
         onChanged: onChanged,
         textAlign: TextAlign.center,
         keyboardType: keyboard,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(14),
-          _CreditCardNumberFormatter(),
-        ],
+        inputFormatters: keyboard == TextInputType.number
+            ? [
+                LengthLimitingTextInputFormatter(14),
+                _CreditCardNumberFormatter(),
+              ]
+            : [],
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
         decoration: InputDecoration(
           border: InputBorder.none,

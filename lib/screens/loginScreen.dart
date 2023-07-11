@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/screens/landingScreen.dart';
 import 'package:csshadow/csshadow.dart';
+import 'package:ipi/screens/profileScreen.dart';
 import 'package:ipi/widgets/confirmNumberDialog.dart';
 import 'package:ipi/widgets/myLogo.dart';
 import '../const/colors.dart';
@@ -15,9 +16,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreen extends State<LoginScreen> {
   final myNumeroController = TextEditingController();
+  final myNameController = TextEditingController();
   String errorText = "";
   int numeroLength = 0;
   final myFocusNode = FocusNode();
+  final focusNode2 = FocusNode();
 
   bool _checkNumero() {
     bool test = false;
@@ -48,7 +51,8 @@ class _LoginScreen extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ConfirmNumberDialog(myNumeroController.text);
+        return ConfirmNumberDialog(
+            myNumeroController.text, myNameController.text);
       },
     );
   }
@@ -127,8 +131,8 @@ class _LoginScreen extends State<LoginScreen> {
                 Align(
                   alignment: Alignment.center,
                   child: MyLogo(
-                    height: 120,
-                    width: 120,
+                    height: 100,
+                    width: 100,
                   ),
                 ),
                 SizedBox(
@@ -143,12 +147,25 @@ class _LoginScreen extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'On a juste besoin de ton numero de téléphone',
+                        'On a juste besoin de ton nom et ton numero de téléphone',
                         style: TextStyle(height: 1.5, color: AppColor.primary),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(
                         height: 30,
+                      ),
+                      CustomTextInput(
+                        controller: myNameController,
+                        myFocusNode: focusNode2,
+                        onChanged: (myNameController) {},
+                        hintText: "Ton nom",
+                        keyboard: TextInputType.name,
+                        onEditingComplete: () {
+                          myFocusNode.nextFocus();
+                        },
+                      ),
+                      SizedBox(
+                        height: 15,
                       ),
                       CustomTextInput(
                         controller: myNumeroController,

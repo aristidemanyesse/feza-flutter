@@ -104,15 +104,8 @@ class DeconnexionDialog extends StatelessWidget {
 
   void deconnexion(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove("produitsSelected");
-    await prefs.remove("user");
-    await prefs.remove("userId");
-    await prefs.remove("lat");
-    await prefs.remove("lon");
-    await prefs.remove("imei");
-    await prefs.remove("produits");
-    await prefs.remove("nomsProduits");
-    await prefs.remove("produitsIDSelected");
+    await prefs.clear();
+
     Navigator.of(context).pushNamedAndRemoveUntil(
         IntroScreen.routeName, (Route<dynamic> route) => false);
   }

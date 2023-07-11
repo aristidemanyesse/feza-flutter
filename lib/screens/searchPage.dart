@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/provider/DemandeProvider.dart';
@@ -72,7 +73,7 @@ class SearchPageState extends State<SearchPage>
   bool ready = true;
   bool isZone = false;
   bool isOrdonnance = false;
-  double distance = 0;
+  int distance = 0;
   late File file;
   late String base64 = "";
 
@@ -139,7 +140,8 @@ class SearchPageState extends State<SearchPage>
     _sharedPreferencesSubscription =
         sharedPreferencesService.watchString('distance').listen((value) {
       setState(() {
-        distance = double.parse(value);
+        print(value + "---------------");
+        distance = int.parse(value);
       });
       officinesAvialable();
       locateMe();
@@ -168,8 +170,7 @@ class SearchPageState extends State<SearchPage>
     dynamic lon = await sharedPreferencesService.getString('lon');
     myPosition = LatLng(double.parse(lat), double.parse(lon));
 
-    distance =
-        double.parse(await sharedPreferencesService.getString('distance'));
+    distance = int.parse(await sharedPreferencesService.getString('distance'));
     _produits = await sharedPreferencesService.getProduitList('produits');
     _selectedOptions =
         await sharedPreferencesService.getStringList('produitsSelected');
@@ -266,9 +267,10 @@ class SearchPageState extends State<SearchPage>
       markersLatLng = [];
       routesOfficines = {};
     });
+
     List<dynamic> datas = await OfficineProvider.avialable({
       "circonscription": user.circonscription!.id,
-      "distance": distance,
+      "distance": !isZone ? distance : 0,
       "longitude": myPosition.longitude,
       "latitude": myPosition.latitude
     });
@@ -279,10 +281,10 @@ class SearchPageState extends State<SearchPage>
         OfficineModel officine = offs[0];
         officines.add(officine);
 
-        double distance = element["distance"];
-        distanceTableaux[officine] = distance < 1000
-            ? "$distance m"
-            : "${(distance / 1000).toStringAsFixed(2)} km";
+        double ladistance = element["distance"];
+        distanceTableaux[officine] = ladistance < 1000
+            ? "$ladistance m"
+            : "${(ladistance / 1000).toStringAsFixed(2)} km";
 
         routesOfficines[officine.id!] = jsonDecode(element["route"]);
         markers.add(
@@ -297,6 +299,9 @@ class SearchPageState extends State<SearchPage>
         officines;
       });
     } else {
+      setState(() {
+        wait = false;
+      });
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -404,6 +409,23 @@ class SearchPageState extends State<SearchPage>
     Navigator.of(context).pop();
   }
 
+  Future<void> getPosition() async {
+    Position? position;
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      position = await Geolocator.getLastKnownPosition();
+      print("L'utilisateur a refusé l'accès à la localisation");
+    } else {
+      position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+    }
+    await sharedPreferencesService.init();
+    await sharedPreferencesService.setString(
+        'lat', position!.latitude.toString());
+    await sharedPreferencesService.setString(
+        'lon', position.longitude.toString());
+  }
+
   void fitBoundsOnCircle(LatLng center, double radius) {
     Distance distance = Distance();
     LatLng p1 = distance.offset(center, radius * 1.8, 0.0);
@@ -415,6 +437,9 @@ class SearchPageState extends State<SearchPage>
   }
 
   void locateMe() async {
+    setState(() {
+      getPosition();
+    });
     fitBoundsOnCircle(myPosition, distance * 1000);
   }
 
@@ -427,7 +452,7 @@ class SearchPageState extends State<SearchPage>
         child: Stack(
           children: [
             Container(
-              height: Helper.getScreenHeight(context) * 0.65,
+              height: Helper.getScreenHeight(context) * 0.85,
               child: Stack(
                 children: [
                   FlutterMap(
@@ -453,7 +478,7 @@ class SearchPageState extends State<SearchPage>
                         circles: [
                           CircleMarker(
                             point: myPosition, // Coordonnées du cercle
-                            radius: distance * 1000,
+                            radius: !isZone ? distance * 1000 : 0,
                             useRadiusInMeter: true,
                             borderColor: Colors.grey,
                             borderStrokeWidth: 1.5,
@@ -506,42 +531,12 @@ class SearchPageState extends State<SearchPage>
                                   child: MyPinInMap(), milliseconds: 1000),
                               anchorPos: AnchorPos.align(AnchorAlign.top),
                             ),
-                            // Marker(
-                            //   point: myPosition, // Coordonnées du marqueur
-                            //   anchorPos: AnchorPos.align(AnchorAlign.top),
-                            //   builder: (ctx) => SmoothCompass(
-                            //     compassBuilder: (context, snapshot, child) {
-                            //       return Center(
-                            //         child: Column(
-                            //           mainAxisSize: MainAxisSize.min,
-                            //           children: [
-                            //             AnimatedRotation(
-                            //               turns: snapshot?.data?.turns ?? 0,
-                            //               duration:
-                            //                   const Duration(milliseconds: 400),
-                            //               child: Transform.rotate(
-                            //                 angle: 0 *
-                            //                     3.1415926535897932 /
-                            //                     180, // Conversion de 90 degrés en radians
-                            //                 child: Icon(
-                            //                   Icons.arrow_upward,
-                            //                   color: Colors.red,
-                            //                   size: 30.0,
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       );
-                            //     },
-                            //   ),
-                            // ),
                           ],
                           popupDisplayOptions: PopupDisplayOptions(
                               builder: (BuildContext context, Marker marker) {
                             return Container(
                               padding: EdgeInsets.all(7),
-                              margin: EdgeInsets.all(7),
+                              margin: EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(10)),
@@ -557,9 +552,9 @@ class SearchPageState extends State<SearchPage>
               ),
             ),
             DraggableScrollableSheet(
-              minChildSize: 0.5,
-              initialChildSize: 0.5,
-              maxChildSize: 0.5,
+              initialChildSize: 0.50,
+              maxChildSize: 0.50,
+              minChildSize: 0.27,
               builder: (context, scrollController) {
                 return ListView(
                   controller: scrollController,
@@ -580,13 +575,8 @@ class SearchPageState extends State<SearchPage>
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SizedBox(
-                            height: 5,
-                          ),
                           Indicator(),
-                          SizedBox(
-                            height: 15,
-                          ),
+                          Spacer(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -595,13 +585,13 @@ class SearchPageState extends State<SearchPage>
                                   onTap: () {
                                     setState(() {
                                       isZone = true;
+                                      officinesAvialable();
                                     });
                                   },
                                   child: Stack(
                                     children: [
                                       Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 15),
+                                        padding: EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                             gradient: LinearGradient(
                                               colors: [
@@ -619,13 +609,17 @@ class SearchPageState extends State<SearchPage>
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "Rechercher par zone",
+                                              "Recherche zone",
                                               style: TextStyle(
                                                   color: Colors.grey[700],
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             const SizedBox(height: 10),
-                                            SelectCirconscriptionBloc(),
+                                            Opacity(
+                                              child:
+                                                  SelectCirconscriptionBloc(),
+                                              opacity: !isZone ? 0 : 1,
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -636,18 +630,14 @@ class SearchPageState extends State<SearchPage>
                                               left: 0,
                                               bottom: 0,
                                               child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 20,
-                                                    vertical: 15),
+                                                padding: EdgeInsets.all(10),
                                                 decoration: BoxDecoration(
                                                   gradient: LinearGradient(
                                                     colors: [
-                                                      Color.fromARGB(255, 155,
-                                                              145, 144)
-                                                          .withOpacity(0.8),
-                                                      Color.fromARGB(
-                                                              255, 56, 54, 59)
-                                                          .withOpacity(0.8)
+                                                      Color(0xff464646)
+                                                          .withOpacity(0.7),
+                                                      Color(0xffd1d1d1)
+                                                          .withOpacity(0.7)
                                                     ],
                                                     stops: [0, 1],
                                                     begin: Alignment.topLeft,
@@ -671,13 +661,13 @@ class SearchPageState extends State<SearchPage>
                                   onTap: () {
                                     setState(() {
                                       isZone = false;
+                                      officinesAvialable();
                                     });
                                   },
                                   child: Stack(
                                     children: [
                                       Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 15),
+                                        padding: EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                             gradient: LinearGradient(
                                               colors: [
@@ -696,13 +686,16 @@ class SearchPageState extends State<SearchPage>
                                               CrossAxisAlignment.end,
                                           children: [
                                             Text(
-                                              "Dans un périmètre de  ",
+                                              "Périmètre de  ",
                                               style: TextStyle(
                                                   color: Colors.grey[700],
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             const SizedBox(height: 10),
-                                            SelectDistanceBloc(),
+                                            Opacity(
+                                              child: SelectDistanceBloc(),
+                                              opacity: !isZone ? 1 : 0,
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -713,18 +706,14 @@ class SearchPageState extends State<SearchPage>
                                               left: 0,
                                               bottom: 0,
                                               child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 20,
-                                                    vertical: 15),
+                                                padding: EdgeInsets.all(10),
                                                 decoration: BoxDecoration(
                                                   gradient: LinearGradient(
                                                     colors: [
-                                                      Color.fromARGB(255, 155,
-                                                              145, 144)
-                                                          .withOpacity(0.8),
-                                                      Color.fromARGB(
-                                                              255, 56, 54, 59)
-                                                          .withOpacity(0.8)
+                                                      Color(0xff464646)
+                                                          .withOpacity(0.7),
+                                                      Color(0xffd1d1d1)
+                                                          .withOpacity(0.7)
                                                     ],
                                                     stops: [0, 1],
                                                     begin: Alignment.topLeft,
@@ -742,9 +731,7 @@ class SearchPageState extends State<SearchPage>
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
+                          Spacer(),
                           Row(
                             children: [
                               Expanded(
@@ -823,9 +810,7 @@ class SearchPageState extends State<SearchPage>
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
+                          Spacer(),
                           Row(
                             children: [
                               Expanded(
@@ -836,12 +821,15 @@ class SearchPageState extends State<SearchPage>
                                   GestureDetector(
                                     onTap: () => showProduitsListe(context),
                                     child: Container(
-                                      height: 45,
+                                      height: 40,
                                       decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: AppColor.secondary,
+                                              width: 1),
                                           gradient: LinearGradient(
                                             colors: [
-                                              Color(0xffe4f3e4),
-                                              Color(0xfff9978f)
+                                              Color(0xffd1d1d1),
+                                              Color(0xffffffff)
                                             ],
                                             stops: [0, 1],
                                             begin: Alignment.topLeft,
@@ -872,15 +860,18 @@ class SearchPageState extends State<SearchPage>
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 15,
+                                    height: 10,
                                   ),
                                   Container(
-                                    height: 45,
+                                    height: 40,
                                     decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: AppColor.secondary,
+                                            width: 1),
                                         gradient: LinearGradient(
                                           colors: [
-                                            Color(0xffe4f3e4),
-                                            Color(0xfff9978f)
+                                            Color(0xffd1d1d1),
+                                            Color(0xffffffff)
                                           ],
                                           stops: [0, 1],
                                           begin: Alignment.topLeft,
@@ -916,8 +907,10 @@ class SearchPageState extends State<SearchPage>
                               ),
                               Container(
                                 width: Helper.getScreenWidth(context) * 0.2,
-                                height: 110,
+                                height: 100,
                                 decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: AppColor.secondary, width: 1),
                                     gradient: LinearGradient(
                                       colors: [
                                         Color(0xffd1d1d1),
@@ -956,12 +949,14 @@ class SearchPageState extends State<SearchPage>
                               ),
                               Container(
                                 width: Helper.getScreenWidth(context) * 0.25,
-                                height: 110,
+                                height: 100,
                                 decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: AppColor.secondary, width: 1),
                                     gradient: LinearGradient(
                                       colors: [
-                                        Color(0xffe4f3e4),
-                                        Color(0xff92cf94)
+                                        Color(0xffd1d1d1),
+                                        Color(0xffffffff)
                                       ],
                                       stops: [0, 1],
                                       begin: Alignment.topLeft,
@@ -976,11 +971,10 @@ class SearchPageState extends State<SearchPage>
                                           Text(
                                             officines.length.toString(),
                                             style: TextStyle(
-                                                fontSize: 55,
+                                                fontSize: 50,
                                                 color: Colors.grey[700],
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          const SizedBox(height: 5),
                                           Text(
                                             "pharmacies trouvées",
                                             textAlign: TextAlign.center,
@@ -1014,9 +1008,7 @@ class SearchPageState extends State<SearchPage>
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
+                          Spacer(),
                           ready
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1047,7 +1039,6 @@ class SearchPageState extends State<SearchPage>
                                   ],
                                 )
                               : Container(),
-                          SizedBox(height: 5),
                         ],
                       ),
                     ),
@@ -1056,7 +1047,7 @@ class SearchPageState extends State<SearchPage>
               },
             ),
             Positioned(
-              top: Helper.getScreenHeight(context) * 0.04,
+              top: Helper.getScreenHeight(context) * 0.05,
               left: 0,
               child: Container(
                 margin: EdgeInsets.only(left: 12),

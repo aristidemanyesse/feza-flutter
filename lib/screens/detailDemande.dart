@@ -13,6 +13,7 @@ import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/indicator.dart';
 import 'package:ipi/widgets/ligneProduitAvialable.dart';
 import "package:intl/intl.dart";
+import 'package:lottie/lottie.dart';
 
 class DetailDemande extends StatefulWidget {
   static const routeName = "/DetailDemande";
@@ -33,10 +34,6 @@ class DetailDemande extends StatefulWidget {
 }
 
 class DetailDemandeState extends State<DetailDemande> {
-  SharedPreferencesService sharedPreferencesService =
-      SharedPreferencesService();
-
-  UtilisateurModel? user;
   late Map<OfficineModel, List<LigneReponseModel>> datas = {};
   late Map<OfficineModel, ReponseModel> reponses = {};
 
@@ -93,7 +90,7 @@ class DetailDemandeState extends State<DetailDemande> {
             height: 5,
           ),
           Text(
-            "Reponse des pharmacies",
+            "Reponse des pharmacies ",
             textAlign: TextAlign.center,
             style: Helper.getTheme(context).headlineLarge?.copyWith(
                 fontWeight: FontWeight.bold,
@@ -139,126 +136,149 @@ class DetailDemandeState extends State<DetailDemande> {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: reponses.keys.map((officine) {
-                  ReponseModel reponse = reponses[officine]!;
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 15),
-                    child: ExpansionTile(
-                      leading: Image.asset(
-                        "assets/images/icons/pharma.png",
-                        height: 30,
+            child: reponses.keys.length == 0
+                ? Center(
+                    child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: Lottie.asset(
+                          "assets/lotties/empty.json",
+                        ),
                       ),
-                      trailing: reponse.read!
-                          ? GestureDetector(
-                              child: Icon(
-                                Icons.place,
-                                color: Color.fromARGB(255, 84, 75, 75),
-                              ),
-                            )
-                          : Icon(
-                              Icons.chat_rounded,
-                              color: Colors.green,
+                      Text(
+                        "Aucune pharmacie n'a encore \n repondu pour le moment ...",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(height: 1.5),
+                      ),
+                    ],
+                  ))
+                : SingleChildScrollView(
+                    child: Column(
+                      children: reponses.keys.map((officine) {
+                        ReponseModel reponse = reponses[officine]!;
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 15),
+                          child: ExpansionTile(
+                            leading: Image.asset(
+                              "assets/images/icons/pharma.png",
+                              height: 30,
                             ),
-                      onExpansionChanged: (value) {
-                        if (value && !reponse.read!) {
-                          print(reponse.demande!.id);
-                          ReponseProvider.update({
-                            "id": reponse.id,
-                            "demande": reponse.demande!.id,
-                            "read": true
-                          });
-                          setState(() {});
-                        }
-                      },
-                      collapsedBackgroundColor: Colors.white.withOpacity(0.8),
-                      backgroundColor: Colors.white.withOpacity(0.5),
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            officine.name ?? "",
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: reponse.read!
-                                    ? Colors.grey
-                                    : Color.fromARGB(255, 6, 114, 49),
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            "${officine.circonscription!.name} ${officine.localisation ?? ''}",
-                            style: TextStyle(fontSize: 12),
-                          )
-                        ],
-                      ),
-                      children: [
-                        Container(
-                          height: 2,
-                          color: Colors.grey.shade300,
-                          margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 15),
-                          child: Column(
-                            children: datas[officine]!.map((prod) {
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Ligne(
-                                    produit: prod.produit!,
-                                    active: prod.status!,
-                                  ),
-                                  Container(
-                                    height: 1,
-                                    color: Colors.grey.shade300,
-                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                        reponses[officine]!.commentaire != ""
-                            ? Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 13, vertical: 10),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Le traitant: ",
-                                      style: TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black),
+                            trailing: reponse.read!
+                                ? GestureDetector(
+                                    child: Icon(
+                                      Icons.place,
+                                      color: Color.fromARGB(255, 84, 75, 75),
                                     ),
-                                    SizedBox(
-                                      width: 3,
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        reponses[officine]!.commentaire ?? "",
-                                        style: TextStyle(
-                                            height: 1.2,
-                                            fontStyle: FontStyle.italic),
+                                  )
+                                : Icon(
+                                    Icons.chat_rounded,
+                                    color: Colors.green,
+                                  ),
+                            onExpansionChanged: (value) {
+                              if (value && !reponse.read!) {
+                                ReponseProvider.update({
+                                  "id": reponse.id,
+                                  "demande": reponse.demande!.id,
+                                  "read": true
+                                });
+                                setState(() {});
+                              }
+                            },
+                            collapsedBackgroundColor:
+                                Colors.white.withOpacity(0.8),
+                            backgroundColor: Colors.white.withOpacity(0.5),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  officine.name ?? "",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: reponse.read!
+                                          ? Colors.grey
+                                          : Color.fromARGB(255, 6, 114, 49),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 3),
+                                Text(
+                                  "${officine.circonscription!.name} ${officine.localisation ?? ''}",
+                                  style: TextStyle(fontSize: 12),
+                                )
+                              ],
+                            ),
+                            children: [
+                              Container(
+                                height: 2,
+                                color: Colors.grey.shade300,
+                                margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(horizontal: 15),
+                                child: Column(
+                                  children: datas[officine]!.map((prod) {
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Ligne(
+                                          produit: prod.produit!,
+                                          active: prod.status!,
+                                        ),
+                                        Container(
+                                          height: 1,
+                                          color: Colors.grey.shade300,
+                                          margin:
+                                              EdgeInsets.fromLTRB(0, 0, 0, 7),
+                                        ),
+                                      ],
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                              reponses[officine]!.commentaire != ""
+                                  ? Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 13, vertical: 10),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Le traitant: ",
+                                            style: TextStyle(
+                                                fontStyle: FontStyle.italic,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
+                                          ),
+                                          SizedBox(
+                                            width: 3,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              reponses[officine]!.commentaire ??
+                                                  "",
+                                              style: TextStyle(
+                                                  height: 1.2,
+                                                  fontStyle: FontStyle.italic),
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     )
-                                  ],
-                                ),
-                              )
-                            : Container()
-                      ],
+                                  : Container()
+                            ],
+                          ),
+                        );
+                      }).toList(),
                     ),
-                  );
-                }).toList(),
-              ),
-            ),
+                  ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

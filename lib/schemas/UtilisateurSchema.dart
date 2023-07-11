@@ -1,8 +1,9 @@
 class UtilisateurSchema {
   static const String ALL = r"""
-    query ($otp: String, $circonscription: UUID, $contact: String, $imei:String) {
+    query ($otp: String, $id:UUID, $circonscription: UUID, $contact: String, $imei:String) {
   searchUtilisateur(
     deleted: false
+    id: $id
     otp: $otp
     circonscription_Id: $circonscription
     contact: $contact,
@@ -28,9 +29,9 @@ class UtilisateurSchema {
   """;
 
   static const String CREATE = r"""
-    mutation ($contact: String!, $imei: String!, $circonscription: ID) {
+    mutation ($fullname: String!, $contact: String!, $imei: String!, $circonscription: ID) {
   createUtilisateur(
-    newUtilisateur: {contact: $contact, imei: $imei, circonscription: $circonscription}
+    newUtilisateur: {contact: $contact, fullname:$fullname, imei: $imei, circonscription: $circonscription}
   ) {
     ok
     errors {
@@ -57,25 +58,25 @@ class UtilisateurSchema {
   """;
 
   static const String UPDATE = r"""
-mutation ($id:UUID!, $contact: String!, $imei: String!, $circonscription: ID!) {
-  updateUtilisateur(
-    newUtilisateur: {id:$id, contact: $contact, imei: $imei, circonscription: $circonscription}
-  ) {
-    ok
-    errors {
-      field
-      messages
-    }
-    utilisateur {
-      id
-      contact
-      imei
-      circonscription {
-        id
-        name
+    mutation ($id:UUID!, $contact: String!, $fullname: String!, $imei: String!, $circonscription: ID!) {
+      updateUtilisateur(
+        newUtilisateur: {id:$id, fullname:$fullname, contact: $contact, imei: $imei, circonscription: $circonscription}
+      ) {
+        ok
+        errors {
+          field
+          messages
+        }
+        utilisateur {
+          id
+          contact
+          imei
+          circonscription {
+            id
+            name
+          }
+        }
       }
     }
-  }
-}
   """;
 }

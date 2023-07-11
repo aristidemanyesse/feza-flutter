@@ -59,17 +59,17 @@ class NoPharmacieAvialable extends StatelessWidget {
                         color: Colors.transparent,
                       ),
                       child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            "Ok, revenir !",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold),
-                          )),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Ok, revenir !",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
                     // Container(
                     //   alignment: Alignment.center,

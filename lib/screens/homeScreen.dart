@@ -85,195 +85,196 @@ class HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
         child: Scaffold(
           backgroundColor: Color.fromARGB(255, 245, 239, 235),
-          body: Container(
-            height: Helper.getScreenHeight(context),
-            width: Helper.getScreenWidth(context),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  height: Helper.getScreenHeight(context) * 0.3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                Helper.getAssetName("pharma.png", "icons"),
-                                width: 35,
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Text(
-                                "Bonjour ",
-                                style: Helper.getTheme(context).headlineSmall,
-                              ),
-                              Text(
-                                user?.fullname ?? "",
-                                style: Helper.getTheme(context)
-                                    .headlineSmall
-                                    ?.copyWith(
-                                        color: AppColor.blue,
-                                        fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                " !",
-                                style: Helper.getTheme(context)
-                                    .headlineSmall
-                                    ?.copyWith(
-                                        color: AppColor.blue,
-                                        fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(right: 12),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                    MenuScreen.routeName,
-                                    arguments: {"user": user});
-                              },
-                              child: Icon(
-                                Icons.menu,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
-                              child: Text("Circonscription actuelle"),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            SelectCirconscriptionBloc(),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 40,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text(
-                              "Vos demandes en cours ...",
-                              style: Helper.getTheme(context)
-                                  .headlineLarge
-                                  ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 22,
-                                      color: Color.fromARGB(255, 21, 67, 111)),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(right: 10),
-                            child: GestureDetector(
-                              onTap: () {
-                                NotificationService().showNotification(
-                                    title: 'Sample title', body: 'It works!');
-                                Navigator.of(context)
-                                    .pushReplacementNamed(HomeScreen.routeName);
-                              },
-                              child: Icon(Icons.refresh),
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
+          body: SafeArea(
+            child: Container(
+              height: Helper.getScreenHeight(context),
+              width: Helper.getScreenWidth(context),
+              child: Column(
+                children: [
+                  Container(
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    child: demandes.isEmpty
-                        ? Center(
-                            child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Center(
-                                child: Lottie.asset(
-                                  "assets/lotties/empty.json",
+                    height: Helper.getScreenHeight(context) * 0.3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Image.asset(
+                                  Helper.getAssetName("pharma.png", "icons"),
+                                  width: 35,
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  "Bonjour ",
+                                  style: Helper.getTheme(context).headlineSmall,
+                                ),
+                                Text(
+                                  user?.fullname ?? "",
+                                  style: Helper.getTheme(context)
+                                      .headlineSmall
+                                      ?.copyWith(
+                                          color: AppColor.blue,
+                                          fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  " !",
+                                  style: Helper.getTheme(context)
+                                      .headlineSmall
+                                      ?.copyWith(
+                                          color: AppColor.blue,
+                                          fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(right: 12),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                      MenuScreen.routeName,
+                                      arguments: {"user": user});
+                                },
+                                child: Icon(
+                                  Icons.menu,
+                                  color: Colors.black,
                                 ),
                               ),
-                              Text(
-                                "Aucune demande pour le moment ...",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(height: 1.5),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                child: Text("Circonscription actuelle"),
                               ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              SelectCirconscriptionBloc(),
                             ],
-                          ))
-                        : SingleChildScrollView(
-                            child: Column(
-                              children: demandes.map((demande) {
-                                return DemandeItemCard(demande);
-                              }).toList(),
-                            ),
                           ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 10),
-                  height: Helper.getScreenHeight(context) * 0.1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(SearchPage.routeName);
-                        },
-                        child: Row(
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(
-                              Icons.add,
-                              size: 24,
-                              color: Colors.white,
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(
+                                "Vos demandes en cours ...",
+                                style: Helper.getTheme(context)
+                                    .headlineLarge
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 22,
+                                        color:
+                                            Color.fromARGB(255, 21, 67, 111)),
+                              ),
                             ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "Faire une nouvelle recherche",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                            Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: InkWell(
+                                onTap: () {
+                                  NotificationService().showNotification(
+                                      title: 'Sample title', body: 'It works!');
+                                  Navigator.of(context).pushReplacementNamed(
+                                      HomeScreen.routeName);
+                                },
+                                child: Icon(Icons.refresh),
+                              ),
                             )
                           ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                )
-              ],
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: demandes.isEmpty
+                          ? Center(
+                              child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Center(
+                                  child: Lottie.asset(
+                                    "assets/lotties/empty.json",
+                                  ),
+                                ),
+                                Text(
+                                  "Aucune demande pour le moment ...",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(height: 1.5),
+                                ),
+                              ],
+                            ))
+                          : SingleChildScrollView(
+                              child: Column(
+                                children: demandes.map((demande) {
+                                  return DemandeItemCard(demande);
+                                }).toList(),
+                              ),
+                            ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 5),
+                    height: Helper.getScreenHeight(context) * 0.1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(SearchPage.routeName);
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.add,
+                                size: 24,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Faire une nouvelle recherche",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
