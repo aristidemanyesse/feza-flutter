@@ -140,11 +140,15 @@ class SearchPageState extends State<SearchPage>
     _sharedPreferencesSubscription =
         sharedPreferencesService.watchString('distance').listen((value) {
       setState(() {
-        print(value + "---------------");
         distance = int.parse(value);
       });
       officinesAvialable();
       locateMe();
+    });
+
+    _sharedPreferencesSubscription =
+        sharedPreferencesService.watchString('circonscription').listen((value) {
+      officinesAvialable();
     });
 
     _sharedPreferencesSubscription = sharedPreferencesService
@@ -225,6 +229,8 @@ class SearchPageState extends State<SearchPage>
           setState(() {
             ready = true;
           });
+          await sharedPreferencesService.setString('distance', "1");
+          await sharedPreferencesService.setStringList('produitsSelected', []);
 
           showModalBottomSheet(
             context: context,
@@ -269,7 +275,8 @@ class SearchPageState extends State<SearchPage>
     });
 
     List<dynamic> datas = await OfficineProvider.avialable({
-      "circonscription": user.circonscription!.id,
+      "circonscription":
+          user.circonscription == null ? "" : user.circonscription!.id,
       "distance": !isZone ? distance : 0,
       "longitude": myPosition.longitude,
       "latitude": myPosition.latitude
@@ -308,16 +315,6 @@ class SearchPageState extends State<SearchPage>
           return NoPharmacieAvialable();
         },
       );
-    }
-  }
-
-  void targetMarker(String? id) {
-    for (var marker in markers) {
-      if (marker.officine.id == id) {
-        scrollToContainer(id!);
-        _animatedMapMove(marker.point, 13);
-        Navigator.pop(context);
-      }
     }
   }
 
@@ -428,8 +425,8 @@ class SearchPageState extends State<SearchPage>
 
   void fitBoundsOnCircle(LatLng center, double radius) {
     Distance distance = Distance();
-    LatLng p1 = distance.offset(center, radius * 1.8, 0.0);
-    LatLng p2 = distance.offset(center, -radius * 1.8, 0.0);
+    LatLng p1 = distance.offset(center, radius * 2, 0.0);
+    LatLng p2 = distance.offset(center, -radius * 2, 0.0);
 
     final bounds = LatLngBounds.fromPoints([center, p1, p2]);
     final centerZoom = mapController.centerZoomFitBounds(bounds);
@@ -452,7 +449,7 @@ class SearchPageState extends State<SearchPage>
         child: Stack(
           children: [
             Container(
-              height: Helper.getScreenHeight(context) * 0.85,
+              height: Helper.getScreenHeight(context) * 0.8,
               child: Stack(
                 children: [
                   FlutterMap(
@@ -547,13 +544,18 @@ class SearchPageState extends State<SearchPage>
                       ),
                     ],
                   ),
-                  Visibility(child: LoaderScreen(), visible: !ready),
+                  Visibility(
+                      child: LoaderScreen(
+                        title:
+                            "IPI envoie votre demande aux pharmacies sélectionnées...",
+                      ),
+                      visible: !ready),
                 ],
               ),
             ),
             DraggableScrollableSheet(
-              initialChildSize: 0.50,
-              maxChildSize: 0.50,
+              initialChildSize: 0.51,
+              maxChildSize: 0.51,
               minChildSize: 0.27,
               builder: (context, scrollController) {
                 return ListView(
@@ -561,7 +563,6 @@ class SearchPageState extends State<SearchPage>
                   children: [
                     Container(
                       padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
-                      margin: EdgeInsets.fromLTRB(3, 0, 3, 0),
                       height: Helper.getScreenHeight(context) * 0.48,
                       decoration: ShapeDecoration(
                         color: Color.fromARGB(255, 245, 239, 235),
@@ -584,8 +585,10 @@ class SearchPageState extends State<SearchPage>
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      isZone = true;
-                                      officinesAvialable();
+                                      if (!isZone) {
+                                        isZone = true;
+                                        officinesAvialable();
+                                      }
                                     });
                                   },
                                   child: Stack(
@@ -595,12 +598,12 @@ class SearchPageState extends State<SearchPage>
                                         decoration: BoxDecoration(
                                             gradient: LinearGradient(
                                               colors: [
-                                                Color(0xfffddcda),
-                                                Color(0xffe9e1f6)
+                                                Color(0xffe4f3e4),
+                                                Color(0xff92cf94)
                                               ],
-                                              stops: [0, 1],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
+                                              stops: [0.25, 1],
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(10)),
@@ -623,32 +626,7 @@ class SearchPageState extends State<SearchPage>
                                           ],
                                         ),
                                       ),
-                                      !isZone
-                                          ? Positioned(
-                                              top: 0,
-                                              right: 0,
-                                              left: 0,
-                                              bottom: 0,
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    colors: [
-                                                      Color(0xff464646)
-                                                          .withOpacity(0.7),
-                                                      Color(0xffd1d1d1)
-                                                          .withOpacity(0.7)
-                                                    ],
-                                                    stops: [0, 1],
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            )
-                                          : Container(),
+                                      !isZone ? Calque() : Container(),
                                     ],
                                   ),
                                 ),
@@ -660,8 +638,10 @@ class SearchPageState extends State<SearchPage>
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      isZone = false;
-                                      officinesAvialable();
+                                      if (isZone) {
+                                        isZone = false;
+                                        officinesAvialable();
+                                      }
                                     });
                                   },
                                   child: Stack(
@@ -671,12 +651,12 @@ class SearchPageState extends State<SearchPage>
                                         decoration: BoxDecoration(
                                             gradient: LinearGradient(
                                               colors: [
-                                                Color(0xfffddcda),
-                                                Color(0xffe9e1f6)
+                                                Color(0xffe4f3e4),
+                                                Color(0xff92cf94)
                                               ],
-                                              stops: [0, 1],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
+                                              stops: [0.25, 1],
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
                                             ),
                                             color: Colors.grey,
                                             borderRadius:
@@ -699,32 +679,7 @@ class SearchPageState extends State<SearchPage>
                                           ],
                                         ),
                                       ),
-                                      isZone
-                                          ? Positioned(
-                                              top: 0,
-                                              right: 0,
-                                              left: 0,
-                                              bottom: 0,
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    colors: [
-                                                      Color(0xff464646)
-                                                          .withOpacity(0.7),
-                                                      Color(0xffd1d1d1)
-                                                          .withOpacity(0.7)
-                                                    ],
-                                                    stops: [0, 1],
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            )
-                                          : Container(),
+                                      isZone ? Calque() : Container(),
                                     ],
                                   ),
                                 ),
@@ -768,26 +723,26 @@ class SearchPageState extends State<SearchPage>
                                   ),
                                 ),
                               )),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              GestureDetector(
-                                child: Container(
-                                    padding: EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                        border: Border.all(
-                                            color: AppColor.secondary,
-                                            width: 2)),
-                                    child: Icon(
-                                      Icons.barcode_reader,
-                                      size: 26,
-                                    )),
-                                onTap: () {
-                                  getCodeBar();
-                                },
-                              ),
+                              // SizedBox(
+                              //   width: 10,
+                              // ),
+                              // GestureDetector(
+                              //   child: Container(
+                              //       padding: EdgeInsets.all(8),
+                              //       decoration: BoxDecoration(
+                              //           borderRadius: BorderRadius.all(
+                              //               Radius.circular(10)),
+                              //           border: Border.all(
+                              //               color: AppColor.secondary,
+                              //               width: 2)),
+                              //       child: Icon(
+                              //         Icons.barcode_reader,
+                              //         size: 26,
+                              //       )),
+                              //   onTap: () {
+                              //     getCodeBar();
+                              //   },
+                              // ),
                               SizedBox(
                                 width: 10,
                               ),
@@ -1047,23 +1002,25 @@ class SearchPageState extends State<SearchPage>
               },
             ),
             Positioned(
-              top: Helper.getScreenHeight(context) * 0.05,
-              left: 0,
-              child: Container(
-                margin: EdgeInsets.only(left: 12),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(100))),
-                    child: Icon(
-                      Icons.arrow_back_ios_rounded,
-                      size: 20,
-                      color: AppColor.blue,
+              top: 10,
+              child: SafeArea(
+                child: Container(
+                  margin: EdgeInsets.only(left: 12),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: AppColor.blue, width: 1),
+                          borderRadius: BorderRadius.all(Radius.circular(100))),
+                      child: Icon(
+                        Icons.arrow_back_ios_rounded,
+                        size: 20,
+                        color: AppColor.blue,
+                      ),
                     ),
                   ),
                 ),
@@ -1090,6 +1047,37 @@ class SearchPageState extends State<SearchPage>
                   ),
                 ))
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class Calque extends StatelessWidget {
+  const Calque({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 0,
+      right: 0,
+      left: 0,
+      bottom: 0,
+      child: Container(
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xff464646).withOpacity(0.7),
+              Color(0xffd1d1d1).withOpacity(0.7)
+            ],
+            stops: [0, 1],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );

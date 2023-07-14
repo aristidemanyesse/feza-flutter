@@ -3,6 +3,10 @@ import 'package:ipi/utils/helper.dart';
 import 'package:lottie/lottie.dart';
 
 class LoaderScreen extends StatefulWidget {
+  late String title = "";
+
+  LoaderScreen({required this.title});
+
   @override
   _LoaderScreenState createState() => _LoaderScreenState();
 }
@@ -41,39 +45,31 @@ class _LoaderScreenState extends State<LoaderScreen>
         Container(
           width: Helper.getScreenWidth(context),
           height: Helper.getScreenHeight(context),
-          color: Colors.white.withOpacity(0.5),
+          color: Colors.white.withOpacity(0.7),
         ),
-        Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Lottie.asset("assets/lotties/search2.json",
-                  width: Helper.getScreenWidth(context) * 0.5),
-              Text(
-                "IPI envoie votre demande aux pharmacies sélectionnées...",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87),
-              )
-            ],
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Lottie.asset("assets/lotties/search2.json",
+                    width: Helper.getScreenWidth(context) * 0.5),
+                Text(
+                  widget.title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 15,
+                      height: 2,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
+                )
+              ],
+            ),
           ),
         ),
       ],
-    );
-  }
-}
-
-// Exemple d'utilisation dans un écran ou un widget
-class MyScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: LoaderScreen(),
-      ),
     );
   }
 }

@@ -3,19 +3,15 @@ import 'package:ipi/const/colors.dart';
 import 'package:ipi/utils/helper.dart';
 
 class MenuCard extends StatelessWidget {
-  const MenuCard({
-    Key? key,
-    required String name,
-    required String subtitle,
-    required Widget imageShape,
-  })  : _name = name,
-        _subtitle = subtitle,
-        _imageShape = imageShape,
-        super(key: key);
+  final String name;
+  final Widget subtitle;
+  final Widget imageShape;
 
-  final String _name;
-  final String _subtitle;
-  final Widget _imageShape;
+  const MenuCard({
+    required this.name,
+    required this.imageShape,
+    this.subtitle = const Text(""),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +47,7 @@ class MenuCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _name,
+                this.name,
                 style: Helper.getTheme(context)
                     .headlineMedium
                     ?.copyWith(color: AppColor.primary, fontSize: 15),
@@ -59,10 +55,7 @@ class MenuCard extends StatelessWidget {
               SizedBox(
                 height: 5,
               ),
-              Text(
-                _subtitle,
-                style: TextStyle(color: AppColor.green),
-              )
+              this.subtitle,
             ],
           ),
         ),
@@ -70,7 +63,7 @@ class MenuCard extends StatelessWidget {
           height: 80,
           child: Align(
             alignment: Alignment.centerLeft,
-            child: _imageShape,
+            child: this.imageShape,
           ),
         ),
         SizedBox(

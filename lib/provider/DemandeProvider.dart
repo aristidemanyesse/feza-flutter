@@ -11,7 +11,6 @@ class DemandeProvider extends ChangeNotifier {
 
   static Future<List<DemandeModel>> all(Map<String, dynamic> variables) async {
     dynamic datas = await ApiService.request(DemandeSchema.ALL, variables);
-    print(datas);
     dynamic list = datas["searchDemande"]["results"];
     List<DemandeModel> officines = [];
     for (var jsonTask in list) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/screens/landingScreen.dart';
 import 'package:csshadow/csshadow.dart';
-import 'package:ipi/screens/profileScreen.dart';
 import 'package:ipi/widgets/confirmNumberDialog.dart';
 import 'package:ipi/widgets/myLogo.dart';
 import '../const/colors.dart';
@@ -56,19 +55,6 @@ class _LoginScreen extends State<LoginScreen> {
       },
     );
   }
-
-  // Navigator.of(context).pushNamed(SendOTPScreen.routeName,
-  //     arguments: {"numero": myNumeroController.text});
-
-  // void test() async {
-  //   Map<String, dynamic> variables = {"numero": myNumeroController.text};
-  //   List<UtilisateurModel> utilisateurs =
-  //       await UtilisateurProvider.all(variables);
-  //   print(utilisateurs);
-  //   // test();
-  // }
-
-  // String imei = await ImeiPlugin.getImei();
 
   @override
   void dispose() {

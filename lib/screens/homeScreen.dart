@@ -6,7 +6,6 @@ import 'package:ipi/provider/DemandeProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/searchPage.dart';
-import 'package:ipi/utils/local_notifications.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/DemandeItemCard.dart';
 import 'package:ipi/widgets/confirmExitDialog.dart';
@@ -34,8 +33,6 @@ class HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     getData();
-    NotificationService()
-        .showNotification(title: 'Sample title', body: 'It works!');
   }
 
   @override
@@ -194,8 +191,6 @@ class HomeScreenState extends State<HomeScreen> {
                               margin: EdgeInsets.only(right: 10),
                               child: InkWell(
                                 onTap: () {
-                                  NotificationService().showNotification(
-                                      title: 'Sample title', body: 'It works!');
                                   Navigator.of(context).pushReplacementNamed(
                                       HomeScreen.routeName);
                                 },

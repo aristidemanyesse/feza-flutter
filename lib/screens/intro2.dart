@@ -31,7 +31,7 @@ class Intro2 extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  "Scanne le codebarre du médicament pour le rechercher instantanement...",
+                  "Scanne ton ordonnance pour le rechercher instantanement...",
                   textAlign: TextAlign.left,
                   style: TextStyle(height: 1.5, color: AppColor.primary),
                 ),

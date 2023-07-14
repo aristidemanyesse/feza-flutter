@@ -46,8 +46,18 @@ class OfficineSchema {
   """;
 
   static const String OFFICINES_AVIALABLE = r"""
-    query ($longitude: Float, $latitude: Float, $distance: Int,  $circonscription: UUID,) {
+    query ($longitude: Float, $latitude: Float, $distance: Int,  $circonscription: String,) {
       searchOfficineAvialable(longitude: $longitude, latitude: $latitude, distance: $distance, circonscription: $circonscription) {
+        distance
+        officine
+        route
+      }
+    }
+  """;
+
+  static const String OFFICINES_GARDE_AVIALABLE = r"""
+    query ($longitude: Float, $latitude: Float, $distance: Int,  $circonscription: String,) {
+      searchOfficineGardeAvialable(longitude: $longitude, latitude: $latitude, distance: $distance, circonscription: $circonscription) {
         distance
         officine
         route

@@ -29,4 +29,11 @@ class OfficineProvider extends ChangeNotifier {
         await ApiService.request(OfficineSchema.OFFICINES_AVIALABLE, variables);
     return datas["searchOfficineAvialable"];
   }
+
+  static Future<List<dynamic>> garde_avialable(
+      Map<String, dynamic> variables) async {
+    dynamic datas = await ApiService.request(
+        OfficineSchema.OFFICINES_GARDE_AVIALABLE, variables);
+    return datas["searchOfficineGardeAvialable"];
+  }
 }

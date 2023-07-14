@@ -8,7 +8,8 @@ import 'package:ipi/utils/helper.dart';
 import 'package:ipi/widgets/confirmExitDialog.dart';
 import 'package:ipi/widgets/menuCard.dart';
 import 'package:ipi/widgets/myLogo.dart';
-import 'package:ipi/widgets/noPharmacieAvialable.dart';
+import "package:intl/intl.dart";
+import 'package:intl/date_symbol_data_local.dart';
 
 class MenuScreen extends StatefulWidget {
   static const routeName = "/menuScreen";
@@ -18,7 +19,9 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreen extends State<MenuScreen> {
   late UtilisateurModel user;
+  List<GardeModel> gardes = [];
   late GardeModel garde = new GardeModel();
+  DateFormat f = DateFormat();
 
   @override
   void dispose() {
@@ -28,23 +31,17 @@ class _MenuScreen extends State<MenuScreen> {
   @override
   void initState() {
     getData();
+    initializeDateFormatting("fr");
+    f = DateFormat("dd MMMM ", "fr");
     super.initState();
   }
 
   Future<void> getData() async {
-    List<GardeModel> gardes = await GardeProvider.all({});
-
+    gardes = await GardeProvider.all({});
     if (gardes.length > 0) {
       garde = gardes[0];
-      setState(() {});
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return NoPharmacieAvialable();
-        },
-      );
     }
+    setState(() {});
   }
 
   @override
@@ -114,22 +111,50 @@ class _MenuScreen extends State<MenuScreen> {
                                       .pushNamed(PharmaciesGarde.routeName);
                                 },
                                 child: MenuCard(
-                                  imageShape: ClipOval(
-                                    child: Container(
-                                      color: Colors.white,
-                                      height: 60,
-                                      width: 60,
-                                      child: Image.asset(
-                                        Helper.getAssetName(
-                                            "plus.png", "icons"),
-                                        fit: BoxFit.contain,
+                                    imageShape: ClipOval(
+                                      child: Container(
+                                        color: Colors.white,
+                                        height: 60,
+                                        width: 60,
+                                        child: Image.asset(
+                                          Helper.getAssetName(
+                                              "plus.png", "icons"),
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  name: "Pharmarcies de garde",
-                                  subtitle:
-                                      "Du ${garde.debut ?? '..'} au ${garde.fin ?? '..'}",
-                                ),
+                                    name: "Pharmarcies de garde",
+                                    subtitle: gardes.length > 0
+                                        ? Row(
+                                            children: [
+                                              Text("Du"),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "${f.format(DateTime.parse(garde.debut ?? ""))}",
+                                                style: TextStyle(
+                                                    color: AppColor.green,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text("au"),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "${f.format(DateTime.parse(garde.fin ?? ""))}",
+                                                style: TextStyle(
+                                                    color: AppColor.green,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          )
+                                        : Container()),
                               ),
                               SizedBox(
                                 height: 50,
@@ -179,7 +204,12 @@ class _MenuScreen extends State<MenuScreen> {
                                     ),
                                   ),
                                   name: "Mon compte",
-                                  subtitle: user.contact ?? "",
+                                  subtitle: Text(
+                                    user.contact ?? "",
+                                    style: TextStyle(
+                                        color: AppColor.green,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                               ),
                             ],
@@ -190,43 +220,29 @@ class _MenuScreen extends State<MenuScreen> {
               ],
             ),
           ),
-          Container(
-            height: Helper.getScreenHeight(context) * 0.13,
-            width: Helper.getScreenWidth(context),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.0, 0.4],
-                colors: [
-                  Colors.black.withOpacity(0.9),
-                  Colors.black.withOpacity(0.0),
-                ],
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(left: 12),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(100))),
-                      child: Icon(
-                        Icons.arrow_back_ios_rounded,
-                        size: 20,
-                        color: AppColor.blue,
-                      ),
+          Positioned(
+            top: 10,
+            child: SafeArea(
+              child: Container(
+                margin: EdgeInsets.only(left: 12),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: AppColor.blue, width: 1),
+                        borderRadius: BorderRadius.all(Radius.circular(100))),
+                    child: Icon(
+                      Icons.arrow_back_ios_rounded,
+                      size: 20,
+                      color: AppColor.blue,
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
           ),
           Positioned(

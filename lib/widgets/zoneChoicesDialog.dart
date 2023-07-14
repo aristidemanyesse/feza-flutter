@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ipi/utils/sharedpre.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ipi/const/colors.dart';
@@ -170,6 +171,8 @@ class _CirconscriptionChoicesDialogState
 
 class Ligne extends StatelessWidget {
   final CirconscriptionModel circonscription;
+  SharedPreferencesService sharedPreferencesService =
+      SharedPreferencesService();
 
   Ligne({required this.circonscription});
 
@@ -188,6 +191,10 @@ class Ligne extends StatelessWidget {
         ResponseModel response = await UtilisateurProvider.update(variables);
         if (response.ok) {
           test = true;
+          await sharedPreferencesService.init();
+          await sharedPreferencesService.setString(
+              'circonscription', circonscription.id ?? "");
+
           Fluttertoast.showToast(
               msg: "Votre nouvelle zone est : ${circonscription.name} ",
               toastLength: Toast.LENGTH_LONG,

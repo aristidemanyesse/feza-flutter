@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/landingScreen.dart';
+import 'package:ipi/utils/local_notifications.dart';
 import 'package:ipi/widgets/myLogo.dart';
 import 'package:ipi/widgets/optInput.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -31,6 +34,12 @@ class _SendOTPScreen extends State<SendOTPScreen> {
   late String uniq;
   late UtilisateurModel user;
   late String numero;
+
+  @override
+  void initState() {
+    sendOTP();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -88,13 +97,11 @@ class _SendOTPScreen extends State<SendOTPScreen> {
   }
 
   void sendOTP() {
-    Fluttertoast.showToast(
-        msg: "OTP : ${user.otp}",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey,
-        textColor: Colors.white,
-        fontSize: 14.0);
+    Timer(Duration(milliseconds: 3000), () {
+      NotificationService().showNotification(
+          title: 'IPI - Vérification OTP',
+          body: 'Votre code OTP est le ${user.otp}');
+    });
   }
 
   @override
@@ -105,7 +112,6 @@ class _SendOTPScreen extends State<SendOTPScreen> {
     setState(() {
       numero = arguments["numero"];
       user = arguments["user"];
-      sendOTP();
     });
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 245, 239, 235),

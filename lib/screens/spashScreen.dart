@@ -30,7 +30,6 @@ class _SplashScreenState extends State<SplashScreen> {
     timer = Timer(Duration(milliseconds: 1500), () {
       getPosition();
       checkUser();
-      getDatas();
     });
 
     super.initState();
@@ -40,33 +39,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void dispose() {
     timer.cancel();
     super.dispose();
-  }
-
-  Future<void> checkUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove("produitsSelected");
-    await prefs.remove("produitsIDSelected");
-    // await prefs.remove("produits");
-
-    String? userId = prefs.getString('userId');
-    String uniq = await UtilisateurProvider.getUniqID();
-
-    // Navigator.of(context)
-    //     .pushNamed(HomeScreen.routeName, arguments: {"user": ""});
-
-    if (userId != null) {
-      List<UtilisateurModel> users =
-          await UtilisateurProvider.all({"id": userId, "imei": uniq});
-      if (users.isEmpty) {
-        Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
-      } else {
-        UtilisateurModel user = users[0];
-        Navigator.of(context)
-            .pushNamed(HomeScreen.routeName, arguments: {"user": user});
-      }
-    } else {
-      Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
-    }
   }
 
   Future<void> getPosition() async {
@@ -97,6 +69,36 @@ class _SplashScreenState extends State<SplashScreen> {
     sharedPreferencesService.setProduitList('produits', produits);
     nomsProduits = produits.map((produit) => produit.name).toList();
     sharedPreferencesService.setStringList('nomsProduits', nomsProduits);
+    sharedPreferencesService.setString('distance', "1");
+  }
+
+  Future<void> checkUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove("produitsSelected");
+    await prefs.remove("produitsIDSelected");
+    // await prefs.remove("produits");
+
+    String? userId = prefs.getString('userId');
+    String uniq = await UtilisateurProvider.getUniqID();
+
+    await getDatas();
+
+    // Navigator.of(context)
+    //     .pushNamed(HomeScreen.routeName, arguments: {"user": ""});
+
+    if (userId != null) {
+      List<UtilisateurModel> users =
+          await UtilisateurProvider.all({"id": userId, "imei": uniq});
+      if (users.isEmpty) {
+        Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
+      } else {
+        UtilisateurModel user = users[0];
+        Navigator.of(context)
+            .pushNamed(HomeScreen.routeName, arguments: {"user": user});
+      }
+    } else {
+      Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
+    }
   }
 
   @override

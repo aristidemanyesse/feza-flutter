@@ -11,7 +11,7 @@ class DistanceChoicesDialog extends StatefulWidget {
 }
 
 class _DistanceChoicesDialogState extends State<DistanceChoicesDialog> {
-  late List<String> distances = ["1", "2", "3", "5"];
+  late List<String> distances = ["1", "2", "3", "5", "10"];
 
   _DistanceChoicesDialogState();
 
@@ -59,7 +59,15 @@ class _DistanceChoicesDialogState extends State<DistanceChoicesDialog> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: distances.map((item) {
-                    return Ligne(distance: item);
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Ligne(distance: item),
+                        Divider(
+                          height: 3,
+                        )
+                      ],
+                    );
                   }).toList(),
                 ),
               ),
@@ -115,39 +123,29 @@ class Ligne extends StatelessWidget {
         changeDistance(context, int.parse(distance));
       },
       child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+        margin: EdgeInsets.fromLTRB(5, 7, 0, 7),
+        width: double.infinity,
+        child: Row(
           children: [
-            Container(
-              margin: EdgeInsets.fromLTRB(5, 7, 0, 7),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.social_distance_rounded,
-                    size: 19,
-                  ),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Marquee(
-                    child: Text(
-                      "$distance Km",
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                    direction: Axis.horizontal,
-                    textDirection: TextDirection.ltr,
-                    animationDuration: Duration(seconds: 4),
-                    backDuration: Duration(milliseconds: 5000),
-                    pauseDuration: Duration(milliseconds: 1000),
-                    directionMarguee: DirectionMarguee.oneDirection,
-                  ),
-                ],
-              ),
+            Icon(
+              Icons.social_distance_rounded,
+              size: 19,
             ),
-            Divider(
-              height: 3,
-            )
+            SizedBox(
+              width: 12,
+            ),
+            Marquee(
+              child: Text(
+                "$distance Km",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              direction: Axis.horizontal,
+              textDirection: TextDirection.ltr,
+              animationDuration: Duration(seconds: 4),
+              backDuration: Duration(milliseconds: 5000),
+              pauseDuration: Duration(milliseconds: 1000),
+              directionMarguee: DirectionMarguee.oneDirection,
+            ),
           ],
         ),
       ),

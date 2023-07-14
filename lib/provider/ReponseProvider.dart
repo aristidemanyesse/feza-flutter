@@ -23,7 +23,6 @@ class ReponseProvider extends ChangeNotifier {
     ResponseModel response;
     dynamic datas =
         await ApiService.request(ReponseSchema.UPDATE_REPONSE, variables);
-    print(datas);
     bool ok = datas["updateReponse"]["ok"];
     if (ok) {
       ReponseModel reponse =
