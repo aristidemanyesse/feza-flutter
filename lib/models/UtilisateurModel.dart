@@ -3,7 +3,7 @@ import 'package:ipi/models/CirconscriptionModel.dart';
 class UtilisateurModel {
   UtilisateurModel({
     this.id,
-    this.fullname,
+    this.fullname = "",
     this.contact,
     this.otp,
     this.imei,
@@ -51,7 +51,7 @@ class UtilisateurModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "fullname": fullname,
+        "fullname": fullname ?? "",
         "contact": contact,
         "otp": otp,
         "imei": imei,

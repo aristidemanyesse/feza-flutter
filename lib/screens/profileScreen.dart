@@ -1,5 +1,6 @@
 import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/screens/landingScreen.dart';
@@ -187,7 +188,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   margin: EdgeInsets.only(left: 12),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pop();
+                      Get.back();
                     },
                     child: Container(
                       padding: EdgeInsets.all(8),

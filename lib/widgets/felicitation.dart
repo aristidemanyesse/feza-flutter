@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:lottie/lottie.dart';
@@ -35,10 +36,12 @@ class _FelicitationScreenState extends State<FelicitationScreen>
         ),
         Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(child: Container()),
+              SizedBox(
+                height: 20,
+              ),
               Lottie.asset("assets/lotties/felicitation.json",
                   width: Helper.getScreenWidth(context) * 0.5),
               SizedBox(
@@ -46,9 +49,11 @@ class _FelicitationScreenState extends State<FelicitationScreen>
               ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 30),
-                child: Text(
-                  "Nous avons envoyé vos demandes aux pharmacies concernées, elles vous repondront dans quelques instants ...",
-                  textAlign: TextAlign.center,
+                child: DefaultTextStyle(
+                  child: Text(
+                    "Nous avons envoyé vos demandes aux pharmacies concernées, elles vous repondront dans quelques instants ...",
+                    textAlign: TextAlign.center,
+                  ),
                   style: TextStyle(
                       height: 1.7,
                       fontSize: 16,
@@ -57,22 +62,22 @@ class _FelicitationScreenState extends State<FelicitationScreen>
                 ),
               ),
               SizedBox(
-                height: Helper.getScreenHeight(context) * 0.3,
+                height: Helper.getScreenHeight(context) * 0.07,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.transparent,
-                    ),
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.transparent,
+                        border: Border.all(width: 1, color: Colors.grey)),
                     child: TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context)
-                            .pushReplacementNamed(HomeScreen.routeName);
+                        Get.back();
+                        Get.to(HomeScreen());
                       },
                       child: Text(
                         "OK, j'ai compris",
@@ -86,7 +91,7 @@ class _FelicitationScreenState extends State<FelicitationScreen>
                 ],
               ),
               SizedBox(
-                height: Helper.getScreenHeight(context) * 0.1,
+                height: Helper.getScreenHeight(context) * 0.07,
               ),
             ],
           ),

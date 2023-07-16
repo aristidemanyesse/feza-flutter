@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ipi/controllers/AppController.dart';
+import 'package:ipi/controllers/CirconscriptionController.dart';
+import 'package:ipi/controllers/DemandeController.dart';
+import 'package:ipi/controllers/GardeController.dart';
+import 'package:ipi/controllers/MapWidgetController.dart';
+import 'package:ipi/controllers/OfficineController.dart';
+import 'package:ipi/controllers/ProduitController.dart';
+import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/screens/medicamentScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
 import 'package:ipi/screens/test.dart';
@@ -14,26 +23,23 @@ import './screens/menuScreen.dart';
 import './screens/profileScreen.dart';
 import './screens/dessertScreen.dart';
 import './const/colors.dart';
-import 'screens/searchPage.dart';
+import 'screens/makeDemandeScreen.dart';
 import 'dart:async';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-
-// FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-//     FlutterLocalNotificationsPlugin();
-
-// Future<void> initialize() async {
-//   var initializationSettingsAndroid = AndroidInitializationSettings(
-//       'ic_launcher'); // Remplacez 'app_icon' par le nom de votre icône d'application
-//   var initializationSettingsIOS = IOSInitializationSettings();
-//   var initializationSettings = InitializationSettings(
-//       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-
-//   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-// }
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initNotification();
+
+  Get.put(AppController());
+  Get.put(UtilisateurController());
+  Get.put(OfficineController());
+  Get.put(ProduitController());
+  Get.put(CirconscriptionController());
+  Get.put(MapWidgetController());
+  Get.put(GardeController());
+  Get.put(DemandeController());
+
   runApp(MyApp());
 }
 
@@ -85,8 +91,8 @@ class MyAppState extends State<MyApp> {
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
             },
-            child: MaterialApp(
-              title: 'ipi App',
+            child: GetMaterialApp(
+              title: 'IPI',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 fontFamily: "Metropolis",

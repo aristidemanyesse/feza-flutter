@@ -1,16 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:ipi/models/ProduitModel.dart';
-import 'package:ipi/models/UtilisateurModel.dart';
-import 'package:ipi/provider/ProduitProvider.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/introScreen.dart';
-import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/myLogo.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/helper.dart';
 
@@ -20,85 +17,21 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  SharedPreferencesService sharedPreferencesService =
-      SharedPreferencesService();
-
-  late Timer timer;
+  final box = GetStorage();
+  UtilisateurController _controller = Get.find();
 
   @override
   void initState() {
-    timer = Timer(Duration(milliseconds: 1500), () {
-      getPosition();
-      checkUser();
-    });
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
-  }
-
-  Future<void> getPosition() async {
-    Position? position;
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      position = await Geolocator.getLastKnownPosition();
-      print("L'utilisateur a refusé l'accès à la localisation");
-    } else {
-      position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-    }
-    await sharedPreferencesService.init();
-    await sharedPreferencesService.setString(
-        'lat', position!.latitude.toString());
-    await sharedPreferencesService.setString(
-        'lon', position.longitude.toString());
-  }
-
-  Future<void> getDatas() async {
-    await sharedPreferencesService.init();
-    List<ProduitModel> produits = [];
-    List<String> nomsProduits = [];
-    produits = await sharedPreferencesService.getProduitList('produits');
-    if (produits.length == 0) {
-      produits = await ProduitProvider.all({});
-    }
-    sharedPreferencesService.setProduitList('produits', produits);
-    nomsProduits = produits.map((produit) => produit.name).toList();
-    sharedPreferencesService.setStringList('nomsProduits', nomsProduits);
-    sharedPreferencesService.setString('distance', "1");
-  }
-
-  Future<void> checkUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove("produitsSelected");
-    await prefs.remove("produitsIDSelected");
-    // await prefs.remove("produits");
-
-    String? userId = prefs.getString('userId');
-    String uniq = await UtilisateurProvider.getUniqID();
-
-    await getDatas();
-
-    // Navigator.of(context)
-    //     .pushNamed(HomeScreen.routeName, arguments: {"user": ""});
-
-    if (userId != null) {
-      List<UtilisateurModel> users =
-          await UtilisateurProvider.all({"id": userId, "imei": uniq});
-      if (users.isEmpty) {
-        Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
+    Timer(Duration(milliseconds: 1500), () {
+      if (_controller.currentUser.value != null) {
+        Get.to(HomeScreen());
       } else {
-        UtilisateurModel user = users[0];
-        Navigator.of(context)
-            .pushNamed(HomeScreen.routeName, arguments: {"user": user});
+        UtilisateurProvider.getUniqID()
+            .then((value) => box.write("imei", value));
+        Get.to(IntroScreen());
       }
-    } else {
-      Navigator.of(context).pushReplacementNamed(IntroScreen.routeName);
-    }
+    });
+    super.initState();
   }
 
   @override

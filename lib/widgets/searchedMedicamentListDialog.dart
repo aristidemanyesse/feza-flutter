@@ -6,7 +6,7 @@ import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/ProduitProvider.dart';
-import 'package:ipi/screens/searchPage.dart';
+import 'package:ipi/screens/makeDemandeScreen.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/SuggestionItemCard.dart';
 import 'package:ipi/widgets/searchBarGroup.dart';

@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:ipi/utils/sharedpre.dart';
+import 'package:get/get.dart';
+import 'package:ipi/controllers/CirconscriptionController.dart';
+import 'package:ipi/controllers/UserController.dart';
 import 'package:marquee_widget/marquee_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/CirconscriptionModel.dart';
 import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
-import 'package:ipi/provider/CirconscriptionProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import '../utils/helper.dart';
 
 class CirconscriptionChoicesDialog extends StatefulWidget {
   const CirconscriptionChoicesDialog({Key? key}) : super(key: key);
-  static const routeName = "/CirconscriptionChoicesDialog";
 
   @override
   State<CirconscriptionChoicesDialog> createState() =>
@@ -22,6 +21,8 @@ class CirconscriptionChoicesDialog extends StatefulWidget {
 
 class _CirconscriptionChoicesDialogState
     extends State<CirconscriptionChoicesDialog> {
+  CirconscriptionController controller = Get.find();
+
   late List<CirconscriptionModel> circonscriptions = [];
   late List<CirconscriptionModel> _circonscriptions = [];
 
@@ -35,11 +36,8 @@ class _CirconscriptionChoicesDialogState
   @override
   void initState() {
     super.initState();
-    CirconscriptionProvider.all({}).then((datas) {
-      setState(() {
-        _circonscriptions = circonscriptions = datas;
-      });
-    });
+    _circonscriptions = controller.circonscriptions.value;
+    circonscriptions = controller.circonscriptions.value;
   }
 
   filter(value) {
@@ -153,7 +151,7 @@ class _CirconscriptionChoicesDialogState
                   ),
                   child: TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        Get.back();
                       },
                       child: Text(
                         "Annuler",
@@ -171,43 +169,21 @@ class _CirconscriptionChoicesDialogState
 
 class Ligne extends StatelessWidget {
   final CirconscriptionModel circonscription;
-  SharedPreferencesService sharedPreferencesService =
-      SharedPreferencesService();
+  UtilisateurController userController = Get.find();
 
   Ligne({required this.circonscription});
 
-  void changeCirconscription(BuildContext context, String circId) async {
-    bool test = false;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userId');
-    String uniq = await UtilisateurProvider.getUniqID();
-    if (userId != null) {
-      List<UtilisateurModel> users =
-          await UtilisateurProvider.all({"id": userId, "imei": uniq});
-      if (users.isNotEmpty) {
-        UtilisateurModel user = users[0];
-        Map<String, dynamic> variables = user.toJson();
-        variables["circonscription"] = circId;
-        ResponseModel response = await UtilisateurProvider.update(variables);
-        if (response.ok) {
-          test = true;
-          await sharedPreferencesService.init();
-          await sharedPreferencesService.setString(
-              'circonscription', circonscription.id ?? "");
-
-          Fluttertoast.showToast(
-              msg: "Votre nouvelle zone est : ${circonscription.name} ",
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM,
-              backgroundColor: Colors.green.shade600,
-              textColor: Colors.white,
-              fontSize: 14.0);
-          Navigator.pop(context);
-        }
-      }
-    }
-    if (!test) {
-      Navigator.pop(context, false);
+  void changeCirconscription(
+      BuildContext context, CirconscriptionModel circonscription) async {
+    UtilisateurModel? user = userController.currentUser.value;
+    Map<String, dynamic> variables = user!.toJson();
+    variables["circonscription"] = circonscription.id;
+    ResponseModel response = await UtilisateurProvider.update(variables);
+    Get.back();
+    if (response.ok) {
+      Get.snackbar("IPI - Changement de zone",
+          "Votre zone est maintenant ${circonscription.name}");
+    } else {
       Fluttertoast.showToast(
           msg: "Une erreur s'est produite, veuillez recommencer !",
           toastLength: Toast.LENGTH_LONG,
@@ -223,7 +199,7 @@ class Ligne extends StatelessWidget {
     // TODO: implement build
     return GestureDetector(
       onTap: () {
-        changeCirconscription(context, circonscription.id!);
+        changeCirconscription(context, circonscription);
       },
       child: Container(
         child: Column(
@@ -240,18 +216,20 @@ class Ligne extends StatelessWidget {
                   SizedBox(
                     width: 12,
                   ),
-                  Marquee(
-                    child: Text(
-                      circonscription.name,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Marquee(
+                      child: Text(
+                        circonscription.name,
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                      direction: Axis.horizontal,
+                      textDirection: TextDirection.ltr,
+                      animationDuration: Duration(seconds: 4),
+                      backDuration: Duration(milliseconds: 5000),
+                      pauseDuration: Duration(milliseconds: 1000),
+                      directionMarguee: DirectionMarguee.oneDirection,
                     ),
-                    direction: Axis.horizontal,
-                    textDirection: TextDirection.ltr,
-                    animationDuration: Duration(seconds: 4),
-                    backDuration: Duration(milliseconds: 5000),
-                    pauseDuration: Duration(milliseconds: 1000),
-                    directionMarguee: DirectionMarguee.oneDirection,
                   ),
                 ],
               ),

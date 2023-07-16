@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
-import 'package:ipi/models/UtilisateurModel.dart';
-import 'package:ipi/provider/UtilisateurProvider.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/landingScreen.dart';
-import 'package:ipi/utils/local_notifications.dart';
 import 'package:ipi/widgets/myLogo.dart';
 import 'package:ipi/widgets/optInput.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SendOTPScreen extends StatefulWidget {
   static const routeName = "/sendOTP";
@@ -21,6 +20,9 @@ class SendOTPScreen extends StatefulWidget {
 }
 
 class _SendOTPScreen extends State<SendOTPScreen> {
+  UtilisateurController controller = Get.find();
+  final box = GetStorage();
+
   final _focusNode1 = FocusNode();
   final myController1 = TextEditingController();
   final _focusNode2 = FocusNode();
@@ -30,10 +32,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
   final _focusNode4 = FocusNode();
   final myController4 = TextEditingController();
 
-  late String code;
-  late String uniq;
-  late UtilisateurModel user;
-  late String numero;
+  late String code = "";
 
   @override
   void initState() {
@@ -66,19 +65,9 @@ class _SendOTPScreen extends State<SendOTPScreen> {
   }
 
   Future<void> validation() async {
-    if (user.otp.toString() == code) {
-      uniq = await UtilisateurProvider.getUniqID();
-      if (user.imei == uniq) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('userId', user.id!);
-        Navigator.of(context)
-            .pushNamed(HomeScreen.routeName, arguments: {"user": user});
-      } else {
-        //TODO faire un dialog pour l'avertir que son compte sera deconnecté des autres téléphones if si oui on continue, si non, on reste la
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('userId', user.id!);
-        Navigator.of(context).pushNamed(HomeScreen.routeName);
-      }
+    if (controller.currentUser.value?.otp.toString() == code) {
+      controller.valide.value = true;
+      Get.off(HomeScreen());
     } else {
       setState(() {
         this.myController1.clear();
@@ -98,21 +87,13 @@ class _SendOTPScreen extends State<SendOTPScreen> {
 
   void sendOTP() {
     Timer(Duration(milliseconds: 3000), () {
-      NotificationService().showNotification(
-          title: 'IPI - Vérification OTP',
-          body: 'Votre code OTP est le ${user.otp}');
+      Get.snackbar('IPI - Vérification OTP',
+          'Votre code OTP est le ${controller.currentUser.value?.otp}');
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-
-    setState(() {
-      numero = arguments["numero"];
-      user = arguments["user"];
-    });
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 245, 239, 235),
       body: SingleChildScrollView(
@@ -186,7 +167,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                     height: 15,
                   ),
                   Text(
-                    "+225 $numero",
+                    "+225 ${controller.currentUser.value?.contact}",
                     style: TextStyle(
                       color: AppColor.blue,
                       fontWeight: FontWeight.bold,

@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:ipi/controllers/UserController.dart';
+import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/introScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfirmExitDialog extends StatelessWidget {
   ConfirmExitDialog();
@@ -12,13 +15,13 @@ class ConfirmExitDialog extends StatelessWidget {
     return Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          height: 185,
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.white.withOpacity(0.9)),
           child: Container(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
@@ -102,12 +105,14 @@ class ConfirmExitDialog extends StatelessWidget {
 class DeconnexionDialog extends StatelessWidget {
   DeconnexionDialog();
 
-  void deconnexion(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+  UtilisateurController controller = Get.find();
+  final box = GetStorage();
 
-    Navigator.of(context).pushNamedAndRemoveUntil(
-        IntroScreen.routeName, (Route<dynamic> route) => false);
+  void deconnexion() async {
+    controller.currentUser.value = null;
+    box.erase();
+    UtilisateurProvider.getUniqID().then((value) => box.write("imei", value));
+    Get.off(IntroScreen());
   }
 
   @override
@@ -144,7 +149,7 @@ class DeconnexionDialog extends StatelessWidget {
                     ),
                     Container(
                       child: Text(
-                        "Vous êtes sur le point de vous deconnecter, voulez-vous continuer ?",
+                        "Vous êtes sur le point de vous déconnecter, voulez-vous continuer ?",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 15, height: 1.5, color: Colors.black),
@@ -167,7 +172,7 @@ class DeconnexionDialog extends StatelessWidget {
                       ),
                       child: TextButton(
                           onPressed: () {
-                            deconnexion(context);
+                            deconnexion();
                           },
                           child: Text(
                             "Oui !",
@@ -186,7 +191,7 @@ class DeconnexionDialog extends StatelessWidget {
                       ),
                       child: TextButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            Get.back();
                           },
                           child: Text(
                             "Non, Annuler",

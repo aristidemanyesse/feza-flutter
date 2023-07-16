@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final AssuranceModel = AssuranceModelFromJson(jsonString);
-
 import 'dart:convert';
 
 import 'package:ipi/models/BaseModel.dart';

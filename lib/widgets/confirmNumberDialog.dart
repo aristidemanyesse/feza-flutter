@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:ipi/models/ResponseModel.dart';
-import 'package:ipi/models/UtilisateurModel.dart';
-import 'package:ipi/provider/UtilisateurProvider.dart';
-import 'package:ipi/screens/sentOTPScreen.dart';
+import 'package:get/get.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/controllers/UserController.dart';
 
 class ConfirmNumberDialog extends StatelessWidget {
   final String number;
@@ -12,32 +10,36 @@ class ConfirmNumberDialog extends StatelessWidget {
 
   ConfirmNumberDialog(this.number, this.name);
 
+  UtilisateurController controller = Get.find();
+
   Future<void> userRegistration(BuildContext context, String number) async {
-    number = number.replaceAll(" ", "");
-    uniq = await UtilisateurProvider.getUniqID();
-    List<UtilisateurModel> users =
-        await UtilisateurProvider.all({"contact": number});
-    if (users.isEmpty) {
-      UtilisateurModel user =
-          new UtilisateurModel(contact: number, fullname: name, imei: uniq);
-      Map<String, dynamic> variables = user.toJson();
-      ResponseModel response = await UtilisateurProvider.create(variables);
-      if (response.ok) {
-        Navigator.of(context).pop();
-        Navigator.of(context).pushNamed(SendOTPScreen.routeName,
-            arguments: {"user": response.data, "numero": number});
-      } else {
-        Fluttertoast.showToast(
-          msg: response.message ?? "Ouups, Veuillez recommencer !",
-          gravity: ToastGravity.BOTTOM,
-        );
-      }
-    } else {
-      UtilisateurModel user = users[0];
-      Navigator.of(context).pop();
-      Navigator.of(context).pushNamed(SendOTPScreen.routeName,
-          arguments: {"user": user, "numero": number});
-    }
+    String contact = number.replaceAll(" ", "");
+    Get.dialog(
+        Center(
+          child: Container(
+            padding: EdgeInsets.all(20),
+            margin: EdgeInsets.symmetric(horizontal: 30),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+            child: Row(
+              children: [
+                CircularProgressIndicator(color: AppColor.blue),
+                SizedBox(
+                  width: 30,
+                ),
+                DefaultTextStyle(
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                  child: Text("Veuillez patienter ..."),
+                )
+              ],
+            ),
+          ),
+        ),
+        barrierDismissible: false);
+    controller.createUser(name, contact);
   }
 
   @override

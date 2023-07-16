@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ipi/utils/sharedpre.dart';
+import 'package:get/get.dart';
+import 'package:ipi/controllers/AppController.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 
 class DistanceChoicesDialog extends StatefulWidget {
   const DistanceChoicesDialog({Key? key}) : super(key: key);
-  static const routeName = "/DistanceChoicesDialog";
 
   @override
   State<DistanceChoicesDialog> createState() => _DistanceChoicesDialogState();
@@ -15,15 +15,7 @@ class _DistanceChoicesDialogState extends State<DistanceChoicesDialog> {
 
   _DistanceChoicesDialogState();
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  AppController appController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +54,13 @@ class _DistanceChoicesDialogState extends State<DistanceChoicesDialog> {
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Ligne(distance: item),
+                        InkWell(
+                          child: Ligne(distance: item),
+                          onTap: () {
+                            appController.radius.value = int.parse(item);
+                            Get.back();
+                          },
+                        ),
                         Divider(
                           height: 3,
                         )
@@ -87,7 +85,7 @@ class _DistanceChoicesDialogState extends State<DistanceChoicesDialog> {
                   ),
                   child: TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        Get.back();
                       },
                       child: Text(
                         "Annuler",
@@ -107,47 +105,33 @@ class Ligne extends StatelessWidget {
   final String distance;
   Ligne({required this.distance});
 
-  SharedPreferencesService sharedPreferencesService =
-      SharedPreferencesService();
-
-  void changeDistance(BuildContext context, int distance) async {
-    await sharedPreferencesService.setString('distance', distance.toString());
-    Navigator.pop(context);
-  }
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return GestureDetector(
-      onTap: () {
-        changeDistance(context, int.parse(distance));
-      },
-      child: Container(
-        margin: EdgeInsets.fromLTRB(5, 7, 0, 7),
-        width: double.infinity,
-        child: Row(
-          children: [
-            Icon(
-              Icons.social_distance_rounded,
-              size: 19,
+    return Container(
+      margin: EdgeInsets.fromLTRB(5, 7, 0, 7),
+      width: double.infinity,
+      child: Row(
+        children: [
+          Icon(
+            Icons.social_distance_rounded,
+            size: 19,
+          ),
+          SizedBox(
+            width: 12,
+          ),
+          Marquee(
+            child: Text(
+              "$distance Km",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
-              width: 12,
-            ),
-            Marquee(
-              child: Text(
-                "$distance Km",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-              direction: Axis.horizontal,
-              textDirection: TextDirection.ltr,
-              animationDuration: Duration(seconds: 4),
-              backDuration: Duration(milliseconds: 5000),
-              pauseDuration: Duration(milliseconds: 1000),
-              directionMarguee: DirectionMarguee.oneDirection,
-            ),
-          ],
-        ),
+            direction: Axis.horizontal,
+            textDirection: TextDirection.ltr,
+            animationDuration: Duration(seconds: 4),
+            backDuration: Duration(milliseconds: 5000),
+            pauseDuration: Duration(milliseconds: 1000),
+            directionMarguee: DirectionMarguee.oneDirection,
+          ),
+        ],
       ),
     );
   }

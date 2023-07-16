@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/schemas/UtilisateurSchema.dart';
@@ -50,6 +52,8 @@ class UtilisateurProvider extends ChangeNotifier {
       UtilisateurModel user =
           UtilisateurModel.fromJson(datas["updateUtilisateur"]["utilisateur"]);
       response = ResponseModel(field: "", message: "", ok: true, data: user);
+      UtilisateurController controller = Get.find();
+      controller.onInit();
     } else {
       response = ResponseModel(
           field: datas["updateUtilisateur"]["errors"][0]["field"],

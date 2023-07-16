@@ -4,13 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:ipi/models/GardeModel.dart';
-import 'package:ipi/models/OfficineDeGardeModel.dart';
+import 'package:get/get.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
-import 'package:ipi/provider/GardeProvider.dart';
-import 'package:ipi/provider/OfficineDeGardeProvider.dart';
 import 'package:ipi/provider/OfficineProvider.dart';
-import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/widgets/indicator.dart';
 import 'package:ipi/widgets/loader.dart';
 import 'package:ipi/widgets/noPharmacieAvialable.dart';
@@ -20,7 +16,6 @@ import 'package:ipi/widgets/selectDistanceBloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/OfficineModel.dart';
-import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/utils/sharedpre.dart';
 import 'package:ipi/widgets/mapPin.dart';
@@ -397,7 +392,7 @@ class PharmaciesGardeState extends State<PharmaciesGarde>
                         margin: EdgeInsets.only(left: 12),
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).pop();
+                            Get.back();
                           },
                           child: Container(
                             padding: EdgeInsets.all(10),

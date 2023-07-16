@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/widgets/customNavBar.dart';
@@ -50,7 +51,7 @@ class MedicamentScreen extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Navigator.of(context).pop();
+                                Get.back();
                               },
                               child: Icon(
                                 Icons.arrow_back_ios_rounded,
