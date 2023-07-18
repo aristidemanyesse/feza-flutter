@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/introScreen.dart';
+import 'package:ipi/widgets/pleaseWait.dart';
 
 class ConfirmExitDialog extends StatelessWidget {
   ConfirmExitDialog();
@@ -109,9 +111,13 @@ class DeconnexionDialog extends StatelessWidget {
   final box = GetStorage();
 
   void deconnexion() async {
+    Get.dialog(PleaseWait());
     controller.currentUser.value = null;
     box.erase();
+    Get.reset();
     UtilisateurProvider.getUniqID().then((value) => box.write("imei", value));
+    await Future.delayed(Duration(milliseconds: 3000));
+    Get.back();
     Get.off(IntroScreen());
   }
 

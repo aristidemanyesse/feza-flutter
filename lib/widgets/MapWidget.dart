@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
@@ -6,11 +5,12 @@ import 'package:get/get.dart';
 import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
-import 'package:ipi/widgets/animations.dart';
 import 'package:ipi/widgets/mapPin.dart';
 import 'package:ipi/widgets/mapPopupPin.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
+
+import '../utils/utilities.dart';
 
 class MapWidget extends StatefulWidget {
   MapWidget({
@@ -36,6 +36,13 @@ class MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
       controller.centerMapOnMe();
       LatLngBounds bounds = controller.bounds.value;
       center(bounds);
+    });
+
+    ever(officineController.routeCoordinates, (datas) {
+      if (datas.points.length > 0) {
+        controller.mapController.value
+            .fitBounds(getBoundsFromCoordinates(datas.points));
+      }
     });
 
     super.initState();
@@ -104,9 +111,10 @@ class MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      var markers = controller.markers.value;
-      var distanceTableaux = officineController.distanceTableaux.value;
+      var markers = controller.markers;
+      var distanceTableaux = officineController.distanceTableaux;
       var routeCoordinates = officineController.routeCoordinates.value;
+      var popupLayerController = controller.popupLayerController.value;
 
       return FlutterMap(
         mapController: controller.mapController.value,
@@ -117,8 +125,7 @@ class MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
           maxZoom: 20,
           scrollWheelVelocity: 2.0,
           interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-          onTap: (_, __) =>
-              controller.popupLayerController.value.hideAllPopups(),
+          onTap: (_, __) => popupLayerController.hideAllPopups(),
         ),
         children: [
           TileLayer(
@@ -146,7 +153,7 @@ class MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
           Obx(() {
             return PopupMarkerLayer(
               options: PopupMarkerLayerOptions(
-                popupController: controller.popupLayerController.value,
+                popupController: popupLayerController,
                 markers: markers
                     .map((element) => Marker(
                           point: element.point,
@@ -164,7 +171,6 @@ class MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
                       marker: marker,
                       officine: element.officine,
                       ratio: "",
-                      // "${ratioTableaux[element.officine].toString()}/${initialProduits.length}",
                       distance: distanceTableaux[element.officine]!,
                       ittineraireFunction: () {
                         officineController.routeOfOfficine(element.officine);
@@ -175,32 +181,32 @@ class MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
               ),
             );
           }),
-          PopupMarkerLayer(
-            options: PopupMarkerLayerOptions(
-              popupController: controller.popupLayerController.value,
-              markers: [
-                Marker(
-                  point: controller.currentPosition.value,
-                  width: 35,
-                  height: 35,
-                  builder: (context) =>
-                      Clignotement(child: MyPinInMap(), milliseconds: 1000),
-                  anchorPos: AnchorPos.align(AnchorAlign.top),
-                ),
-              ],
-              popupDisplayOptions: PopupDisplayOptions(
-                  builder: (BuildContext context, Marker marker) {
-                return Container(
-                  padding: EdgeInsets.all(7),
-                  margin: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text("Vous êtes ici !"),
-                );
-              }),
-            ),
-          ),
+          Obx(() {
+            return PopupMarkerLayer(
+              options: PopupMarkerLayerOptions(
+                markers: [
+                  Marker(
+                    point: controller.currentPosition.value,
+                    width: 35,
+                    height: 35,
+                    builder: (context) => MyPinInMap(),
+                    anchorPos: AnchorPos.align(AnchorAlign.top),
+                  ),
+                ],
+                popupDisplayOptions: PopupDisplayOptions(
+                    builder: (BuildContext context, Marker marker) {
+                  return Container(
+                    padding: EdgeInsets.all(7),
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text("Vous êtes ici !"),
+                  );
+                }),
+              ),
+            );
+          }),
         ],
       );
     });

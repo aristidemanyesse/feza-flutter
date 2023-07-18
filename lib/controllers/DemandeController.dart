@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -8,31 +10,58 @@ import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/models/ReponseModel.dart';
 import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/DemandeProvider.dart';
+import 'package:ipi/provider/ReponseProvider.dart';
+import 'package:ipi/utils/local_notifications.dart';
 import 'package:ipi/widgets/felicitation.dart';
+import 'package:ipi/widgets/pleaseWait.dart';
 
 class DemandeController extends GetxController {
   final box = GetStorage();
-  Rx<List<DemandeModel>> demandes = Rx<List<DemandeModel>>([]);
+  RxList<DemandeModel> demandes = RxList<DemandeModel>([]);
+  RxMap<String, bool> repondesDemandes = RxMap<String, bool>({});
 
   UtilisateurController controller = Get.find();
   ProduitController produitController = Get.find();
   OfficineController officineController = Get.find();
 
-  void onInit() {
-    DemandeProvider.all({"user": controller.currentUser.value?.id})
-        .then((datas) => demandes.value = datas);
+  void onInit() async {
+    getData();
+    Timer.periodic(Duration(seconds: 20), (Timer timer) {
+      print("check");
+      checkReponse();
+    });
     super.onInit();
+
+    // ever(
+    //   repondesDemandes,
+    //   (callback) => NotificationService().showNotification(
+    //       title: 'Nouvelle réponse',
+    //       body: 'Une pharmacie a répondu à votre demande'),
+    // );
+  }
+
+  void getData() async {
+    demandes.value =
+        await DemandeProvider.all({"user": controller.currentUser.value?.id});
+    checkReponse();
+  }
+
+  void checkReponse() async {
+    for (var dem in demandes) {
+      repondesDemandes[dem.id!] = await newReponseForDemande(dem);
+    }
   }
 
   void makeDemande(bool isOrdonnance, String base64) async {
-    List<OfficineModel> officines = officineController.officines.value;
+    List<OfficineModel> officines = officineController.officines;
     List<ProduitModel> produits = produitController.produitsSelected;
     UtilisateurModel? user = controller.currentUser.value;
 
-    if (officines.length > 0) {
+    if (officines.length > 0 || officineController.wait.value) {
       if (produits.length > 0 || isOrdonnance) {
         ResponseModel response = await DemandeProvider.createDemande({
           "utilisateur": user?.id,
@@ -66,7 +95,7 @@ class DemandeController extends GetxController {
               );
             }
           }
-
+          Get.back();
           Get.dialog(FelicitationScreen());
           onInit();
           produitController.produitsSelected.value = [];
@@ -92,6 +121,32 @@ class DemandeController extends GetxController {
         msg: "Aucune pharmacie n'a été trouvé dans ce périmètre de recherche !",
         gravity: ToastGravity.BOTTOM,
       );
+    }
+  }
+
+  Future<bool> newReponseForDemande(DemandeModel demande) async {
+    bool news = false;
+    var reponses = await ReponseProvider.all({"demande": demande.id});
+    for (ReponseModel rep in reponses) {
+      if (!rep.read!) {
+        news = true;
+        break;
+      }
+    }
+    return news;
+  }
+
+  void deleteDemande(DemandeModel demande) async {
+    Get.dialog(PleaseWait());
+    ResponseModel response = await DemandeProvider.update({
+      "id": demande.id,
+      "utilisateur": demande.utilisateur?.id,
+      "status": demande.status,
+      "deleted": true,
+    });
+    if (response.ok) {
+      getData();
+      Get.back();
     }
   }
 }

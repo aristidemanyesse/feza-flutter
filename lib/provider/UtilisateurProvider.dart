@@ -52,8 +52,6 @@ class UtilisateurProvider extends ChangeNotifier {
       UtilisateurModel user =
           UtilisateurModel.fromJson(datas["updateUtilisateur"]["utilisateur"]);
       response = ResponseModel(field: "", message: "", ok: true, data: user);
-      UtilisateurController controller = Get.find();
-      controller.onInit();
     } else {
       response = ResponseModel(
           field: datas["updateUtilisateur"]["errors"][0]["field"],

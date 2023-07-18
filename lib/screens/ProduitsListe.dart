@@ -24,7 +24,7 @@ class ProduitsListeState extends State<ProduitsListe> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+      padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
       margin: EdgeInsets.fromLTRB(3, 50, 3, 0),
       decoration: ShapeDecoration(
         color: Color.fromARGB(255, 245, 239, 235),
@@ -36,6 +36,7 @@ class ProduitsListeState extends State<ProduitsListe> {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Indicator(),
           SizedBox(

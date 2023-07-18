@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:ipi/controllers/CirconscriptionController.dart';
+import 'package:ipi/controllers/MapWidgetController.dart';
+import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 import 'package:ipi/const/colors.dart';
@@ -170,6 +172,8 @@ class _CirconscriptionChoicesDialogState
 class Ligne extends StatelessWidget {
   final CirconscriptionModel circonscription;
   UtilisateurController userController = Get.find();
+  OfficineController officineController = Get.find();
+  MapWidgetController mpController = Get.find();
 
   Ligne({required this.circonscription});
 
@@ -181,8 +185,10 @@ class Ligne extends StatelessWidget {
     ResponseModel response = await UtilisateurProvider.update(variables);
     Get.back();
     if (response.ok) {
+      userController.currentUser.value = response.data;
       Get.snackbar("IPI - Changement de zone",
           "Votre zone est maintenant ${circonscription.name}");
+      officineController.officinesInZone(mpController.currentPosition.value);
     } else {
       Fluttertoast.showToast(
           msg: "Une erreur s'est produite, veuillez recommencer !",

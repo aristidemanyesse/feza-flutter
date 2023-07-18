@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/UserController.dart';
+import 'package:ipi/widgets/pleaseWait.dart';
 
 class ConfirmNumberDialog extends StatelessWidget {
   final String number;
@@ -14,31 +15,8 @@ class ConfirmNumberDialog extends StatelessWidget {
 
   Future<void> userRegistration(BuildContext context, String number) async {
     String contact = number.replaceAll(" ", "");
-    Get.dialog(
-        Center(
-          child: Container(
-            padding: EdgeInsets.all(20),
-            margin: EdgeInsets.symmetric(horizontal: 30),
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
-            child: Row(
-              children: [
-                CircularProgressIndicator(color: AppColor.blue),
-                SizedBox(
-                  width: 30,
-                ),
-                DefaultTextStyle(
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                  child: Text("Veuillez patienter ..."),
-                )
-              ],
-            ),
-          ),
-        ),
-        barrierDismissible: false);
+    Get.dialog(PleaseWait(), barrierDismissible: false);
+
     controller.createUser(name, contact);
   }
 

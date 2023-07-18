@@ -38,7 +38,7 @@ class PharmacieItemCard2 extends StatelessWidget {
                         officine.name ?? "",
                         style: Helper.getTheme(context)
                             .headlineMedium
-                            ?.copyWith(color: AppColor.primary, fontSize: 14),
+                            ?.copyWith(color: AppColor.primary, fontSize: 15),
                       ),
                     ],
                   ),
@@ -54,7 +54,7 @@ class PharmacieItemCard2 extends StatelessWidget {
                           children: [
                             Text(
                               officine.localisation ?? "",
-                              style: TextStyle(fontSize: 12),
+                              style: TextStyle(fontSize: 13),
                               overflow: TextOverflow.ellipsis,
                             )
                           ],
@@ -65,7 +65,7 @@ class PharmacieItemCard2 extends StatelessWidget {
                         Text(
                           "${officine.contact}  / ${officine.contact2}",
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 11),
+                          style: TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
@@ -79,13 +79,13 @@ class PharmacieItemCard2 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              "($distance)",
+              "$distance",
             ),
             SizedBox(
               height: 15,
             ),
             Text(
-              "Ouvert",
+              "De garde",
               style: TextStyle(
                   color: AppColor.blue,
                   fontSize: 12,

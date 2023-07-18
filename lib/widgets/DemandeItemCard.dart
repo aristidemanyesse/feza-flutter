@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/LigneDemandeModel.dart';
 import 'package:ipi/models/OfficineDemandeModel.dart';
@@ -15,13 +17,16 @@ import '../utils/helper.dart';
 class DemandeItemCard extends StatefulWidget {
   static const routeName = "/DemandeItemCard";
   final DemandeModel demande;
-  DemandeItemCard(this.demande);
+  final bool status;
+  DemandeItemCard(this.demande, this.status);
 
   @override
   State<DemandeItemCard> createState() => DemandeItemCardState();
 }
 
 class DemandeItemCardState extends State<DemandeItemCard> {
+  DemandeController demandeController = Get.find();
+
   final f = DateFormat("dd/MM/yyyy à HH:mm");
 
   late List<LigneDemandeModel> produits = [];
@@ -52,7 +57,6 @@ class DemandeItemCardState extends State<DemandeItemCard> {
         break;
       }
     }
-    setState(() {});
   }
 
   void showDetail(BuildContext context) {
@@ -74,9 +78,9 @@ class DemandeItemCardState extends State<DemandeItemCard> {
         showDetail(context);
       },
       child: Card(
-        elevation: 5.0,
+        elevation: 1.0,
         color: Colors.white.withOpacity(0.9),
-        margin: EdgeInsets.only(bottom: 15),
+        margin: EdgeInsets.only(bottom: 10),
         child: Container(
           padding: EdgeInsets.all(10),
           child: Row(
@@ -160,25 +164,52 @@ class DemandeItemCardState extends State<DemandeItemCard> {
               SizedBox(
                 width: 10,
               ),
-              Center(
-                  child: Container(
-                margin: EdgeInsets.only(right: 10),
-                child: news
-                    ? Clignotement(
-                        milliseconds: 500,
-                        child: Icon(
-                          Icons.chat_rounded,
-                          color: Colors.green,
-                        ),
-                      )
-                    : Text(
-                        "${reponses.length}/${officines.length}",
-                        style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold),
-                      ),
-              ))
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      demandeController.deleteDemande(widget.demande);
+                    },
+                    child: Icon(
+                      Icons.delete_forever,
+                      color: Colors.red,
+                      size: 24,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    child: widget.status
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Container(
+                              color: AppColor.green,
+                              height: 25,
+                              width: 25,
+                              child: Center(
+                                child: Text(
+                                  "1",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          )
+                        : Text(
+                            "${reponses.length}/${officines.length}",
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold),
+                          ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

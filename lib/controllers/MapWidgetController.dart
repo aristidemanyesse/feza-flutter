@@ -25,6 +25,8 @@ class MapWidgetController extends GetxController {
   RxBool center = false.obs;
 
   void onInit() {
+    getLocation();
+
     ever(appController.radius, (value) {
       markers.value = [];
       markersLatLng.value = [];
@@ -42,13 +44,18 @@ class MapWidgetController extends GetxController {
     });
 
     ever(officineController.officines, (datas) {
-      for (OfficineModel officine in datas) {
-        markers.add(
-            CustomMyMarker(LatLng(officine.lon!, officine.lat!), officine));
-        markersLatLng.add(LatLng(officine.lon!, officine.lat!));
+      if (datas.length > 0) {
+        markers.value = [];
+        markersLatLng.value = [];
+        for (OfficineModel officine in datas) {
+          markers.add(
+              CustomMyMarker(LatLng(officine.lon!, officine.lat!), officine));
+          markersLatLng.add(LatLng(officine.lon!, officine.lat!));
+          bounds.value = LatLngBounds.fromPoints(markersLatLng);
+        }
       }
-      bounds.value = LatLngBounds.fromPoints(markersLatLng);
     });
+
     super.onInit();
   }
 
@@ -73,7 +80,7 @@ class MapWidgetController extends GetxController {
         currentPosition.value, -appController.radius.value * 1000 * 2, 0.0);
 
     markersLatLng.value = [currentPosition.value, p1, p2];
-    for (OfficineModel officine in officineController.officines.value) {
+    for (OfficineModel officine in officineController.officines) {
       markersLatLng.add(LatLng(officine.lon!, officine.lat!));
     }
     bounds.value = LatLngBounds.fromPoints(markersLatLng);

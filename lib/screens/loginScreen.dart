@@ -15,11 +15,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreen extends State<LoginScreen> {
   final myNumeroController = TextEditingController();
-  final myNameController = TextEditingController();
   String errorText = "";
   int numeroLength = 0;
   final myFocusNode = FocusNode();
-  final focusNode2 = FocusNode();
 
   bool _checkNumero() {
     bool test = false;
@@ -50,8 +48,7 @@ class _LoginScreen extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ConfirmNumberDialog(
-            myNumeroController.text, myNameController.text);
+        return ConfirmNumberDialog(myNumeroController.text, "");
       },
     );
   }
@@ -133,22 +130,9 @@ class _LoginScreen extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'On a juste besoin de ton nom et ton numero de téléphone',
+                        'On a juste besoin de ton numero de téléphone',
                         style: TextStyle(height: 1.5, color: AppColor.primary),
                         textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      CustomTextInput(
-                        controller: myNameController,
-                        myFocusNode: focusNode2,
-                        onChanged: (myNameController) {},
-                        hintText: "Ton nom",
-                        keyboard: TextInputType.name,
-                        onEditingComplete: () {
-                          myFocusNode.nextFocus();
-                        },
                       ),
                       SizedBox(
                         height: 15,
@@ -156,6 +140,7 @@ class _LoginScreen extends State<LoginScreen> {
                       CustomTextInput(
                         controller: myNumeroController,
                         myFocusNode: myFocusNode,
+                        textAlign: TextAlign.center,
                         onChanged: (myNumeroController) {
                           if (myNumeroController!.toString().length == 14) {
                             _checkNumero();

@@ -51,34 +51,37 @@ class MapMinPharmaciePopup extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 10),
-              Container(
-                padding: EdgeInsets.only(right: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Marquee(
-                      child: Text(
-                        officine.name!,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Marquee(
+                        child: Text(
+                          officine.name!,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
                         ),
+                        direction: Axis.horizontal,
+                        textDirection: TextDirection.ltr,
+                        animationDuration: Duration(seconds: 2),
+                        backDuration: Duration(milliseconds: 5000),
+                        pauseDuration: Duration(milliseconds: 1000),
+                        directionMarguee: DirectionMarguee.oneDirection,
                       ),
-                      direction: Axis.horizontal,
-                      textDirection: TextDirection.ltr,
-                      animationDuration: Duration(seconds: 4),
-                      backDuration: Duration(milliseconds: 5000),
-                      pauseDuration: Duration(milliseconds: 1000),
-                      directionMarguee: DirectionMarguee.oneDirection,
-                    ),
-                    const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-                    Text(
-                      officine.localisation ?? "...",
-                      style: const TextStyle(fontSize: 12.0),
-                    ),
-                  ],
+                      const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.0)),
+                      Text(
+                        officine.localisation ?? "...",
+                        style: const TextStyle(fontSize: 12.0),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

@@ -23,63 +23,68 @@ class SearchBarGroupState extends State<SearchBarGroup> {
   late TextEditingController _textFieldController = new TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
+  List<String> nomsProduits = [];
+  List<ProduitModel> produits = [];
+  @override
+  void initState() {
+    nomsProduits = controller.nomsProduits;
+    produits = controller.produits;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_focusNode);
     });
 
-    return Obx(() {
-      List<String> nomsProduits = controller.nomsProduits.value;
-      List<ProduitModel> produits = controller.produits.value;
-      return AutoCompleteTextField(
-        suggestionsAmount: 7,
-        key: key,
-        focusNode: _focusNode,
-        controller: _textFieldController,
-        itemBuilder: (context, item) {
-          ProduitModel produitTrouve =
-              produits.firstWhere((produit) => produit.name == item);
-          return SuggestionItemCard(produit: produitTrouve);
-        },
-        itemFilter: (suggestion, query) {
-          return suggestion.toLowerCase().contains(query.toLowerCase());
-        },
-        itemSorter: (a, b) {
-          return a.compareTo(b);
-        },
-        keyboardType: TextInputType.name,
-        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-        suggestions: nomsProduits,
-        decoration: InputDecoration(
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(40)),
-            borderSide: BorderSide(color: AppColor.blue, width: 1.0),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(40)),
-            borderSide: BorderSide(color: AppColor.secondary, width: 1.0),
-          ),
-          hintText: "Rechercher médicament...",
-          hintStyle: TextStyle(
-            color: AppColor.placeholder,
-            fontSize: 14,
-          ),
-          prefixIcon: Icon(
-            Icons.search,
-            color: AppColor.blue,
-          ),
-          contentPadding: const EdgeInsets.only(
-            top: 13,
-          ),
+    return AutoCompleteTextField(
+      suggestionsAmount: 7,
+      key: key,
+      focusNode: _focusNode,
+      controller: _textFieldController,
+      itemBuilder: (context, item) {
+        ProduitModel produitTrouve =
+            produits.firstWhere((produit) => produit.name == item);
+        return SuggestionItemCard(produit: produitTrouve);
+      },
+      itemFilter: (suggestion, query) {
+        return suggestion.toLowerCase().contains(query.toLowerCase());
+      },
+      itemSorter: (a, b) {
+        return a.compareTo(b);
+      },
+      keyboardType: TextInputType.name,
+      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+      suggestions: nomsProduits,
+      decoration: InputDecoration(
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(40)),
+          borderSide: BorderSide(color: AppColor.blue, width: 1.0),
         ),
-        itemSubmitted: (value) async {
-          ProduitModel produitTrouve =
-              produits.firstWhere((produit) => produit.name == value);
-          controller.addProduitSelected(produitTrouve);
-          FocusScope.of(context).requestFocus(_focusNode);
-        },
-      );
-    });
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(40)),
+          borderSide: BorderSide(color: AppColor.secondary, width: 1.0),
+        ),
+        hintText: "Rechercher médicament...",
+        hintStyle: TextStyle(
+          color: AppColor.placeholder,
+          fontSize: 14,
+        ),
+        prefixIcon: Icon(
+          Icons.search,
+          color: AppColor.blue,
+        ),
+        contentPadding: const EdgeInsets.only(
+          top: 13,
+        ),
+      ),
+      itemSubmitted: (value) async {
+        ProduitModel produitTrouve =
+            produits.firstWhere((produit) => produit.name == value);
+        controller.addProduitSelected(produitTrouve);
+        FocusScope.of(context).requestFocus(_focusNode);
+      },
+    );
   }
 }

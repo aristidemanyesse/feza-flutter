@@ -9,6 +9,7 @@ class CustomTextInput extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType keyboard;
   final FocusNode myFocusNode;
+  final TextAlign textAlign;
 
   const CustomTextInput({
     Key? key,
@@ -18,6 +19,7 @@ class CustomTextInput extends StatelessWidget {
     required this.myFocusNode,
     required this.onChanged,
     required this.keyboard,
+    required this.textAlign,
   });
 
   @override
@@ -25,6 +27,7 @@ class CustomTextInput extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 50,
+      padding: EdgeInsets.symmetric(horizontal: 15),
       decoration: ShapeDecoration(
         color: AppColor.placeholderBg,
         shape: StadiumBorder(),
@@ -34,7 +37,7 @@ class CustomTextInput extends StatelessWidget {
         controller: controller,
         onEditingComplete: onEditingComplete,
         onChanged: onChanged,
-        textAlign: TextAlign.center,
+        textAlign: textAlign,
         keyboardType: keyboard,
         inputFormatters: keyboard == TextInputType.number
             ? [

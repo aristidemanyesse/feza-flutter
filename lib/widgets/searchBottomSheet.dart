@@ -163,13 +163,15 @@ class SearchBottomSheetState extends State<SearchBottomSheet> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     const SizedBox(height: 10),
-                                    Opacity(
-                                      child: SelectCirconscriptionBloc(),
-                                      opacity:
-                                          appController.searchByAround.value
-                                              ? 0
-                                              : 1,
-                                    ),
+                                    Obx(() {
+                                      return Opacity(
+                                        child: SelectCirconscriptionBloc(),
+                                        opacity:
+                                            appController.searchByAround.value
+                                                ? 0
+                                                : 1,
+                                      );
+                                    }),
                                   ],
                                 ),
                               ),
@@ -217,13 +219,15 @@ class SearchBottomSheetState extends State<SearchBottomSheet> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     const SizedBox(height: 10),
-                                    Opacity(
-                                      child: SelectDistanceBloc(),
-                                      opacity:
-                                          appController.searchByAround.value
-                                              ? 1
-                                              : 0,
-                                    ),
+                                    Obx(() {
+                                      return Opacity(
+                                        child: SelectDistanceBloc(),
+                                        opacity:
+                                            !appController.searchByAround.value
+                                                ? 0
+                                                : 1,
+                                      );
+                                    }),
                                   ],
                                 ),
                               ),
@@ -461,7 +465,7 @@ class SearchBottomSheetState extends State<SearchBottomSheet> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "${officineController.officines.value.length}",
+                                      "${officineController.officines.length}",
                                       style: TextStyle(
                                           fontSize: 50,
                                           color: Colors.grey[700],

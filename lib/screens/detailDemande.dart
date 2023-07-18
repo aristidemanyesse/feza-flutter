@@ -1,5 +1,12 @@
 import 'dart:async';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share/flutter_share.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:ipi/const/colors.dart';
+import 'package:ipi/controllers/MapWidgetController.dart';
+import 'package:ipi/controllers/ReponseController.dart';
 import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/LigneDemandeModel.dart';
 import 'package:ipi/models/LigneReponseModel.dart';
@@ -12,6 +19,8 @@ import 'package:ipi/widgets/indicator.dart';
 import 'package:ipi/widgets/ligneProduitAvialable.dart';
 import "package:intl/intl.dart";
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:share_plus/share_plus.dart';
 
 class DetailDemande extends StatefulWidget {
   static const routeName = "/DetailDemande";
@@ -32,6 +41,9 @@ class DetailDemande extends StatefulWidget {
 }
 
 class DetailDemandeState extends State<DetailDemande> {
+  MapWidgetController mpController = Get.find();
+  ReponseController reponseController = Get.find();
+
   late Map<OfficineModel, List<LigneReponseModel>> datas = {};
   late Map<OfficineModel, ReponseModel> reponses = {};
 
@@ -64,6 +76,25 @@ class DetailDemandeState extends State<DetailDemande> {
       }
     }
     setState(() {});
+  }
+
+  void sharePosition(OfficineModel officine) {
+    // await FlutterShare.share(
+    //     title: 'Example share',
+    //     text: 'Example share text',
+    //     linkUrl: 'https://flutter.dev/',
+    //     chooserTitle: 'Example Chooser Title');
+
+    Share.share(mpController.currentPosition.value.toString(),
+        subject: 'Partage de la position de ${officine.name}');
+  }
+
+  void copy(OfficineModel officine) {
+    FlutterClipboard.copy(mpController.currentPosition.value.toString())
+        .then((value) => Fluttertoast.showToast(
+              msg: "Localisation copiéé!",
+              gravity: ToastGravity.BOTTOM,
+            ));
   }
 
   @override
@@ -163,24 +194,14 @@ class DetailDemandeState extends State<DetailDemande> {
                               height: 30,
                             ),
                             trailing: reponse.read!
-                                ? GestureDetector(
-                                    child: Icon(
-                                      Icons.place,
-                                      color: Color.fromARGB(255, 84, 75, 75),
-                                    ),
-                                  )
+                                ? Container()
                                 : Icon(
                                     Icons.chat_rounded,
                                     color: Colors.green,
                                   ),
                             onExpansionChanged: (value) {
                               if (value && !reponse.read!) {
-                                ReponseProvider.update({
-                                  "id": reponse.id,
-                                  "demande": reponse.demande!.id,
-                                  "read": true
-                                });
-                                setState(() {});
+                                reponseController.updateReponse(reponse);
                               }
                             },
                             collapsedBackgroundColor:
@@ -241,7 +262,7 @@ class DetailDemandeState extends State<DetailDemande> {
                               reponses[officine]!.commentaire != ""
                                   ? Container(
                                       margin: EdgeInsets.symmetric(
-                                          horizontal: 13, vertical: 10),
+                                          horizontal: 13, vertical: 5),
                                       child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -249,7 +270,7 @@ class DetailDemandeState extends State<DetailDemande> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Le traitant: ",
+                                            "Le pharmacien: ",
                                             style: TextStyle(
                                                 fontStyle: FontStyle.italic,
                                                 fontWeight: FontWeight.bold,
@@ -270,7 +291,104 @@ class DetailDemandeState extends State<DetailDemande> {
                                         ],
                                       ),
                                     )
-                                  : Container()
+                                  : Container(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(left: 12),
+                                    child: InkWell(
+                                      onTap: () {
+                                        UrlLauncher.launchUrl(
+                                            "tel://${officine.contact}" as Uri);
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: AppColor.blue, width: 1),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(100))),
+                                        child: Icon(
+                                          Icons.call,
+                                          size: 24,
+                                          color: AppColor.blue,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 12),
+                                    child: InkWell(
+                                      onTap: () {
+                                        copy(officine);
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: AppColor.blue, width: 1),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(100))),
+                                        child: Icon(
+                                          Icons.copy_all_outlined,
+                                          size: 24,
+                                          color: AppColor.blue,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 12),
+                                    child: InkWell(
+                                      onTap: () {
+                                        sharePosition(officine);
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: AppColor.blue, width: 1),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(100))),
+                                        child: Icon(
+                                          Icons.share,
+                                          size: 24,
+                                          color: AppColor.blue,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 12),
+                                    child: InkWell(
+                                      onTap: () {},
+                                      child: Container(
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: AppColor.blue, width: 1),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(100))),
+                                        child: Icon(
+                                          Icons.route_outlined,
+                                          size: 24,
+                                          color: AppColor.blue,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 15,
+                              )
                             ],
                           ),
                         );

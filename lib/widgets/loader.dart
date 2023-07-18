@@ -14,7 +14,6 @@ class LoaderScreen extends StatefulWidget {
 class _LoaderScreenState extends State<LoaderScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -23,7 +22,7 @@ class _LoaderScreenState extends State<LoaderScreen>
       vsync: this,
       duration: Duration(seconds: 30),
     )..repeat(reverse: true);
-    _animation = Tween(begin: 1.5, end: 1.0).animate(
+    Tween(begin: 1.5, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeInOut,
@@ -45,7 +44,7 @@ class _LoaderScreenState extends State<LoaderScreen>
         Container(
           width: Helper.getScreenWidth(context),
           height: Helper.getScreenHeight(context),
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.white.withOpacity(0.8),
         ),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 15),
@@ -55,12 +54,12 @@ class _LoaderScreenState extends State<LoaderScreen>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Lottie.asset("assets/lotties/search2.json",
-                    width: Helper.getScreenWidth(context) * 0.5),
+                    width: Helper.getScreenWidth(context) * 0.7),
                 Text(
                   widget.title,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 16,
                       height: 2,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87),

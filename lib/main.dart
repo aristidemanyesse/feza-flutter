@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/CirconscriptionController.dart';
+import 'package:ipi/controllers/ConnexionController.dart';
 import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/controllers/GardeController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/controllers/ProduitController.dart';
+import 'package:ipi/controllers/ReponseController.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/screens/medicamentScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
@@ -24,13 +26,12 @@ import './screens/profileScreen.dart';
 import './screens/dessertScreen.dart';
 import './const/colors.dart';
 import 'screens/makeDemandeScreen.dart';
-import 'dart:async';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initNotification();
 
+  Get.put(ConnexionController());
   Get.put(AppController());
   Get.put(UtilisateurController());
   Get.put(OfficineController());
@@ -39,6 +40,7 @@ void main() {
   Get.put(MapWidgetController());
   Get.put(GardeController());
   Get.put(DemandeController());
+  Get.put(ReponseController());
 
   runApp(MyApp());
 }
@@ -51,32 +53,11 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  late bool isConnected = true;
-
-  Future<void> execute() async {
-    isConnected = await InternetConnectionChecker().hasConnection;
-    setState(() {});
-
-    // actively listen for status updates
-    InternetConnectionChecker().onStatusChange.listen(
-      (InternetConnectionStatus status) {
-        switch (status) {
-          case InternetConnectionStatus.connected:
-            isConnected = true;
-            break;
-          case InternetConnectionStatus.disconnected:
-            isConnected = false;
-            break;
-        }
-        setState(() {});
-      },
-    );
-  }
+  ConnexionController controller = Get.find();
 
   @override
   void initState() {
     super.initState();
-    execute();
   }
 
   GlobalKey homeScreenkey = GlobalKey();
@@ -159,7 +140,7 @@ class MyAppState extends State<MyApp> {
             ),
           ),
           SafeArea(
-              child: !isConnected
+              child: !controller.isConnected.value
                   ? Container(
                       height: Helper.getScreenHeight(context) * 0.04,
                       width: double.infinity,

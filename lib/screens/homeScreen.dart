@@ -7,6 +7,7 @@ import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/makeDemandeScreen.dart';
+import 'package:ipi/screens/profileScreen.dart';
 import 'package:ipi/widgets/DemandeItemCard.dart';
 import 'package:ipi/widgets/confirmExitDialog.dart';
 import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
@@ -28,6 +29,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    demandeController.onInit();
     super.initState();
   }
 
@@ -40,7 +42,8 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Obx(() {
       UtilisateurModel? user = userController.currentUser.value;
-      List<DemandeModel>? demandes = demandeController.demandes.value;
+      List<DemandeModel>? demandes = demandeController.demandes;
+      Map<String, bool>? repondesDemandes = demandeController.repondesDemandes;
 
       return WillPopScope(
           child: Scaffold(
@@ -49,34 +52,38 @@ class HomeScreenState extends State<HomeScreen> {
               child: Container(
                 height: Helper.getScreenHeight(context),
                 width: Helper.getScreenWidth(context),
+                padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Column(
                   children: [
+                    SizedBox(
+                      height: 15,
+                    ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      height: Helper.getScreenHeight(context) * 0.3,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            height: 20,
-                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              Container(
+                                margin: EdgeInsets.only(right: 12),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Get.to(MenuScreen(),
+                                        transition: Transition.leftToRight);
+                                  },
+                                  child: Icon(
+                                    Icons.menu,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Image.asset(
-                                    Helper.getAssetName("pharma.png", "icons"),
-                                    width: 35,
-                                  ),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
                                   Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
                                         "Bonjour,",
@@ -89,41 +96,37 @@ class HomeScreenState extends State<HomeScreen> {
                                       SizedBox(
                                         height: 5,
                                       ),
-                                      Text(
-                                        user?.fullname ?? "",
-                                        style: Helper.getTheme(context)
-                                            .headlineSmall
-                                            ?.copyWith(
-                                                fontSize: 18,
-                                                color: AppColor.blue,
-                                                fontWeight: FontWeight.bold),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Get.to(ProfileScreen());
+                                        },
+                                        child: Text(
+                                          user?.fullname ?? "",
+                                          style: Helper.getTheme(context)
+                                              .headlineSmall
+                                              ?.copyWith(
+                                                  fontSize: 18,
+                                                  color: AppColor.blue,
+                                                  fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ],
-                                  )
-                                ],
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(right: 12),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(MenuScreen(),
-                                        transition: Transition.rightToLeft);
-                                  },
-                                  child: Icon(
-                                    Icons.menu,
-                                    color: Colors.black,
                                   ),
-                                ),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Image.asset(
+                                    Helper.getAssetName("pharma.png", "icons"),
+                                    width: 35,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                           SizedBox(
-                            height: 35,
+                            height: 25,
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -142,40 +145,27 @@ class HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 10),
                                 child: Text(
                                   "Vos demandes en cours ...",
                                   style: Helper.getTheme(context)
                                       .headlineLarge
                                       ?.copyWith(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 22,
+                                          fontSize: 20,
                                           color:
                                               Color.fromARGB(255, 21, 67, 111)),
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(right: 10),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).pushReplacementNamed(
-                                        HomeScreen.routeName);
-                                  },
-                                  child: Icon(Icons.refresh),
-                                ),
-                              )
                             ],
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     Expanded(
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        margin: EdgeInsets.symmetric(horizontal: 10),
                         child: demandes.isEmpty
                             ? Center(
                                 child: Column(
@@ -196,7 +186,8 @@ class HomeScreenState extends State<HomeScreen> {
                             : SingleChildScrollView(
                                 child: Column(
                                   children: demandes.map((demande) {
-                                    return DemandeItemCard(demande);
+                                    return DemandeItemCard(demande,
+                                        repondesDemandes[demande.id] ?? false);
                                   }).toList(),
                                 ),
                               ),
@@ -207,7 +198,6 @@ class HomeScreenState extends State<HomeScreen> {
                     ),
                     Container(
                       margin: EdgeInsets.only(bottom: 5),
-                      height: Helper.getScreenHeight(context) * 0.1,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

@@ -24,8 +24,7 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
   MapWidgetController mapController = Get.find();
   OfficineController officineController = Get.find();
 
-  bool ready = true;
-  bool wait = false;
+  double taille = 0.8;
 
   bool isOrdonnance = false;
   late File file;
@@ -38,6 +37,7 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    officineController.garde.value = false;
     officineController.officinesInZone(mapController.currentPosition.value);
     super.initState();
   }
@@ -50,21 +50,35 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
         width: double.infinity,
         child: Stack(
           children: [
-            Container(
-              height: Helper.getScreenHeight(context) * 0.8,
-              child: Stack(
-                children: [
-                  MapWidget(),
-                  Visibility(
-                      child: LoaderScreen(
-                        title:
-                            "IPI envoie votre demande aux pharmacies sélectionnées...",
-                      ),
-                      visible: !ready),
-                ],
+            Container(height: Get.size.height * taille, child: MapWidget()),
+            SearchBottomSheet(),
+            Positioned(
+              top: Helper.getScreenHeight(context) * 0.45,
+              right: 5,
+              child: Container(
+                padding: EdgeInsets.all(8),
+                margin: EdgeInsets.only(right: 10, bottom: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                    border: Border.all(color: AppColor.secondary, width: 2)),
+                child: GestureDetector(
+                  child: Icon(
+                    Icons.location_searching,
+                    size: 26,
+                  ),
+                  onTap: () {
+                    mapController.changeCenter();
+                  },
+                ),
               ),
             ),
-            SearchBottomSheet(),
+            Visibility(
+                child: LoaderScreen(
+                  title:
+                      "IPI envoie votre demande aux pharmacies sélectionnées...",
+                ),
+                visible: !officineController.wait.value),
             Positioned(
               top: 10,
               child: SafeArea(
@@ -81,7 +95,7 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
                           border: Border.all(color: AppColor.blue, width: 1),
                           borderRadius: BorderRadius.all(Radius.circular(100))),
                       child: Icon(
-                        Icons.arrow_back_ios_rounded,
+                        Icons.arrow_downward_rounded,
                         size: 20,
                         color: AppColor.blue,
                       ),
@@ -90,26 +104,6 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
                 ),
               ),
             ),
-            Positioned(
-                top: Helper.getScreenHeight(context) * 0.45,
-                right: 5,
-                child: Container(
-                  padding: EdgeInsets.all(8),
-                  margin: EdgeInsets.only(right: 10, bottom: 10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(100)),
-                      border: Border.all(color: AppColor.secondary, width: 2)),
-                  child: GestureDetector(
-                    child: Icon(
-                      Icons.location_searching,
-                      size: 26,
-                    ),
-                    onTap: () {
-                      mapController.changeCenter();
-                    },
-                  ),
-                ))
           ],
         ),
       ),

@@ -33,7 +33,7 @@ class Intro3 extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  "Toi-même tu sias !!!",
+                  "Toi-même tu sais !!!",
                   textAlign: TextAlign.left,
                   style: TextStyle(height: 1.5, color: AppColor.primary),
                 ),

@@ -6,6 +6,7 @@ import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/models/GardeModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
+import 'package:ipi/screens/profileScreen.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/widgets/confirmExitDialog.dart';
 import 'package:ipi/widgets/menuCard.dart';
@@ -98,8 +99,9 @@ class _MenuScreen extends State<MenuScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context)
-                                        .pushNamed(PharmaciesGarde.routeName);
+                                    Get.to(PharmaciesGarde(),
+                                        transition:
+                                            Transition.rightToLeftWithFade);
                                   },
                                   child: MenuCard(
                                       imageShape: ClipOval(
@@ -152,9 +154,9 @@ class _MenuScreen extends State<MenuScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    // Navigator.of(context).pushNamed(
-                                    //     ProfileScreen.routeName,
-                                    //     arguments: {"user": user});
+                                    Get.to(ProfileScreen(),
+                                        transition:
+                                            Transition.rightToLeftWithFade);
                                   },
                                   child: MenuCard(
                                     imageShape: ClipPath(
@@ -211,36 +213,6 @@ class _MenuScreen extends State<MenuScreen> {
                 ),
               ),
             ),
-            Positioned(
-                bottom: 20,
-                right: 0,
-                left: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.transparent,
-                      ),
-                      child: TextButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return DeconnexionDialog();
-                              },
-                            );
-                          },
-                          child: Text(
-                            "Se déconnecter",
-                            style: TextStyle(fontSize: 15, color: Colors.red),
-                          )),
-                    )
-                  ],
-                ))
           ],
         ),
       );

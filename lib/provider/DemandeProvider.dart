@@ -40,6 +40,25 @@ class DemandeProvider extends ChangeNotifier {
     return response;
   }
 
+  static Future<ResponseModel> update(Map<String, dynamic> variables) async {
+    ResponseModel response;
+    dynamic datas =
+        await ApiService.request(DemandeSchema.UPDATE_DEMANDE, variables);
+    bool ok = datas["updateDemande"]["ok"];
+    if (ok) {
+      DemandeModel user =
+          DemandeModel.fromJson(datas["updateDemande"]["demande"]);
+      response = ResponseModel(field: "", message: "", ok: true, data: user);
+    } else {
+      response = ResponseModel(
+          field: datas["updateDemande"]["errors"][0]["field"],
+          message: datas["updateDemande"]["errors"][0]["message"],
+          ok: false,
+          data: new DemandeModel());
+    }
+    return response;
+  }
+
   static Future<ResponseModel> createLigneDemande(
       Map<String, dynamic> variables) async {
     ResponseModel response;

@@ -73,6 +73,41 @@ class DemandeSchema {
       }
   """;
 
+  static const String UPDATE_DEMANDE = r"""
+      mutation ($id: UUID, $utilisateur:ID, $status: Boolean, $deleted: Boolean) {
+        updateDemande(newDemande: {id: $id, utilisateur:$utilisateur, status: $status, deleted: $deleted}) {
+          ok
+          errors {
+            field
+            messages
+          }
+          demande {
+            id
+            status
+            base64
+            ordonnance
+            commentaire
+            createdAt
+            utilisateur {
+              id
+              fullname
+              contact
+              imei
+              createdAt
+              image
+              isValide
+              otp
+              geometryJson
+              circonscription {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+  """;
+
   static const String LIGNE_DEMANDE = r"""
       query($demande:UUID){
         searchLigneDemande(deleted: false, demande_Id:$demande){
