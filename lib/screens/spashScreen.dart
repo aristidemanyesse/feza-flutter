@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ipi/components/myLogo.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/introScreen.dart';
-import 'package:ipi/widgets/myLogo.dart';
 
 import '../utils/helper.dart';
 
@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    Timer(Duration(milliseconds: 1500), () {
+    Future.delayed(Duration(seconds: 2)).then((value) {
       if (_controller.currentUser.value != null) {
         Get.to(HomeScreen());
       } else {
@@ -62,22 +62,23 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
         MyLogo(),
         Positioned(
-            bottom: 50,
-            right: 0,
-            left: 0,
-            child: Align(
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Text("Veuillez patienter...")
-                ],
-              ),
-            ))
+          bottom: 50,
+          right: 0,
+          left: 0,
+          child: Align(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(
+                  height: 15,
+                ),
+                Text("Veuillez patienter...")
+              ],
+            ),
+          ),
+        )
       ]),
     );
   }

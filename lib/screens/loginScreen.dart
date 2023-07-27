@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:ipi/components/customTextInput.dart';
+import 'package:ipi/components/myLogo.dart';
 import 'package:ipi/screens/landingScreen.dart';
 import 'package:csshadow/csshadow.dart';
 import 'package:ipi/widgets/confirmNumberDialog.dart';
-import 'package:ipi/widgets/myLogo.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
-import '../widgets/customTextInput.dart';
 
 class LoginScreen extends StatefulWidget {
-  static const routeName = "/loginScreen";
   @override
   _LoginScreen createState() => _LoginScreen();
 }
@@ -137,20 +136,25 @@ class _LoginScreen extends State<LoginScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      CustomTextInput(
-                        controller: myNumeroController,
-                        myFocusNode: myFocusNode,
-                        textAlign: TextAlign.center,
-                        onChanged: (myNumeroController) {
-                          if (myNumeroController!.toString().length == 14) {
-                            _checkNumero();
-                          }
-                        },
-                        keyboard: TextInputType.number,
-                        hintText: "07 01 02 03 04",
-                        onEditingComplete: () {
-                          myFocusNode.unfocus();
-                        },
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(45),
+                            border: Border.all(color: AppColor.blue)),
+                        child: CustomTextInput(
+                          controller: myNumeroController,
+                          myFocusNode: myFocusNode,
+                          textAlign: TextAlign.center,
+                          onChanged: (myNumeroController) {
+                            if (myNumeroController!.toString().length == 14) {
+                              _checkNumero();
+                            }
+                          },
+                          keyboard: TextInputType.number,
+                          hintText: "07 01 02 03 04",
+                          onEditingComplete: () {
+                            myFocusNode.unfocus();
+                          },
+                        ),
                       ),
                       SizedBox(
                         height: 5,

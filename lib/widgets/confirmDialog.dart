@@ -1,21 +1,34 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-class NoPharmacieAvialable extends StatelessWidget {
-  NoPharmacieAvialable();
+import 'package:flutter/material.dart';
+
+class ConfirmDialog extends StatelessWidget {
+  final String title;
+  final String message;
+  final String testOk;
+  final String testCancel;
+  final Function functionOk;
+  final Function functionCancel;
+
+  ConfirmDialog(
+      {this.title = "😩😟 Hhmmm !",
+      this.message = "Voulez-vous vraiment continuer ?",
+      this.testOk = "Oui",
+      this.testCancel = "Non",
+      required this.functionOk,
+      required this.functionCancel});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          height: 180,
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.white.withOpacity(0.9)),
           child: Container(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
@@ -24,7 +37,7 @@ class NoPharmacieAvialable extends StatelessWidget {
                       padding: EdgeInsets.only(bottom: 5),
                       alignment: Alignment.center,
                       child: Text(
-                        "😩😟 Ooohhh !",
+                        title,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -34,11 +47,11 @@ class NoPharmacieAvialable extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: 12,
+                      height: 15,
                     ),
                     Container(
                       child: Text(
-                        "Nous n'avons pas trouvé de pharmacie dans cette zone de recherche",
+                        message,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 15, height: 1.5, color: Colors.black),
@@ -50,7 +63,7 @@ class NoPharmacieAvialable extends StatelessWidget {
                   height: 20,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
                       alignment: Alignment.center,
@@ -60,34 +73,33 @@ class NoPharmacieAvialable extends StatelessWidget {
                         color: Colors.transparent,
                       ),
                       child: TextButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        child: Text(
-                          "Ok, revenir !",
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                          onPressed: () {
+                            functionOk();
+                          },
+                          child: Text(
+                            testOk,
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold),
+                          )),
                     ),
-                    // Container(
-                    //   alignment: Alignment.center,
-                    //   height: 35,
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(30),
-                    //     color: Colors.transparent,
-                    //   ),
-                    //   child: TextButton(
-                    //       onPressed: () {
-                    //         Navigator.pop(context);
-                    //       },
-                    //       child: Text(
-                    //         "Non, Annuler",
-                    //         style: TextStyle(fontSize: 17),
-                    //       )),
-                    // )
+                    Container(
+                      alignment: Alignment.center,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.transparent,
+                      ),
+                      child: TextButton(
+                          onPressed: () {
+                            functionCancel();
+                          },
+                          child: Text(
+                            testCancel,
+                            style: TextStyle(fontSize: 15),
+                          )),
+                    )
                   ],
                 )
               ],

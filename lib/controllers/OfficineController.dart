@@ -33,6 +33,11 @@ class OfficineController extends GetxController {
   void officinesInZone(LatLng center) async {
     wait.value = true;
     routeCoordinates.value = Polyline(points: []);
+
+    distanceTableaux.value = {};
+    routesOfficines.value = {};
+    officines.value = [];
+
     UtilisateurModel? user = userController.currentUser.value;
     if (user == null) {
       wait.value = false;
@@ -68,9 +73,6 @@ class OfficineController extends GetxController {
       });
     }
 
-    distanceTableaux.value = {};
-    routesOfficines.value = {};
-    officines.value = [];
     if (datas.length > 0) {
       for (var element in datas) {
         var offs = await OfficineProvider.all({"id": element["officine"]});

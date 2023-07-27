@@ -9,16 +9,15 @@ import 'package:ipi/provider/DemandeProvider.dart';
 import 'package:ipi/provider/ReponseProvider.dart';
 import 'package:ipi/screens/detailDemande.dart';
 import "package:intl/intl.dart";
-import 'package:ipi/widgets/animations.dart';
+import 'package:ipi/widgets/confirmDialog.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class DemandeItemCard extends StatefulWidget {
-  static const routeName = "/DemandeItemCard";
   final DemandeModel demande;
-  final bool status;
-  DemandeItemCard(this.demande, this.status);
+  final int news;
+  DemandeItemCard(this.demande, this.news);
 
   @override
   State<DemandeItemCard> createState() => DemandeItemCardState();
@@ -170,7 +169,21 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      demandeController.deleteDemande(widget.demande);
+                      Get.dialog(
+                        ConfirmDialog(
+                          title: "Suppression",
+                          message:
+                              "Voulez-vous vraiment suppriimer cette requette aux pharmacies !",
+                          testOk: "Oui",
+                          testCancel: "Non",
+                          functionOk: () {
+                            demandeController.deleteDemande(widget.demande);
+                          },
+                          functionCancel: () {
+                            Get.back();
+                          },
+                        ),
+                      );
                     },
                     child: Icon(
                       Icons.delete_forever,
@@ -182,16 +195,16 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                     height: 15,
                   ),
                   Container(
-                    child: widget.status
+                    child: widget.news > 0
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Container(
-                              color: AppColor.green,
+                              color: Color.fromARGB(255, 69, 180, 110),
                               height: 25,
                               width: 25,
                               child: Center(
                                 child: Text(
-                                  "1",
+                                  widget.news.toString(),
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,

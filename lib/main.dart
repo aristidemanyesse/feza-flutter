@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/CirconscriptionController.dart';
 import 'package:ipi/controllers/ConnexionController.dart';
@@ -10,29 +11,21 @@ import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/controllers/ProduitController.dart';
 import 'package:ipi/controllers/ReponseController.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/screens/medicamentScreen.dart';
-import 'package:ipi/screens/pharmaciesGarde.dart';
-import 'package:ipi/screens/test.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/utils/local_notifications.dart';
+import 'package:ipi/widgets/searchBottomSheet.dart';
+import 'package:ipi/widgets/takeImage.dart';
 import './screens/spashScreen.dart';
-import './screens/landingScreen.dart';
-import './screens/loginScreen.dart';
-import './screens/sentOTPScreen.dart';
-import './screens/introScreen.dart';
-import './screens/homeScreen.dart';
-import './screens/menuScreen.dart';
-import './screens/profileScreen.dart';
-import './screens/dessertScreen.dart';
 import './const/colors.dart';
-import 'screens/makeDemandeScreen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initNotification();
+  await GetStorage.init();
 
   Get.put(ConnexionController());
   Get.put(AppController());
+  Get.put(TakeImageController());
   Get.put(UtilisateurController());
   Get.put(OfficineController());
   Get.put(ProduitController());
@@ -41,6 +34,7 @@ void main() {
   Get.put(GardeController());
   Get.put(DemandeController());
   Get.put(ReponseController());
+  Get.put(SearchBottomSheetController());
 
   runApp(MyApp());
 }
@@ -122,21 +116,6 @@ class MyAppState extends State<MyApp> {
                 ),
               ),
               home: SplashScreen(),
-              routes: {
-                LandingScreen.routeName: (context) => LandingScreen(),
-                LoginScreen.routeName: (context) => LoginScreen(),
-                SendOTPScreen.routeName: (context) => SendOTPScreen(),
-                IntroScreen.routeName: (context) => IntroScreen(),
-                SearchPage.routeName: (context) => SearchPage(),
-                MenuScreen.routeName: (context) => MenuScreen(),
-                PharmaciesGarde.routeName: (context) => PharmaciesGarde(),
-                ProfileScreen.routeName: (context) => ProfileScreen(),
-                DessertScreen.routeName: (context) => DessertScreen(),
-                MedicamentScreen.routeName: (context) => MedicamentScreen(),
-                HomeScreen.routeName: (context) => HomeScreen(),
-                // TextRecognizerView.routeName: (context) => TextRecognizerView(),
-                TestPage.routeName: (context) => TestPage(),
-              },
             ),
           ),
           SafeArea(

@@ -5,7 +5,6 @@ void main() async {
 }
 
 class TestPage extends StatefulWidget {
-  static const routeName = "/test";
   @override
   State<StatefulWidget> createState() => _TestPageState();
 }

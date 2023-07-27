@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ipi/components/DemandeItemCard.dart';
 import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/models/DemandeModel.dart';
@@ -8,15 +10,13 @@ import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/makeDemandeScreen.dart';
 import 'package:ipi/screens/profileScreen.dart';
-import 'package:ipi/widgets/DemandeItemCard.dart';
-import 'package:ipi/widgets/confirmExitDialog.dart';
+import 'package:ipi/widgets/confirmDialog.dart';
 import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 import 'package:lottie/lottie.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class HomeScreen extends StatefulWidget {
-  static const routeName = "/homeScreen";
   HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -43,7 +43,7 @@ class HomeScreenState extends State<HomeScreen> {
     return Obx(() {
       UtilisateurModel? user = userController.currentUser.value;
       List<DemandeModel>? demandes = demandeController.demandes;
-      Map<String, bool>? repondesDemandes = demandeController.repondesDemandes;
+      Map<String, int>? repondesDemandes = demandeController.repondesDemandes;
 
       return WillPopScope(
           child: Scaffold(
@@ -150,10 +150,10 @@ class HomeScreenState extends State<HomeScreen> {
                                   style: Helper.getTheme(context)
                                       .headlineLarge
                                       ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                          color:
-                                              Color.fromARGB(255, 21, 67, 111)),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Color.fromARGB(255, 21, 67, 111),
+                                      ),
                                 ),
                               ),
                             ],
@@ -187,7 +187,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 child: Column(
                                   children: demandes.map((demande) {
                                     return DemandeItemCard(demande,
-                                        repondesDemandes[demande.id] ?? false);
+                                        repondesDemandes[demande.id] ?? 0);
                                   }).toList(),
                                 ),
                               ),
@@ -234,11 +234,19 @@ class HomeScreenState extends State<HomeScreen> {
             ),
           ),
           onWillPop: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return ConfirmExitDialog();
-              },
+            Get.dialog(
+              ConfirmDialog(
+                title: "😩😟 Hhmmm !",
+                message: "Voulez-vous vraiment quitter cette application ?",
+                testOk: "Oui",
+                testCancel: "Non, je reste",
+                functionOk: () {
+                  exit(0);
+                },
+                functionCancel: () {
+                  Get.back();
+                },
+              ),
             );
             return Future.value(false);
           });

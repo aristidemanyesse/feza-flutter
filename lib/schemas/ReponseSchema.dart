@@ -6,6 +6,7 @@ class ReponseSchema {
           id
           commentaire
           read
+          price
           demande {
             id
             demande {
@@ -125,6 +126,8 @@ class ReponseSchema {
           results {
             id
             status
+            price
+            quantite
             reponse {
               id
               commentaire
@@ -179,6 +182,7 @@ class ReponseSchema {
               id
               name
               description
+              price
               codebarre
               onlyOrdonnance
               cis

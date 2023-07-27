@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ipi/components/SuggestionItemCard.dart';
+import 'package:ipi/components/indicator.dart';
+import 'package:ipi/components/searchBarGroup.dart';
 import 'package:ipi/controllers/ProduitController.dart';
-import 'package:ipi/widgets/SuggestionItemCard.dart';
-import 'package:ipi/widgets/indicator.dart';
-import 'package:ipi/widgets/searchBarGroup.dart';
 
 class ProduitsListe extends StatefulWidget {
-  static const routeName = "/ProduitsListe";
-
   ProduitsListe({
     Key? key,
   }) : super(key: key);

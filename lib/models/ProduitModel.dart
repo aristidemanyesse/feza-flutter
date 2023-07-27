@@ -8,6 +8,7 @@ class ProduitModel {
     required this.codebarre,
     this.onlyOrdonnance,
     this.image,
+    this.price,
     this.type,
     this.cis,
     this.forme,
@@ -25,6 +26,7 @@ class ProduitModel {
   String? cis;
   String? forme;
   String? voies;
+  int? price;
   bool? onlyOrdonnance;
   String? image;
   TypeProduitModel? type;
@@ -40,6 +42,7 @@ class ProduitModel {
       codebarre: json["codebarre"],
       onlyOrdonnance: json["onlyOrdonnance"],
       image: json["image"],
+      price: json["price"],
       cis: json["cis"],
       forme: json["forme"],
       voies: json["voies"],
@@ -54,6 +57,7 @@ class ProduitModel {
         "name": name,
         "description": description,
         "codebarre": codebarre,
+        "price": price,
         "cis": cis,
         "forme": forme,
         "voies": voies,

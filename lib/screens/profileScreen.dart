@@ -1,17 +1,22 @@
+import 'dart:io';
+
 import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:ipi/components/customTextInput.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/landingScreen.dart';
+import 'package:ipi/screens/spashScreen.dart';
 import 'package:ipi/utils/helper.dart';
-import 'package:ipi/widgets/confirmExitDialog.dart';
-import 'package:ipi/widgets/customTextInput.dart';
-import 'package:ipi/widgets/zoneChoicesDialog.dart';
+import 'package:ipi/widgets/confirmDialog.dart';
+import 'package:ipi/widgets/pleaseWait.dart';
+import 'package:ipi/widgets/takeImage.dart';
 
 class ProfileScreen extends StatefulWidget {
-  static const routeName = "/profileScreen";
   ProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -20,6 +25,7 @@ class ProfileScreen extends StatefulWidget {
 
 class ProfileScreenState extends State<ProfileScreen> {
   UtilisateurController controller = Get.find();
+  TakeImageController imageController = Get.find();
 
   final myNameController = TextEditingController();
   final focusNode2 = FocusNode();
@@ -29,6 +35,17 @@ class ProfileScreenState extends State<ProfileScreen> {
   final myFocusNode = FocusNode();
   late UtilisateurModel user = UtilisateurModel();
   bool isUpdated = false;
+
+  final box = GetStorage();
+
+  void deconnexion() async {
+    Get.dialog(PleaseWait());
+    controller.currentUser.value = null;
+    box.erase();
+    UtilisateurProvider.getUniqID().then((value) => box.write("imei", value));
+    await Future.delayed(Duration(milliseconds: 3000));
+    Get.to(SplashScreen());
+  }
 
   bool _checkNumero() {
     bool test = false;
@@ -129,17 +146,27 @@ class ProfileScreenState extends State<ProfileScreen> {
                             borderRadius: BorderRadius.circular(100),
                             border: Border.all(color: Colors.grey, width: 3)),
                         child: ClipOval(
-                          child: Container(
-                            height: 120,
-                            width: 120,
-                            child: Image.asset(
-                              Helper.getAssetName(
-                                "user.jpg",
-                                "icons",
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                          child: Obx(() {
+                            imageController.isOrdonnance.value = false;
+                            return Container(
+                              height: 120,
+                              width: 120,
+                              child: imageController.ok.value
+                                  ? Image.asset(
+                                      Helper.getAssetName(
+                                        "user.jpg",
+                                        "icons",
+                                      ),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      File(imageController.file.value.path),
+                                      fit: BoxFit.cover,
+                                      height: 200.0,
+                                      width: double.infinity,
+                                    ),
+                            );
+                          }),
                         ),
                       ),
                       Visibility(
@@ -147,12 +174,17 @@ class ProfileScreenState extends State<ProfileScreen> {
                         child: Positioned(
                           bottom: -3,
                           left: 70,
-                          child: Container(
-                              child: Icon(
-                            Icons.camera_alt,
-                            color: AppColor.blue,
-                            size: 35,
-                          )),
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.dialog(TakeImage());
+                            },
+                            child: Container(
+                                child: Icon(
+                              Icons.camera_alt,
+                              color: AppColor.blue,
+                              size: 35,
+                            )),
+                          ),
                         ),
                       ),
                     ]),
@@ -386,11 +418,20 @@ class ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: TextButton(
                           onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return DeconnexionDialog();
-                              },
+                            Get.dialog(
+                              ConfirmDialog(
+                                title: "Déconnexion",
+                                message:
+                                    "Voulez-vous vraiment vous déconnecter ? \n Toutes vos données seront effacer de cet appareil !",
+                                testOk: "Oui",
+                                testCancel: "Non",
+                                functionOk: () {
+                                  deconnexion();
+                                },
+                                functionCancel: () {
+                                  Get.back();
+                                },
+                              ),
                             );
                           },
                           child: Text(
@@ -402,50 +443,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                 )),
           )
         ],
-      ),
-    );
-  }
-}
-
-class CustomFormImput extends StatelessWidget {
-  const CustomFormImput({
-    Key? key,
-    String label = "",
-    String value = "",
-    bool isPassword = false,
-  })  : _label = label,
-        _value = value,
-        _isPassword = isPassword,
-        super(key: key);
-
-  final String _label;
-  final String _value;
-  final bool _isPassword;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 50,
-      padding: const EdgeInsets.only(left: 40),
-      decoration: ShapeDecoration(
-        shape: StadiumBorder(),
-        color: AppColor.placeholderBg,
-      ),
-      child: TextFormField(
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          labelText: _label,
-          contentPadding: const EdgeInsets.only(
-            top: 10,
-            bottom: 10,
-          ),
-        ),
-        obscureText: _isPassword,
-        initialValue: _value,
-        style: TextStyle(
-          fontSize: 14,
-        ),
       ),
     );
   }

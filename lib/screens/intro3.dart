@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ipi/screens/loginScreen.dart';
 import 'package:lottie/lottie.dart';
 
@@ -58,8 +59,7 @@ class Intro3 extends StatelessWidget {
                     width: Helper.getScreenWidth(context) * 0.7,
                     child: ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context)
-                              .pushReplacementNamed(LoginScreen.routeName);
+                          Get.off(LoginScreen());
                         },
                         child: Text(
                           "Je suis prêt !",

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:ipi/components/indicator.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/ReponseController.dart';
@@ -15,16 +15,14 @@ import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/models/ReponseModel.dart';
 import 'package:ipi/provider/ReponseProvider.dart';
 import 'package:ipi/utils/helper.dart';
-import 'package:ipi/widgets/indicator.dart';
-import 'package:ipi/widgets/ligneProduitAvialable.dart';
 import "package:intl/intl.dart";
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'package:share_plus/share_plus.dart';
 
-class DetailDemande extends StatefulWidget {
-  static const routeName = "/DetailDemande";
+import '../components/ligneProduitAvialable.dart';
 
+class DetailDemande extends StatefulWidget {
   late List<LigneDemandeModel> produits = [];
   late List<OfficineDemandeModel> officines = [];
   late DemandeModel demande;
@@ -62,9 +60,9 @@ class DetailDemandeState extends State<DetailDemande> {
 
   Future<void> getData() async {
     for (OfficineDemandeModel offdem in widget.officines) {
-      List<LigneReponseModel> lignes = [];
       List<ReponseModel> data = await ReponseProvider.all(
           {"officine": offdem.officine!.id, "demande": widget.demande.id});
+      List<LigneReponseModel> lignes = [];
       if (data.length > 0) {
         ReponseModel reponse = data[0];
         lignes =
@@ -194,7 +192,7 @@ class DetailDemandeState extends State<DetailDemande> {
                               height: 30,
                             ),
                             trailing: reponse.read!
-                                ? Container()
+                                ? null
                                 : Icon(
                                     Icons.chat_rounded,
                                     color: Colors.green,
@@ -247,6 +245,7 @@ class DetailDemandeState extends State<DetailDemande> {
                                         Ligne(
                                           produit: prod.produit!,
                                           active: prod.status!,
+                                          price: prod.price!,
                                         ),
                                         Container(
                                           height: 1,
@@ -292,6 +291,33 @@ class DetailDemandeState extends State<DetailDemande> {
                                       ),
                                     )
                                   : Container(),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    right: 20, top: 10, bottom: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "Total = ",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      "${reponse.price} Fcfa",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.italic),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 1,
+                                color: Colors.grey.shade300,
+                                margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                              ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -408,7 +434,7 @@ class DetailDemandeState extends State<DetailDemande> {
                 ),
                 child: TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back();
                     },
                     child: Text(
                       "Terminer",

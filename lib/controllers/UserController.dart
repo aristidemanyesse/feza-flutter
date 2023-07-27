@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
@@ -14,13 +12,12 @@ class UtilisateurController extends GetxController {
   Rx<UtilisateurModel?> currentUser = Rx<UtilisateurModel?>(null);
   Rx<bool> valide = Rx<bool>(false);
 
-  void onInit() {
+  void onInit() async {
     String? id = box.read('userId');
     String? imei = box.read('imei');
-    UtilisateurProvider.all({"id": id, "imei": imei}).then((datas) {
-      currentUser.value = datas[0];
-      valide.value = false;
-    });
+    var datas = await UtilisateurProvider.all({"id": id, "imei": imei});
+    currentUser.value = datas[0];
+    valide.value = false;
     ever(currentUser, (user) => box.write('userId', user?.id));
     super.onInit();
   }
@@ -58,6 +55,7 @@ class UtilisateurController extends GetxController {
     datas["contact"] = contact;
     datas["id"] = currentUser.value?.id;
     datas["imei"] = currentUser.value?.imei;
+    datas["circonscription"] = currentUser.value?.circonscription?.id;
     datas["circonscription"] = currentUser.value?.circonscription?.id;
     ResponseModel response = await UtilisateurProvider.update(datas);
     if (response.ok) {

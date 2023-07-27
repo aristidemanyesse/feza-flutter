@@ -1,5 +1,6 @@
 import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../const/colors.dart';
 import '../screens/homeScreen.dart';
@@ -50,8 +51,7 @@ class CustomNavBar extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         if (!menu) {
-                          Navigator.of(context)
-                              .pushReplacementNamed(MenuScreen.routeName);
+                          Get.off(MenuScreen());
                         }
                       },
                       child: Column(
@@ -75,8 +75,7 @@ class CustomNavBar extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         if (!profile) {
-                          Navigator.of(context)
-                              .pushReplacementNamed(ProfileScreen.routeName);
+                          Get.off(ProfileScreen());
                         }
                       },
                       child: Column(
@@ -106,26 +105,27 @@ class CustomNavBar extends StatelessWidget {
           Align(
             alignment: Alignment.topCenter,
             child: SizedBox(
-                height: 70,
-                width: 70,
-                child: FloatingActionButton(
-                    elevation: 15,
-                    backgroundColor: Colors.white,
-                    onPressed: () {
-                      if (!home) {
-                        Navigator.of(context)
-                            .pushReplacementNamed(HomeScreen.routeName);
-                      }
-                    },
-                    child: home
-                        ? Image.asset(
-                            Helper.getAssetName("pharma.png", "icons"),
-                            width: 40,
-                          )
-                        : Image.asset(
-                            Helper.getAssetName("pharma1.png", "icons"),
-                            width: 40,
-                          ))),
+              height: 70,
+              width: 70,
+              child: FloatingActionButton(
+                elevation: 15,
+                backgroundColor: Colors.white,
+                onPressed: () {
+                  if (!home) {
+                    Get.off(HomeScreen());
+                  }
+                },
+                child: home
+                    ? Image.asset(
+                        Helper.getAssetName("pharma.png", "icons"),
+                        width: 40,
+                      )
+                    : Image.asset(
+                        Helper.getAssetName("pharma1.png", "icons"),
+                        width: 40,
+                      ),
+              ),
+            ),
           )
         ],
       ),

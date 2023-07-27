@@ -74,23 +74,29 @@ class ConfirmNumberDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     alignment: Alignment.center,
-                    height: 35,
+                    height: 40,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
+                      border: Border.all(color: AppColor.blue),
                       color: Colors.white54,
                     ),
                     child: TextButton(
-                        onPressed: () {
-                          userRegistration(context, number);
-                        },
-                        child: Text(
-                          "C'est bien mon numéro !",
-                          style: TextStyle(fontSize: 13),
-                        )),
+                      onPressed: () {
+                        userRegistration(context, number);
+                      },
+                      child: Text(
+                        "C'est bien mon numéro !",
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
                   )
                 ],
-              )
+              ),
+              SizedBox(
+                height: 5,
+              ),
             ],
           ),
         ));

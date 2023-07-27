@@ -1,17 +1,16 @@
 import 'package:get/get.dart';
+import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
-import 'package:ipi/widgets/MapWidget.dart';
+import 'package:ipi/components/MapWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:ipi/widgets/loader.dart';
+import 'package:ipi/components/loader.dart';
 import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/utils/helper.dart';
 import 'dart:io';
 
 class SearchPage extends StatefulWidget {
-  static const routeName = "/SearchPage";
-
   SearchPage({
     Key? key,
   }) : super(key: key);
@@ -23,6 +22,7 @@ class SearchPage extends StatefulWidget {
 class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
   MapWidgetController mapController = Get.find();
   OfficineController officineController = Get.find();
+  DemandeController demandeController = Get.find();
 
   double taille = 0.8;
 
@@ -38,7 +38,6 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
   @override
   void initState() {
     officineController.garde.value = false;
-    officineController.officinesInZone(mapController.currentPosition.value);
     super.initState();
   }
 
@@ -78,7 +77,7 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
                   title:
                       "IPI envoie votre demande aux pharmacies sélectionnées...",
                 ),
-                visible: !officineController.wait.value),
+                visible: demandeController.wait.value),
             Positioned(
               top: 10,
               child: SafeArea(

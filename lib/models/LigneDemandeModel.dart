@@ -6,6 +6,7 @@ class LigneDemandeModel {
     this.id,
     this.demande,
     this.produit,
+    this.quantite = 1,
     this.status,
     this.deleted,
     this.protected,
@@ -16,6 +17,7 @@ class LigneDemandeModel {
   String? id;
   DemandeModel? demande;
   ProduitModel? produit;
+  int? quantite;
   bool? status;
   bool? deleted;
   bool? protected;
@@ -26,6 +28,7 @@ class LigneDemandeModel {
       LigneDemandeModel(
           id: json["id"],
           status: json["status"],
+          quantite: json["quantite"],
           demande: DemandeModel.fromJson(json["demande"]),
           produit: ProduitModel.fromJson(json["produit"]),
           deleted: json["deleted"],
@@ -37,6 +40,7 @@ class LigneDemandeModel {
         "id": id,
         "demande": demande?.toJson(),
         "produit": produit?.toJson(),
+        "quantite": quantite,
         "status": status,
         "deleted": deleted,
         "protected": protected,

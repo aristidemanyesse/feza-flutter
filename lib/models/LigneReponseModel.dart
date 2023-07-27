@@ -7,6 +7,8 @@ class LigneReponseModel {
     this.reponse,
     this.produit,
     this.status,
+    this.price,
+    this.quantite,
     this.deleted,
     this.protected,
     this.createdAt,
@@ -17,6 +19,8 @@ class LigneReponseModel {
   ReponseModel? reponse;
   ProduitModel? produit;
   bool? status;
+  int? price;
+  int? quantite;
   bool? deleted;
   bool? protected;
   String? createdAt;
@@ -26,6 +30,8 @@ class LigneReponseModel {
       LigneReponseModel(
           id: json["id"],
           status: json["status"],
+          price: json["price"],
+          quantite: json["quantite"],
           reponse: ReponseModel.fromJson(json["reponse"]),
           produit: ProduitModel.fromJson(json["produit"]),
           deleted: json["deleted"],
@@ -38,6 +44,8 @@ class LigneReponseModel {
         "reponse": reponse?.toJson(),
         "produit": produit?.toJson(),
         "status": status,
+        "price": price,
+        "quantite": quantite,
         "deleted": deleted,
         "protected": protected,
         "createdAt": createdAt,

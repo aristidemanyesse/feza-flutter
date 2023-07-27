@@ -2,10 +2,10 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:ipi/components/mapPin.dart';
 import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/models/OfficineModel.dart';
-import 'package:ipi/widgets/mapPin.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapWidgetController extends GetxController {

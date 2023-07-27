@@ -13,6 +13,7 @@ class ProduitSchema {
       name
       description
       codebarre
+      price
       onlyOrdonnance
       cis
       forme
@@ -35,6 +36,7 @@ query ($produits: [String]!) {
       name
       description
       codebarre
+      price
       onlyOrdonnance
       cis
       forme

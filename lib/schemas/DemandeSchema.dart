@@ -114,6 +114,7 @@ class DemandeSchema {
           results{
             id
             status
+            quantite
             demande{
               id
               status
@@ -140,6 +141,7 @@ class DemandeSchema {
             produit{
               id
               name
+              price
               description
               codebarre
               onlyOrdonnance
@@ -176,6 +178,7 @@ class DemandeSchema {
           lignedemande{
             id
             status
+            quantite
             demande{
               id
               status
@@ -202,6 +205,7 @@ class DemandeSchema {
             produit{
               id
               name
+              price
               description
               codebarre
               onlyOrdonnance

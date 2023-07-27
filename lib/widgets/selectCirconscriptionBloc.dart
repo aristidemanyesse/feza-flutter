@@ -23,16 +23,12 @@ class _SelectCirconscriptionBlocState extends State<SelectCirconscriptionBloc> {
           controller.currentUser.value?.circonscription;
       return GestureDetector(
         onTap: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return CirconscriptionChoicesDialog();
-            },
-          );
+          Get.dialog(CirconscriptionChoicesDialog());
         },
         child: Container(
             child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               circonscription?.name ?? "",

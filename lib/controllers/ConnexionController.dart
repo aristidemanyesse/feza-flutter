@@ -1,8 +1,5 @@
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:ipi/models/GardeModel.dart';
-import 'package:ipi/provider/GardeProvider.dart';
 
 class ConnexionController extends GetxController {
   RxBool isConnected = true.obs;

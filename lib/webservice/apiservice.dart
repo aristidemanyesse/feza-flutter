@@ -1,13 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:graphql/client.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:ipi/controllers/ConnexionController.dart';
 
 class ApiService {
   // static const BASE_URL = "http://192.168.0.101:8005/";
-  // static const BASE_URL = "http://192.168.41.55:8005/";
+  // static const BASE_URL = "http://192.168.91.55:8005/";
   // static const BASE_URL = "http://192.168.1.45:8005/";
   static const BASE_URL = "http://aristidemanyesse.pythonanywhere.com/";
   static const GRAPH_URL = BASE_URL + "graphql/";
@@ -26,21 +22,28 @@ class ApiService {
       variables: variables,
     );
 
-    ConnexionController controller = Get.find();
-    if (controller.isConnected.value) {
-      final QueryResult result = await client.query(options);
-      if (result.hasException) {
-        print("Erreur Apiservice::::: ${result.exception.toString()}");
-        return null;
-      }
-      return result.data;
-    } else {
-      Fluttertoast.showToast(
-        backgroundColor: Colors.red.withOpacity(0.85),
-        msg: "Désolé, vérifiez votre connexion internet !",
-        gravity: ToastGravity.BOTTOM,
-      );
-      return {};
+    final QueryResult result = await client.query(options);
+    if (result.hasException) {
+      print("Erreur Apiservice::::: ${result.exception.toString()}");
+      return null;
     }
+    return result.data;
+
+    // ConnexionController controller = Get.find();
+    // if (controller.isConnected.value) {
+    //   final QueryResult result = await client.query(options);
+    //   if (result.hasException) {
+    //     print("Erreur Apiservice::::: ${result.exception.toString()}");
+    //     return null;
+    //   }
+    //   return result.data;
+    // } else {
+    //   Fluttertoast.showToast(
+    //     backgroundColor: Colors.red.withOpacity(0.85),
+    //     msg: "Désolé, vérifiez votre connexion internet !",
+    //     gravity: ToastGravity.BOTTOM,
+    //   );
+    //   return {};
+    // }
   }
 }

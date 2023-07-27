@@ -1,13 +1,12 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ipi/components/SuggestionItemCard.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/ProduitController.dart';
 import 'package:ipi/models/ProduitModel.dart';
-import 'package:ipi/widgets/SuggestionItemCard.dart';
 
 class SearchBarGroup extends StatefulWidget {
-  static const routeName = "/SearchBarGroup";
   late bool scan = true;
   late bool camera = true;
   SearchBarGroup({Key? key, scan, camera}) : super(key: key);

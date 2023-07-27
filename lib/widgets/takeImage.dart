@@ -1,13 +1,62 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
-class ChooseCamera extends StatelessWidget {
-  Function cameraFunction = () {};
-  Function galleryFunction = () {};
+class TakeImageController extends GetxController {
+  Rx<File> file = new Rx<File>(File(""));
+  RxString base64 = "".obs;
+  RxBool ok = false.obs;
+  RxBool isOrdonnance = false.obs;
+}
 
-  ChooseCamera({
-    required this.cameraFunction,
-    required this.galleryFunction,
-  });
+class TakeImage extends StatefulWidget {
+  TakeImage();
+
+  @override
+  State<TakeImage> createState() => TakeImageState();
+}
+
+class TakeImageState extends State<TakeImage> {
+  TakeImageState();
+
+  TakeImageController controller = Get.find();
+
+  final picker = ImagePicker();
+  late Future<XFile?> pickedFile = Future.value(null);
+
+  Future<void> _captureImageFromCamera() async {
+    pickedFile = picker.pickImage(source: ImageSource.camera);
+
+    pickedFile.then((value) {
+      var file = File(value!.path);
+      controller.isOrdonnance.value = true;
+      controller.ok.value = true;
+      controller.file.value = file;
+      List<int> imageBytes = file.readAsBytesSync();
+      controller.base64.value =
+          "data:image/png;base64," + base64Encode(imageBytes);
+    });
+    Get.back();
+  }
+
+  Future<void> _pickImageFromGallery() async {
+    pickedFile = picker.pickImage(
+      source: ImageSource.gallery,
+    );
+    pickedFile.then((value) {
+      var file = File(value!.path);
+      controller.file.value = file;
+      controller.isOrdonnance.value = true;
+      controller.ok.value = true;
+      List<int> imageBytes = file.readAsBytesSync();
+      controller.base64.value =
+          "data:image/png;base64," + base64Encode(imageBytes);
+    });
+    Get.back();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +74,7 @@ class ChooseCamera extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    cameraFunction();
+                    _captureImageFromCamera();
                   },
                   child: Row(
                     children: [
@@ -53,7 +102,7 @@ class ChooseCamera extends StatelessWidget {
                 const SizedBox(height: 15),
                 GestureDetector(
                   onTap: () {
-                    galleryFunction();
+                    _pickImageFromGallery();
                   },
                   child: Row(
                     children: [

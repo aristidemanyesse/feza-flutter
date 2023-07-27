@@ -15,23 +15,24 @@ import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/DemandeProvider.dart';
 import 'package:ipi/provider/ReponseProvider.dart';
-import 'package:ipi/utils/local_notifications.dart';
 import 'package:ipi/widgets/felicitation.dart';
 import 'package:ipi/widgets/pleaseWait.dart';
+import 'package:ipi/widgets/takeImage.dart';
 
 class DemandeController extends GetxController {
   final box = GetStorage();
   RxList<DemandeModel> demandes = RxList<DemandeModel>([]);
-  RxMap<String, bool> repondesDemandes = RxMap<String, bool>({});
+  RxMap<String, int> repondesDemandes = RxMap<String, int>({});
+  RxBool wait = false.obs;
 
   UtilisateurController controller = Get.find();
   ProduitController produitController = Get.find();
   OfficineController officineController = Get.find();
+  TakeImageController imageCcontroller = Get.find();
 
   void onInit() async {
     getData();
     Timer.periodic(Duration(seconds: 20), (Timer timer) {
-      print("check");
       checkReponse();
     });
     super.onInit();
@@ -51,22 +52,25 @@ class DemandeController extends GetxController {
   }
 
   void checkReponse() async {
+    Map<String, int> tab = {};
     for (var dem in demandes) {
-      repondesDemandes[dem.id!] = await newReponseForDemande(dem);
+      tab[dem.id!] = await newReponseForDemande(dem);
     }
+    repondesDemandes.value = tab;
   }
 
-  void makeDemande(bool isOrdonnance, String base64) async {
+  void makeDemande() async {
+    Get.dialog(PleaseWait());
     List<OfficineModel> officines = officineController.officines;
     List<ProduitModel> produits = produitController.produitsSelected;
     UtilisateurModel? user = controller.currentUser.value;
 
     if (officines.length > 0 || officineController.wait.value) {
-      if (produits.length > 0 || isOrdonnance) {
+      if (produits.length > 0 || imageCcontroller.isOrdonnance.value) {
         ResponseModel response = await DemandeProvider.createDemande({
           "utilisateur": user?.id,
           "commentaire": "",
-          "base64": base64,
+          "base64": imageCcontroller.base64.value,
         });
         if (response.ok) {
           DemandeModel demande = response.data;
@@ -101,6 +105,7 @@ class DemandeController extends GetxController {
           produitController.produitsSelected.value = [];
           officineController.officines.value = [];
         } else {
+          Get.back();
           Fluttertoast.showToast(
             backgroundColor: Colors.red.withOpacity(0.85),
             msg: response.message ?? "Ouups, Veuillez recommencer !",
@@ -108,6 +113,7 @@ class DemandeController extends GetxController {
           );
         }
       } else {
+        Get.back();
         Fluttertoast.showToast(
           backgroundColor: Colors.red.withOpacity(0.85),
           msg:
@@ -116,6 +122,7 @@ class DemandeController extends GetxController {
         );
       }
     } else {
+      Get.back();
       Fluttertoast.showToast(
         backgroundColor: Colors.red.withOpacity(0.85),
         msg: "Aucune pharmacie n'a été trouvé dans ce périmètre de recherche !",
@@ -124,13 +131,12 @@ class DemandeController extends GetxController {
     }
   }
 
-  Future<bool> newReponseForDemande(DemandeModel demande) async {
-    bool news = false;
+  Future<int> newReponseForDemande(DemandeModel demande) async {
+    int news = 0;
     var reponses = await ReponseProvider.all({"demande": demande.id});
     for (ReponseModel rep in reponses) {
       if (!rep.read!) {
-        news = true;
-        break;
+        news++;
       }
     }
     return news;

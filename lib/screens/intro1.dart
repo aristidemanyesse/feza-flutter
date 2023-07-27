@@ -5,7 +5,6 @@ import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class Intro1 extends StatefulWidget {
-  static const routeName = "/Intro1";
   Intro1({Key? key}) : super(key: key);
 
   @override

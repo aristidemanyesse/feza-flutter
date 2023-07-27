@@ -4,17 +4,16 @@ import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ipi/components/myLogo.dart';
+import 'package:ipi/components/optInput.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/landingScreen.dart';
-import 'package:ipi/widgets/myLogo.dart';
-import 'package:ipi/widgets/optInput.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class SendOTPScreen extends StatefulWidget {
-  static const routeName = "/sendOTP";
   @override
   _SendOTPScreen createState() => _SendOTPScreen();
 }
@@ -241,11 +240,20 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Je n'ai pas reçu de code. "),
-                        Text(
-                          "Renvoyez-le !",
-                          style: TextStyle(
-                            color: AppColor.blue,
-                            fontWeight: FontWeight.bold,
+                        Container(
+                          margin: EdgeInsets.only(left: 7),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(color: AppColor.blue),
+                          ),
+                          child: Text(
+                            "Renvoyez-le !",
+                            style: TextStyle(
+                              color: AppColor.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],

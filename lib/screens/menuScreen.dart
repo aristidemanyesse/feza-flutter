@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ipi/components/menuCard.dart';
+import 'package:ipi/components/myLogo.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/GardeController.dart';
 import 'package:ipi/controllers/UserController.dart';
@@ -8,14 +10,10 @@ import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
 import 'package:ipi/screens/profileScreen.dart';
 import 'package:ipi/utils/helper.dart';
-import 'package:ipi/widgets/confirmExitDialog.dart';
-import 'package:ipi/widgets/menuCard.dart';
-import 'package:ipi/widgets/myLogo.dart';
 import "package:intl/intl.dart";
 import 'package:intl/date_symbol_data_local.dart';
 
 class MenuScreen extends StatefulWidget {
-  static const routeName = "/menuScreen";
   @override
   _MenuScreen createState() => _MenuScreen();
 }

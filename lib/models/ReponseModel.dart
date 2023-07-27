@@ -5,6 +5,7 @@ class ReponseModel {
     this.id,
     this.demande,
     this.commentaire,
+    this.price,
     this.read,
     this.deleted,
     this.protected,
@@ -16,6 +17,7 @@ class ReponseModel {
   OfficineDemandeModel? demande;
   String? commentaire;
   bool? read;
+  int? price;
   bool? deleted;
   bool? protected;
   String? createdAt;
@@ -24,6 +26,7 @@ class ReponseModel {
   factory ReponseModel.fromJson(Map<String, dynamic> json) => ReponseModel(
       id: json["id"],
       read: json["read"],
+      price: json["price"],
       commentaire: json["commentaire"],
       demande: OfficineDemandeModel.fromJson(json["demande"]),
       deleted: json["deleted"],
@@ -34,6 +37,7 @@ class ReponseModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "read": read,
+        "price": price,
         "commentaire": commentaire,
         "demande": demande?.toJson(),
         "deleted": deleted,

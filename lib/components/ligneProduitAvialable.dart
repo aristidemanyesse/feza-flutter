@@ -7,8 +7,9 @@ import 'package:marquee_widget/marquee_widget.dart';
 class Ligne extends StatelessWidget {
   final ProduitModel produit;
   final bool active;
+  final int price;
 
-  Ligne({required this.produit, required this.active});
+  Ligne({required this.produit, required this.active, required this.price});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class Ligne extends StatelessWidget {
                   child: Text(
                     produit.name,
                     style: TextStyle(
-                      fontWeight: active ? FontWeight.w600 : FontWeight.normal,
+                      fontWeight: active ? FontWeight.w500 : FontWeight.normal,
                       fontSize: 12,
                       color: active ? Colors.black : Colors.grey,
                       decoration: active
@@ -63,45 +64,28 @@ class Ligne extends StatelessWidget {
                       fontStyle: FontStyle.italic),
                   overflow: TextOverflow.ellipsis,
                 ),
+                Container(
+                  margin: EdgeInsets.only(right: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Prix moy: ",
+                        style: TextStyle(fontSize: 11),
+                      ),
+                      Text(
+                        "${price} Fcfa",
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.black,
+                            fontStyle: FontStyle.italic),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class LigneSearched extends StatelessWidget {
-  String title = "";
-
-  LigneSearched({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 7),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Icon(Icons.edit_attributes, size: 19, color: AppColor.placeholder),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: Text(
-              this.title,
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          GestureDetector(
-            child: Icon(Icons.delete_forever, color: Colors.red),
-            onTap: () {},
           )
         ],
       ),
