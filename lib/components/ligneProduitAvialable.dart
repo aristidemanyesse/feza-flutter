@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
-import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/models/LigneReponseModel.dart';
+import 'package:ipi/models/SubsLigneReponseModel.dart';
 import 'package:ipi/webservice/apiservice.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 
 class Ligne extends StatelessWidget {
-  final ProduitModel produit;
-  final bool active;
-  final int price;
-
-  Ligne({required this.produit, required this.active, required this.price});
+  final LigneReponseModel ligneReponse;
+  Ligne({required this.ligneReponse});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +16,20 @@ class Ligne extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 7),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(active ? Icons.check_circle_outline : Icons.close,
-              size: 20, color: active ? AppColor.green : Colors.red),
+          Icon(
+              ligneReponse.status ?? false
+                  ? Icons.check_circle_outline
+                  : Icons.close,
+              size: 20,
+              color:
+                  ligneReponse.status ?? false ? AppColor.green : Colors.red),
           SizedBox(
             width: 5,
           ),
           Image.network(
-            ApiService.BASE_URL + produit.image!,
+            ApiService.BASE_URL + ligneReponse.produit!.image!,
             width: 50,
             height: 30,
           ),
@@ -41,12 +45,16 @@ class Ligne extends StatelessWidget {
                   pauseDuration: Duration(milliseconds: 1000),
                   directionMarguee: DirectionMarguee.oneDirection,
                   child: Text(
-                    produit.name,
+                    ligneReponse.produit!.name,
                     style: TextStyle(
-                      fontWeight: active ? FontWeight.w500 : FontWeight.normal,
+                      fontWeight: ligneReponse.status ?? false
+                          ? FontWeight.w600
+                          : FontWeight.normal,
                       fontSize: 12,
-                      color: active ? Colors.black : Colors.grey,
-                      decoration: active
+                      color: ligneReponse.status ?? false
+                          ? Colors.black
+                          : Colors.grey,
+                      decoration: ligneReponse.status ?? false
                           ? TextDecoration.none
                           : TextDecoration.lineThrough,
                       decorationThickness: 2.0,
@@ -54,31 +62,167 @@ class Ligne extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 2,
+                  height: 3,
                 ),
                 Text(
-                  produit.forme ?? "",
+                  ligneReponse.produit!.forme ?? "",
                   style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.black,
-                      fontStyle: FontStyle.italic),
+                    fontSize: 11,
+                    fontStyle: FontStyle.italic,
+                    color: ligneReponse.status ?? false
+                        ? Colors.black
+                        : Colors.grey,
+                    decoration: ligneReponse.status ?? false
+                        ? TextDecoration.none
+                        : TextDecoration.lineThrough,
+                    decorationThickness: 2.0,
+                  ),
                   overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                ligneReponse.status ?? false
+                    ? Container(
+                        margin: EdgeInsets.only(right: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Prix U.: ",
+                              style: TextStyle(fontSize: 11),
+                            ),
+                            Text(
+                              "${ligneReponse.price} Fcfa",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                  fontStyle: FontStyle.italic),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              "x${ligneReponse.quantite}",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                  fontStyle: FontStyle.italic),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              "${ligneReponse.price! * ligneReponse.quantite!.toInt()} Fcfa",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.w600),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class LigneSub extends StatelessWidget {
+  final SubsLigneReponseModel sub;
+  LigneSub({required this.sub});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 7),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Substitut",
+            style: TextStyle(
+                color: AppColor.blue, fontSize: 9, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Image.network(
+            ApiService.BASE_URL + sub.produit!.image!,
+            width: 50,
+            height: 30,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Marquee(
+                  direction: Axis.horizontal,
+                  textDirection: TextDirection.ltr,
+                  animationDuration: Duration(seconds: 3),
+                  backDuration: Duration(milliseconds: 5000),
+                  pauseDuration: Duration(milliseconds: 1000),
+                  directionMarguee: DirectionMarguee.oneDirection,
+                  child: Text(
+                    sub.produit!.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                Text(
+                  sub.produit!.forme ?? "",
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.grey,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(
+                  height: 3,
                 ),
                 Container(
                   margin: EdgeInsets.only(right: 5),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Prix moy: ",
+                        "Prix U.: ",
                         style: TextStyle(fontSize: 11),
                       ),
                       Text(
-                        "${price} Fcfa",
+                        "${sub.price} Fcfa",
                         style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 12,
                             color: Colors.black,
                             fontStyle: FontStyle.italic),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        "x${sub.quantite}",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontStyle: FontStyle.italic),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        "${sub.price! * sub.quantite!.toInt()} Fcfa",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w600),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],

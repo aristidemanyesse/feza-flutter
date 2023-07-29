@@ -199,4 +199,106 @@ class ReponseSchema {
         }
       }
   """;
+
+  static const String SUBS_LIGNE_REPONSE = r"""
+      query ($ligne_id: UUID) {
+        searchSubsLigneReponse(deleted: false, ligne_Id: $ligne_id) {
+          results {
+            id
+            price
+            quantite
+            ligne {
+               id
+            status
+            price
+            quantite
+            reponse {
+              id
+              commentaire
+              read
+              demande {
+                demande {
+                  id
+                  status
+                  ordonnance
+                  commentaire
+                  utilisateur {
+                    id
+                    fullname
+                    contact
+                    imei
+                    createdAt
+                    image
+                    isValide
+                    otp
+                    geometryJson
+                    circonscription {
+                      id
+                      name
+                    }
+                  }
+                }
+                officine {
+                  id
+                  name
+                  contact
+                  contact2
+                  localisation
+                  geometryJson
+                  lat
+                  lon
+                  type {
+                    id
+                    name
+                    etiquette
+                  }
+                  image
+                  image2
+                  image3
+                  circonscription {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+            produit {
+              id
+              name
+              description
+              price
+              codebarre
+              onlyOrdonnance
+              cis
+              forme
+              voies
+              image
+              type {
+                id
+                name
+                etiquette
+              }
+            }
+            }
+            produit {
+              id
+              name
+              description
+              price
+              codebarre
+              onlyOrdonnance
+              cis
+              forme
+              voies
+              image
+              type {
+                id
+                name
+                etiquette
+              }
+            }
+          }
+        }
+      }
+  """;
 }

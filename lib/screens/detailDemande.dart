@@ -13,6 +13,7 @@ import 'package:ipi/models/LigneReponseModel.dart';
 import 'package:ipi/models/OfficineDemandeModel.dart';
 import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/models/ReponseModel.dart';
+import 'package:ipi/models/SubsLigneReponseModel.dart';
 import 'package:ipi/provider/ReponseProvider.dart';
 import 'package:ipi/utils/helper.dart';
 import "package:intl/intl.dart";
@@ -44,6 +45,7 @@ class DetailDemandeState extends State<DetailDemande> {
 
   late Map<OfficineModel, List<LigneReponseModel>> datas = {};
   late Map<OfficineModel, ReponseModel> reponses = {};
+  late Map<LigneReponseModel, List<SubsLigneReponseModel>> subsLignes = {};
 
   final f = DateFormat("dd/MM/yyyy à HH:mm");
 
@@ -67,12 +69,17 @@ class DetailDemandeState extends State<DetailDemande> {
         ReponseModel reponse = data[0];
         lignes =
             await ReponseProvider.allLignesReponse({"reponse": reponse.id});
+        for (var ligne in lignes) {
+          subsLignes[ligne] =
+              await ReponseProvider.subsLigneReponse({"ligne_id": ligne.id});
+        }
         datas[reponse.demande!.officine!] = lignes;
         reponses[reponse.demande!.officine!] = reponse;
       } else {
         datas[offdem.officine!] = lignes;
       }
     }
+    print(subsLignes);
     setState(() {});
   }
 
@@ -234,7 +241,7 @@ class DetailDemandeState extends State<DetailDemande> {
                               Container(
                                 margin: EdgeInsets.symmetric(horizontal: 15),
                                 child: Column(
-                                  children: datas[officine]!.map((prod) {
+                                  children: datas[officine]!.map((ligne) {
                                     return Column(
                                       mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment:
@@ -242,14 +249,16 @@ class DetailDemandeState extends State<DetailDemande> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
-                                        Ligne(
-                                          produit: prod.produit!,
-                                          active: prod.status!,
-                                          price: prod.price!,
+                                        Ligne(ligneReponse: ligne),
+                                        Column(
+                                          children:
+                                              subsLignes[ligne]!.map((sub) {
+                                            return LigneSub(sub: sub);
+                                          }).toList(),
                                         ),
                                         Container(
-                                          height: 1,
-                                          color: Colors.grey.shade300,
+                                          height: 2,
+                                          color: Colors.grey.shade400,
                                           margin:
                                               EdgeInsets.fromLTRB(0, 0, 0, 7),
                                         ),
@@ -324,7 +333,6 @@ class DetailDemandeState extends State<DetailDemande> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(left: 12),
                                     child: InkWell(
                                       onTap: () {
                                         UrlLauncher.launchUrl(
@@ -347,7 +355,6 @@ class DetailDemandeState extends State<DetailDemande> {
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(left: 12),
                                     child: InkWell(
                                       onTap: () {
                                         copy(officine);
@@ -369,7 +376,6 @@ class DetailDemandeState extends State<DetailDemande> {
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(left: 12),
                                     child: InkWell(
                                       onTap: () {
                                         sharePosition(officine);
@@ -391,7 +397,6 @@ class DetailDemandeState extends State<DetailDemande> {
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(left: 12),
                                     child: InkWell(
                                       onTap: () {},
                                       child: Container(

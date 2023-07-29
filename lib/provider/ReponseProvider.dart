@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ipi/models/LigneReponseModel.dart';
 import 'package:ipi/models/ReponseModel.dart';
 import 'package:ipi/models/ResponseModel.dart';
+import 'package:ipi/models/SubsLigneReponseModel.dart';
 import 'package:ipi/schemas/ReponseSchema.dart';
 import 'package:ipi/webservice/apiservice.dart';
 
@@ -46,6 +47,19 @@ class ReponseProvider extends ChangeNotifier {
     List<LigneReponseModel> lignes = [];
     for (var jsonTask in list) {
       LigneReponseModel item = LigneReponseModel.fromJson(jsonTask);
+      lignes.add(item);
+    }
+    return lignes;
+  }
+
+  static Future<List<SubsLigneReponseModel>> subsLigneReponse(
+      Map<String, dynamic> variables) async {
+    dynamic datas =
+        await ApiService.request(ReponseSchema.SUBS_LIGNE_REPONSE, variables);
+    dynamic list = datas["searchSubsLigneReponse"]["results"];
+    List<SubsLigneReponseModel> lignes = [];
+    for (var jsonTask in list) {
+      SubsLigneReponseModel item = SubsLigneReponseModel.fromJson(jsonTask);
       lignes.add(item);
     }
     return lignes;
