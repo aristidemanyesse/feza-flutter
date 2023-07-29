@@ -156,21 +156,53 @@ class _RecapDemandeDialogState extends State<RecapDemandeDialog> {
                                             .map((produit) {
                                           return Container(
                                             margin: EdgeInsets.only(bottom: 7),
-                                            child: Marquee(
-                                              child: Text(
-                                                "- ${produit.name}",
-                                                style: TextStyle(fontSize: 13),
-                                              ),
-                                              direction: Axis.horizontal,
-                                              textDirection: TextDirection.ltr,
-                                              animationDuration:
-                                                  Duration(seconds: 4),
-                                              backDuration:
-                                                  Duration(milliseconds: 5000),
-                                              pauseDuration:
-                                                  Duration(milliseconds: 1000),
-                                              directionMarguee:
-                                                  DirectionMarguee.oneDirection,
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "- ",
+                                                  style: TextStyle(
+                                                    fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Marquee(
+                                                    child: Text(
+                                                      "${produit.name}",
+                                                      style: TextStyle(
+                                                          fontSize: 13),
+                                                    ),
+                                                    direction: Axis.horizontal,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    animationDuration:
+                                                        Duration(seconds: 4),
+                                                    backDuration: Duration(
+                                                        milliseconds: 5000),
+                                                    pauseDuration: Duration(
+                                                        milliseconds: 1000),
+                                                    directionMarguee:
+                                                        DirectionMarguee
+                                                            .oneDirection,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Text(
+                                                  "x ",
+                                                  style: TextStyle(
+                                                    fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "${produitController.quantiteProduitsSelected[produit]}",
+                                                  style: TextStyle(
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )
+                                              ],
                                             ),
                                           );
                                         }).toList(),

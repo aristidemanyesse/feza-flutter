@@ -76,8 +76,11 @@ class DemandeController extends GetxController {
           DemandeModel demande = response.data;
 
           for (ProduitModel produit in produits) {
-            ResponseModel response = await DemandeProvider.createLigneDemande(
-                {"produit": produit.id, "demande": demande.id});
+            ResponseModel response = await DemandeProvider.createLigneDemande({
+              "produit": produit.id,
+              "quantite": produitController.quantiteProduitsSelected[produit],
+              "demande": demande.id
+            });
             if (!response.ok) {
               Fluttertoast.showToast(
                 msg:

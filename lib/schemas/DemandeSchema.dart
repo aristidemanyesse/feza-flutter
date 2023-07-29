@@ -163,11 +163,14 @@ class DemandeSchema {
   static const String CREATE_LIGNE_DEMANDE = r"""
       mutation(
         $demande:ID!,
-        $produit:ID!){
+        $produit:ID!,
+        $quantite:Int
+        ){
         createLigneDemande(
           newLignedemande:{
             demande: $demande,
-            produit:$produit
+            produit:$produit,
+            quantite:$quantite,
           }
         ){
           ok

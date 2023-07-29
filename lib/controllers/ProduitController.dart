@@ -8,6 +8,8 @@ class ProduitController extends GetxController {
   final box = GetStorage();
   RxList<ProduitModel> produits = RxList<ProduitModel>([]);
   RxList<ProduitModel> produitsSelected = RxList<ProduitModel>([]);
+  RxMap<ProduitModel, int> quantiteProduitsSelected =
+      RxMap<ProduitModel, int>({});
   RxList<String> nomsProduits = RxList<String>([]);
 
   RxBool ready = false.obs;
@@ -37,9 +39,11 @@ class ProduitController extends GetxController {
 
   void removeProduitSelected(ProduitModel produit) {
     produitsSelected.removeWhere((item) => item.id == produit.id);
+    quantiteProduitsSelected.remove(produit);
   }
 
   void addProduitSelected(ProduitModel produit) {
     produitsSelected.add(produit);
+    quantiteProduitsSelected[produit] = 1;
   }
 }

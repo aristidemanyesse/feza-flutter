@@ -18,14 +18,14 @@ class SuggestionItemCard extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 3, vertical: 7),
+          padding: EdgeInsets.symmetric(vertical: 7),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image.network(
                 this.image,
-                width: 50,
-                height: 30,
+                width: 60,
+                height: 35,
               ),
               SizedBox(
                 width: 5,
@@ -49,7 +49,7 @@ class SuggestionItemCard extends StatelessWidget {
                       directionMarguee: DirectionMarguee.oneDirection,
                     ),
                     SizedBox(
-                      height: 3,
+                      height: 5,
                     ),
                     Text(
                       this.produit.forme ?? "",

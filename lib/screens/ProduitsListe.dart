@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ipi/components/SuggestionItemCard.dart';
 import 'package:ipi/components/indicator.dart';
 import 'package:ipi/components/searchBarGroup.dart';
+import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/ProduitController.dart';
 
 class ProduitsListe extends StatefulWidget {
@@ -16,7 +17,7 @@ class ProduitsListe extends StatefulWidget {
 
 class ProduitsListeState extends State<ProduitsListe> {
   ProduitsListeState();
-
+  int counter = 1;
   ProduitController controller = Get.put(ProduitController());
 
   @override
@@ -56,19 +57,59 @@ class ProduitsListeState extends State<ProduitsListe> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        GestureDetector(
+                          onTap: () {
+                            controller.removeProduitSelected(produit);
+                          },
+                          child: Icon(
+                            Icons.delete_forever_outlined,
+                            color: Colors.red,
+                            size: 25,
+                          ),
+                        ),
                         Expanded(child: SuggestionItemCard(produit: produit)),
                         SizedBox(
                           width: 10,
                         ),
-                        IconButton(
-                          onPressed: () {
-                            controller.removeProduitSelected(produit);
-                          },
-                          icon: Icon(
-                            Icons.delete_forever_outlined,
-                            color: Colors.red,
-                            size: 27,
-                          ),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                controller.quantiteProduitsSelected[produit] =
+                                    controller.quantiteProduitsSelected[
+                                            produit]! +
+                                        1;
+                              },
+                              child: Icon(
+                                Icons.arrow_drop_up,
+                                color: AppColor.blue,
+                                size: 24,
+                              ),
+                            ),
+                            Text(
+                              "${controller.quantiteProduitsSelected[produit]}",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 12),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                if (controller
+                                        .quantiteProduitsSelected[produit]! >
+                                    1) {
+                                  controller.quantiteProduitsSelected[produit] =
+                                      controller.quantiteProduitsSelected[
+                                              produit]! -
+                                          1;
+                                }
+                              },
+                              child: Icon(
+                                Icons.arrow_drop_down,
+                                color: AppColor.blue,
+                                size: 24,
+                              ),
+                            )
+                          ],
                         )
                       ],
                     ),

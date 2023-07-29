@@ -118,63 +118,67 @@ class ProduitsSection extends StatelessWidget {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        showProduitsListe(context);
-                      },
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(color: AppColor.blue),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              "${produitController.produitsSelected.length} médicaments",
-                              style: TextStyle(
-                                color: AppColor.blue,
-                                fontSize: 15,
+                    produitController.produitsSelected.length > 0
+                        ? GestureDetector(
+                            onTap: () {
+                              showProduitsListe(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 3),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(color: AppColor.blue),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "${produitController.produitsSelected.length} médicaments",
+                                    style: TextStyle(
+                                      color: AppColor.blue,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: takeImageController.ok.value
-                          ? () {
-                              Get.to(ShowImage(
-                                  File(takeImageController.file.value.path)));
-                            }
-                          : null,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(color: AppColor.blue),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              takeImageController.ok.value ? "1" : "0",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: AppColor.blue,
-                                  fontWeight: FontWeight.bold),
+                          )
+                        : Container(),
+                    takeImageController.ok.value
+                        ? GestureDetector(
+                            onTap: takeImageController.ok.value
+                                ? () {
+                                    Get.to(ShowImage(File(
+                                        takeImageController.file.value.path)));
+                                  }
+                                : null,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 3),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(color: AppColor.blue),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    takeImageController.ok.value ? "1" : "0",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: AppColor.blue,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(width: 7),
+                                  Text(
+                                    "ordonnance",
+                                    style: TextStyle(
+                                        fontSize: 15, color: AppColor.blue),
+                                  ),
+                                ],
+                              ),
                             ),
-                            const SizedBox(width: 7),
-                            Text(
-                              "ordonnance",
-                              style:
-                                  TextStyle(fontSize: 15, color: AppColor.blue),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          )
+                        : Container(),
                   ],
                 );
               })
