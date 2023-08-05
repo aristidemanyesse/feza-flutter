@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ipi/models/LigneReponseModel.dart';
+import 'package:ipi/models/RdvLigneReponseModel.dart';
 import 'package:ipi/models/ReponseModel.dart';
 import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/models/SubsLigneReponseModel.dart';
@@ -63,5 +64,18 @@ class ReponseProvider extends ChangeNotifier {
       lignes.add(item);
     }
     return lignes;
+  }
+
+  static Future<List<RdvLigneReponseModel>> rdvLigneReponse(
+      Map<String, dynamic> variables) async {
+    dynamic datas =
+        await ApiService.request(ReponseSchema.RDV_LIGNE_REPONSE, variables);
+    dynamic list = datas["searchRdvLigneReponse"]["results"];
+    List<RdvLigneReponseModel> rdv = [];
+    for (var jsonTask in list) {
+      RdvLigneReponseModel item = RdvLigneReponseModel.fromJson(jsonTask);
+      rdv.add(item);
+    }
+    return rdv;
   }
 }

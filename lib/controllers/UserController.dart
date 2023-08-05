@@ -15,10 +15,13 @@ class UtilisateurController extends GetxController {
   void onInit() async {
     String? id = box.read('userId');
     String? imei = box.read('imei');
-    var datas = await UtilisateurProvider.all({"id": id, "imei": imei});
+    var datas = await UtilisateurProvider.all({"id": id ?? "", "imei": imei});
     currentUser.value = datas[0];
     valide.value = false;
-    ever(currentUser, (user) => box.write('userId', user?.id));
+    ever(currentUser, (user) {
+      box.write('userId', user?.id);
+      box.write("imei", user?.imei);
+    });
     super.onInit();
   }
 
@@ -32,7 +35,6 @@ class UtilisateurController extends GetxController {
           {"contact": contact, "fullname": name, "imei": imei});
       if (response.ok) {
         currentUser.value = response.data;
-        valide.value = false;
         Get.back();
         Get.to(SendOTPScreen());
       } else {
@@ -41,13 +43,13 @@ class UtilisateurController extends GetxController {
       }
     } else {
       currentUser.value = users[0];
-      valide.value = true;
       Get.back();
       Get.to(SendOTPScreen());
     }
   }
 
-  void updateUser({String name = "", String contact = ""}) async {
+  void updateUser(
+      {String name = "", String contact = "", redirect = true}) async {
     Get.dialog(PleaseWait(), barrierDismissible: false);
 
     Map<String, dynamic> datas = {};
@@ -61,14 +63,19 @@ class UtilisateurController extends GetxController {
     if (response.ok) {
       var test = currentUser.value?.contact;
       currentUser.value = response.data;
-      valide.value = false;
-      if (test == contact) {
-        Get.off(MenuScreen());
-      } else {
-        Get.off(SendOTPScreen());
+
+      box.write('userId', currentUser.value?.id);
+      box.write("imei", currentUser.value?.imei);
+
+      if (redirect) {
+        if (test == contact) {
+          Get.off(MenuScreen());
+        } else {
+          Get.off(SendOTPScreen());
+        }
+        Get.snackbar(
+            "Félicitations", "Vos informations ont été changé avec succès !");
       }
-      Get.snackbar(
-          "Félicitations", "Vos informations ont été changé avec succès !");
     } else {
       Get.back();
       Get.snackbar(

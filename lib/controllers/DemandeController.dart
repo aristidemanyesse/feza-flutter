@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -15,6 +15,7 @@ import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/DemandeProvider.dart';
 import 'package:ipi/provider/ReponseProvider.dart';
+import 'package:ipi/utils/local_notifications.dart';
 import 'package:ipi/widgets/felicitation.dart';
 import 'package:ipi/widgets/pleaseWait.dart';
 import 'package:ipi/widgets/takeImage.dart';
@@ -32,17 +33,10 @@ class DemandeController extends GetxController {
 
   void onInit() async {
     getData();
-    Timer.periodic(Duration(seconds: 20), (Timer timer) {
+    Timer.periodic(Duration(seconds: 10), (Timer timer) {
       checkReponse();
     });
     super.onInit();
-
-    // ever(
-    //   repondesDemandes,
-    //   (callback) => NotificationService().showNotification(
-    //       title: 'Nouvelle réponse',
-    //       body: 'Une pharmacie a répondu à votre demande'),
-    // );
   }
 
   void getData() async {
@@ -55,6 +49,14 @@ class DemandeController extends GetxController {
     Map<String, int> tab = {};
     for (var dem in demandes) {
       tab[dem.id!] = await newReponseForDemande(dem);
+    }
+    if (repondesDemandes.length > 0) {
+      if (!mapEquals(tab, repondesDemandes) &&
+          tab.length == repondesDemandes.length) {
+        NotificationService().showNotification(
+            title: 'Nouvelle réponse',
+            body: 'Une pharmacie a répondu à votre demande');
+      }
     }
     repondesDemandes.value = tab;
   }
@@ -76,6 +78,7 @@ class DemandeController extends GetxController {
           DemandeModel demande = response.data;
 
           for (ProduitModel produit in produits) {
+            print(produitController.quantiteProduitsSelected[produit]);
             ResponseModel response = await DemandeProvider.createLigneDemande({
               "produit": produit.id,
               "quantite": produitController.quantiteProduitsSelected[produit],
@@ -102,11 +105,11 @@ class DemandeController extends GetxController {
               );
             }
           }
-          Get.back();
-          Get.dialog(FelicitationScreen());
-          onInit();
           produitController.produitsSelected.value = [];
           officineController.officines.value = [];
+          onInit();
+          Get.back();
+          Get.dialog(FelicitationScreen());
         } else {
           Get.back();
           Fluttertoast.showToast(

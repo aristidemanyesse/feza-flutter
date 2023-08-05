@@ -10,6 +10,16 @@ class TakeImageController extends GetxController {
   RxString base64 = "".obs;
   RxBool ok = false.obs;
   RxBool isOrdonnance = false.obs;
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    file.value = File("");
+    base64.value = "";
+    ok.value = false;
+    isOrdonnance.value = false;
+    super.onInit();
+  }
 }
 
 class TakeImage extends StatefulWidget {

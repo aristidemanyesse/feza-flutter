@@ -9,10 +9,7 @@ class FelicitationScreen extends StatefulWidget {
   _FelicitationScreenState createState() => _FelicitationScreenState();
 }
 
-class _FelicitationScreenState extends State<FelicitationScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-
+class _FelicitationScreenState extends State<FelicitationScreen> {
   @override
   void initState() {
     super.initState();
@@ -20,7 +17,6 @@ class _FelicitationScreenState extends State<FelicitationScreen>
 
   @override
   void dispose() {
-    _animationController.dispose();
     super.dispose();
   }
 

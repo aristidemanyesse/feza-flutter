@@ -28,11 +28,11 @@ class Ligne extends StatelessWidget {
           SizedBox(
             width: 5,
           ),
-          Image.network(
-            ApiService.BASE_URL + ligneReponse.produit!.image!,
-            width: 50,
-            height: 30,
-          ),
+          // Image.network(
+          //   ApiService.BASE_URL + ligneReponse.produit!.image!,
+          //   width: 50,
+          //   height: 30,
+          // ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +80,7 @@ class Ligne extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(
-                  height: 3,
+                  height: 5,
                 ),
                 ligneReponse.status ?? false
                     ? Container(
@@ -89,7 +89,7 @@ class Ligne extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Prix U.: ",
+                              "Prix: ",
                               style: TextStyle(fontSize: 11),
                             ),
                             Text(
@@ -138,24 +138,26 @@ class LigneSub extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 7),
+      margin: EdgeInsets.only(bottom: 7, top: 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Substitut",
+            "Substitut:",
             style: TextStyle(
-                color: AppColor.blue, fontSize: 9, fontWeight: FontWeight.bold),
+                fontSize: 12,
+                decoration: TextDecoration.underline,
+                fontWeight: FontWeight.bold),
           ),
           SizedBox(
             width: 5,
           ),
-          Image.network(
-            ApiService.BASE_URL + sub.produit!.image!,
-            width: 50,
-            height: 30,
-          ),
+          // Image.network(
+          //   ApiService.BASE_URL + sub.produit!.image!,
+          //   width: 50,
+          //   height: 30,
+          // ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,7 +199,7 @@ class LigneSub extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Prix U.: ",
+                        "Prix: ",
                         style: TextStyle(fontSize: 11),
                       ),
                       Text(

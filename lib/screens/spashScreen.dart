@@ -26,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (_controller.currentUser.value != null) {
         Get.to(HomeScreen());
       } else {
+        box.erase();
         UtilisateurProvider.getUniqID()
             .then((value) => box.write("imei", value));
         Get.to(IntroScreen());

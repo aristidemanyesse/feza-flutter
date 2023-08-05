@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/components/DemandeItemCard.dart';
 import 'package:ipi/controllers/DemandeController.dart';
+import 'package:ipi/controllers/ReponseController.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/screens/ListeRdv.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/makeDemandeScreen.dart';
 import 'package:ipi/screens/profileScreen.dart';
@@ -26,6 +28,7 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   UtilisateurController userController = Get.find();
   DemandeController demandeController = Get.find();
+  ReponseController reponseController = Get.find();
 
   @override
   void initState() {
@@ -36,6 +39,17 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void showListeRdv(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return ListeRdv();
+      },
+    );
   }
 
   @override
@@ -197,32 +211,92 @@ class HomeScreenState extends State<HomeScreen> {
                       height: 10,
                     ),
                     Container(
-                      margin: EdgeInsets.only(bottom: 5),
+                      margin: EdgeInsets.only(bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Get.to(SearchPage(),
-                                  transition: Transition.downToUp);
+                          InkWell(
+                            onTap: () {
+                              showListeRdv(context);
                             },
-                            child: Row(
+                            child: Stack(
                               children: [
-                                Icon(
-                                  Icons.add,
-                                  size: 24,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "Faire une nouvelle recherche",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      border: Border.all(color: AppColor.blue),
                                       color: Colors.white),
-                                )
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.notification_important,
+                                      color: AppColor.blue,
+                                      size: 20,
+                                    ),
+                                  ),
+                                ),
+                                Obx(() {
+                                  return reponseController.news > 0
+                                      ? Positioned(
+                                          top: 0,
+                                          right: 0,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              height: 20,
+                                              width: 20,
+                                              decoration: BoxDecoration(
+                                                color: Colors.redAccent,
+                                              ),
+                                              child: Text(
+                                                "${reponseController.news}",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : Container();
+                                })
                               ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Get.to(SearchPage(),
+                                    transition: Transition.downToUp);
+                              },
+                              child: Container(
+                                height: 40,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.add,
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "Faire une nouvelle recherche",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ],

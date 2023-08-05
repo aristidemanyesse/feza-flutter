@@ -77,7 +77,9 @@ class OfficineController extends GetxController {
       for (var element in datas) {
         var offs = await OfficineProvider.all({"id": element["officine"]});
         OfficineModel officine = offs[0];
-        officines.add(officine);
+        if (!officines.contains(officine)) {
+          officines.add(officine);
+        }
 
         double ladistance = element["distance"];
         distanceTableaux[officine] = ladistance < 1000

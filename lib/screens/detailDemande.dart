@@ -79,7 +79,6 @@ class DetailDemandeState extends State<DetailDemande> {
         datas[offdem.officine!] = lignes;
       }
     }
-    print(subsLignes);
     setState(() {});
   }
 
@@ -258,7 +257,7 @@ class DetailDemandeState extends State<DetailDemande> {
                                         ),
                                         Container(
                                           height: 2,
-                                          color: Colors.grey.shade400,
+                                          color: Colors.grey[300],
                                           margin:
                                               EdgeInsets.fromLTRB(0, 0, 0, 7),
                                         ),
@@ -266,6 +265,33 @@ class DetailDemandeState extends State<DetailDemande> {
                                     );
                                   }).toList(),
                                 ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    right: 20, top: 5, bottom: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "Total = ",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      "${reponse.price} Fcfa",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.italic),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 2,
+                                color: Colors.grey,
+                                margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
                               ),
                               reponses[officine]!.commentaire != ""
                                   ? Container(
@@ -300,32 +326,19 @@ class DetailDemandeState extends State<DetailDemande> {
                                       ),
                                     )
                                   : Container(),
-                              Container(
-                                margin: EdgeInsets.only(
-                                    right: 20, top: 10, bottom: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      "Total = ",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    Text(
-                                      "${reponse.price} Fcfa",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle: FontStyle.italic),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "~ Prompt rétablissement à vous ! ~",
+                                    style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 11),
+                                  )
+                                ],
                               ),
-                              Container(
-                                height: 1,
-                                color: Colors.grey.shade300,
-                                margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                              SizedBox(
+                                height: 10,
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -418,8 +431,8 @@ class DetailDemandeState extends State<DetailDemande> {
                                 ],
                               ),
                               SizedBox(
-                                height: 15,
-                              )
+                                height: 10,
+                              ),
                             ],
                           ),
                         );

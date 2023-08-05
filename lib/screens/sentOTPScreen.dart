@@ -65,7 +65,11 @@ class _SendOTPScreen extends State<SendOTPScreen> {
 
   Future<void> validation() async {
     if (controller.currentUser.value?.otp.toString() == code) {
-      controller.valide.value = true;
+      controller.currentUser.value?.imei = box.read('imei');
+      controller.updateUser(
+          contact: controller.currentUser.value?.contact ?? "",
+          name: controller.currentUser.value?.fullname ?? "",
+          redirect: false);
       Get.off(HomeScreen());
     } else {
       setState(() {

@@ -17,7 +17,8 @@ class SearchBottomSheet extends StatefulWidget {
   State<SearchBottomSheet> createState() => SearchBottomSheetState();
 }
 
-class SearchBottomSheetState extends State<SearchBottomSheet> {
+class SearchBottomSheetState extends State<SearchBottomSheet>
+    with SingleTickerProviderStateMixin {
   SearchBottomSheetState();
 
   SearchBottomSheetController controller = Get.find();
@@ -31,6 +32,7 @@ class SearchBottomSheetState extends State<SearchBottomSheet> {
 
   @override
   void initState() {
+    controller.page.value = 0;
     super.initState();
 
     ever(controller.page, (value) async {
@@ -40,6 +42,12 @@ class SearchBottomSheetState extends State<SearchBottomSheet> {
         curve: Curves.easeInOut,
       );
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override

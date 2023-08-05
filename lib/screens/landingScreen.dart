@@ -1,12 +1,25 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/components/myLogo.dart';
+import 'package:ipi/screens/CGU.dart';
 import 'package:ipi/screens/loginScreen.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
-class LandingScreen extends StatelessWidget {
+class LandingScreen extends StatefulWidget {
+  LandingScreen({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<LandingScreen> createState() => LandingScreenState();
+}
+
+class LandingScreenState extends State<LandingScreen> {
+  bool _isChecked = false;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -95,9 +108,11 @@ class LandingScreen extends StatelessWidget {
                               width: double.infinity,
                               height: 50,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  Get.to(LoginScreen());
-                                },
+                                onPressed: _isChecked
+                                    ? () {
+                                        Get.to(LoginScreen());
+                                      }
+                                    : null,
                                 child: Text("Commençons !"),
                               ),
                             ),
@@ -106,7 +121,41 @@ class LandingScreen extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: Container(),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                            value: _isChecked,
+                            onChanged: (bool? newValue) {
+                              setState(() {
+                                _isChecked = newValue ?? false;
+                              });
+                            },
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Je confirme avoir lu et approuvé  ',
+                                  style: TextStyle(color: AppColor.primary)),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              GestureDetector(
+                                onTap: _isChecked
+                                    ? () {
+                                        Get.dialog(CGU());
+                                      }
+                                    : null,
+                                child: Text(
+                                  'la politique de confidentialité de IPI',
+                                  style: TextStyle(color: AppColor.blue),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       alignment: Alignment.center,

@@ -44,10 +44,16 @@ class ZoneSection extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  controller.page.value = 1;
-                  appController.searchByAround.value = false;
-                  officineController
-                      .officinesInZone(mapController.currentPosition.value);
+                  if (utilisateurController
+                          .currentUser.value?.circonscription !=
+                      null) {
+                    controller.page.value = 1;
+                    appController.searchByAround.value = false;
+                    officineController
+                        .officinesInZone(mapController.currentPosition.value);
+                  } else {
+                    Get.dialog(CirconscriptionChoicesDialog());
+                  }
                 },
                 onLongPress: () {
                   Get.dialog(CirconscriptionChoicesDialog());
@@ -66,17 +72,15 @@ class ZoneSection extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Obx(() {
-                          return Text(
-                            "Chercher dans ${utilisateurController.currentUser.value?.circonscription?.name}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: appController.searchByAround.value
-                                    ? AppColor.blue
-                                    : Colors.white),
-                          );
-                        }),
+                        Text(
+                          "Chercher dans ${utilisateurController.currentUser.value?.circonscription?.name}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: appController.searchByAround.value
+                                  ? AppColor.blue
+                                  : Colors.white),
+                        ),
                         Container(
                           width: 2,
                           height: 25,

@@ -13,7 +13,10 @@ class LoaderScreen extends StatefulWidget {
 
 class _LoaderScreenState extends State<LoaderScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
+  late AnimationController _animationController = AnimationController(
+    vsync: this,
+    duration: Duration(seconds: 1),
+  );
 
   @override
   void initState() {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/utils/helper.dart';
+import 'package:ipi/widgets/takeImage.dart';
 
 class ShowImage extends StatefulWidget {
   late File file;
@@ -15,6 +16,8 @@ class ShowImage extends StatefulWidget {
 }
 
 class _ShowImageState extends State<ShowImage> {
+  TakeImageController controller = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -57,8 +60,8 @@ class _ShowImageState extends State<ShowImage> {
                 children: [
                   GestureDetector(
                     onTap: () {
+                      controller.onInit();
                       Get.back();
-                      Get.to(HomeScreen());
                     },
                     child: Container(
                       padding: EdgeInsets.all(12),

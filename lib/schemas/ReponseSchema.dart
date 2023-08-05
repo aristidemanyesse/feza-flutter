@@ -301,4 +301,92 @@ class ReponseSchema {
         }
       }
   """;
+
+  static const String RDV_LIGNE_REPONSE = r"""
+      query ($user_id: UUID) {
+        searchRdvLigneReponse(deleted: false, ligne_Reponse_Demande_Demande_Utilisateur_Id: $user_id) {
+          results {
+            id
+            valide
+            days
+            read
+            validedDate
+            ligne {
+               id
+            status
+            price
+            quantite
+            reponse {
+              id
+              commentaire
+              read
+              demande {
+                demande {
+                  id
+                  status
+                  ordonnance
+                  commentaire
+                  utilisateur {
+                    id
+                    fullname
+                    contact
+                    imei
+                    createdAt
+                    image
+                    isValide
+                    otp
+                    geometryJson
+                    circonscription {
+                      id
+                      name
+                    }
+                  }
+                }
+                officine {
+                  id
+                  name
+                  contact
+                  contact2
+                  localisation
+                  geometryJson
+                  lat
+                  lon
+                  type {
+                    id
+                    name
+                    etiquette
+                  }
+                  image
+                  image2
+                  image3
+                  circonscription {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+            produit {
+              id
+              name
+              description
+              price
+              codebarre
+              onlyOrdonnance
+              cis
+              forme
+              voies
+              image
+              type {
+                id
+                name
+                etiquette
+              }
+            }
+            }
+
+          }
+        }
+      }
+  """;
 }

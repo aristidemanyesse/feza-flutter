@@ -54,6 +54,7 @@ class ProduitsListeState extends State<ProduitsListe> {
               return Column(
                 children: controller.produitsSelected.map((produit) {
                   return Container(
+                    margin: EdgeInsets.only(bottom: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -71,46 +72,59 @@ class ProduitsListeState extends State<ProduitsListe> {
                         SizedBox(
                           width: 10,
                         ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                controller.quantiteProduitsSelected[produit] =
-                                    controller.quantiteProduitsSelected[
-                                            produit]! +
-                                        1;
-                              },
-                              child: Icon(
-                                Icons.arrow_drop_up,
-                                color: AppColor.blue,
-                                size: 24,
-                              ),
-                            ),
-                            Text(
-                              "${controller.quantiteProduitsSelected[produit]}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 12),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                if (controller
-                                        .quantiteProduitsSelected[produit]! >
-                                    1) {
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(40)),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
                                   controller.quantiteProduitsSelected[produit] =
                                       controller.quantiteProduitsSelected[
-                                              produit]! -
+                                              produit]! +
                                           1;
-                                }
-                              },
-                              child: Icon(
-                                Icons.arrow_drop_down,
-                                color: AppColor.blue,
-                                size: 24,
+                                },
+                                child: Icon(
+                                  Icons.arrow_drop_up,
+                                  color: AppColor.blue,
+                                ),
                               ),
-                            )
-                          ],
-                        )
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 0),
+                                child: Text(
+                                  "${controller.quantiteProduitsSelected[produit]}",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (controller
+                                          .quantiteProduitsSelected[produit]! >
+                                      1) {
+                                    controller
+                                            .quantiteProduitsSelected[produit] =
+                                        controller.quantiteProduitsSelected[
+                                                produit]! -
+                                            1;
+                                  }
+                                },
+                                child: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: AppColor.blue,
+                                  size: 24,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
                       ],
                     ),
                   );

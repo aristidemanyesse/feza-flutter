@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ipi/screens/CGU.dart';
 import 'package:ipi/screens/loginScreen.dart';
 import 'package:lottie/lottie.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
-class Intro3 extends StatelessWidget {
+class Intro3 extends StatefulWidget {
+  Intro3({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<Intro3> createState() => Intro3State();
+}
+
+class Intro3State extends State<Intro3> {
+  bool _isChecked = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -67,7 +79,45 @@ class Intro3 extends StatelessWidget {
                         )),
                   ),
                   SizedBox(
-                    height: 50,
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                        value: _isChecked,
+                        onChanged: (bool? newValue) {
+                          setState(() {
+                            _isChecked = newValue ?? false;
+                          });
+                        },
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Je confirme avoir lu et approuvé  ',
+                              style: TextStyle(color: AppColor.primary)),
+                          SizedBox(
+                            height: 3,
+                          ),
+                          GestureDetector(
+                            onTap: _isChecked
+                                ? () {
+                                    Get.dialog(CGU());
+                                  }
+                                : null,
+                            child: Text(
+                              'la politique de confidentialité de IPI',
+                              style: TextStyle(color: AppColor.blue),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
                   ),
                   Container(
                     alignment: Alignment.center,
