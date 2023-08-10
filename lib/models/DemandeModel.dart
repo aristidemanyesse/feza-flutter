@@ -5,8 +5,11 @@ class DemandeModel {
     this.id,
     this.ordonnance,
     this.commentaire,
-    this.status,
+    this.is_finished,
     this.utilisateur,
+    this.lon,
+    this.lat,
+    this.propagating,
     this.base64,
     this.deleted,
     this.protected,
@@ -16,7 +19,10 @@ class DemandeModel {
 
   String? id;
   UtilisateurModel? utilisateur;
-  bool? status;
+  bool? propagating;
+  bool? is_finished;
+  double? lon;
+  double? lat;
   String? commentaire;
   String? ordonnance;
   String? base64;
@@ -29,8 +35,10 @@ class DemandeModel {
       id: json["id"],
       commentaire: json["commentaire"],
       ordonnance: json["ordonnance"],
-      base64: json["base64"],
-      status: json["status"],
+      lon: json["lon"],
+      lat: json["lat"],
+      propagating: json["propagating"],
+      is_finished: json["isFinished"],
       utilisateur: UtilisateurModel.fromJson(json["utilisateur"]),
       deleted: json["deleted"],
       protected: json["protected"],
@@ -42,7 +50,10 @@ class DemandeModel {
         "commentaire": commentaire,
         "ordonnance": ordonnance,
         "base64": base64,
-        "status": status,
+        "lat": lat,
+        "lon": lon,
+        "propagating": propagating,
+        "is_finished": is_finished,
         "utilisateur": utilisateur?.toJson(),
         "deleted": deleted,
         "protected": protected,

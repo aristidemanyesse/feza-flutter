@@ -13,11 +13,13 @@ class UtilisateurController extends GetxController {
   Rx<bool> valide = Rx<bool>(false);
 
   void onInit() async {
-    String? id = box.read('userId');
-    String? imei = box.read('imei');
-    var datas = await UtilisateurProvider.all({"id": id ?? "", "imei": imei});
-    currentUser.value = datas[0];
-    valide.value = false;
+    String id = box.read('userId') ?? "";
+    String imei = box.read('imei') ?? "";
+    if (id.length > 15) {
+      var datas = await UtilisateurProvider.all({"id": id, "imei": imei});
+      currentUser.value = datas[0];
+      valide.value = false;
+    }
     ever(currentUser, (user) {
       box.write('userId', user?.id);
       box.write("imei", user?.imei);

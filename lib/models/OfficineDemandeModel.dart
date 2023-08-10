@@ -6,7 +6,8 @@ class OfficineDemandeModel {
     this.id,
     this.demande,
     this.officine,
-    this.status,
+    this.propagated,
+    this.isValided,
     this.deleted,
     this.protected,
     this.createAt,
@@ -16,7 +17,8 @@ class OfficineDemandeModel {
   String? id;
   DemandeModel? demande;
   OfficineModel? officine;
-  bool? status;
+  bool? isValided;
+  bool? propagated;
   bool? deleted;
   bool? protected;
   String? createAt;
@@ -25,7 +27,8 @@ class OfficineDemandeModel {
   factory OfficineDemandeModel.fromJson(Map<String, dynamic> json) =>
       OfficineDemandeModel(
           id: json["id"],
-          status: json["status"],
+          propagated: json["propagated"],
+          isValided: json["isValided"],
           demande: DemandeModel.fromJson(json["demande"]),
           officine: OfficineModel.fromJson(json["officine"]),
           deleted: json["deleted"],
@@ -35,7 +38,8 @@ class OfficineDemandeModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "status": status,
+        "isValided": isValided,
+        "propagated": propagated,
         "officine": officine?.toJson(),
         "demande": demande?.toJson(),
         "deleted": deleted,

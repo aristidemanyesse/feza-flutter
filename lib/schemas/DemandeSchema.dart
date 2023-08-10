@@ -1,12 +1,15 @@
 class DemandeSchema {
   static const String ALL = r"""
-      query($user:UUID, $status:Boolean){
-        searchDemande(deleted: false, status:$status, utilisateur_Id:$user){
+      query($user:UUID, $isFinished:Boolean){
+        searchDemande(deleted: false, isFinished:$isFinished, utilisateur_Id:$user){
           results{
             id
-            status
+            propagating
+            isFinished
             ordonnance
             base64
+            lon
+            lat
             commentaire
             createdAt
             utilisateur{
@@ -33,11 +36,15 @@ class DemandeSchema {
       mutation(
         $utilisateur:ID!,
         $commentaire:String,
+        $lon:Float,
+        $lat:Float,
         $base64:String){
         createDemande(
           newDemande:{
             commentaire:$commentaire,
             base64: $base64,
+            lon: $lon,
+            lat: $lat,
             utilisateur: $utilisateur
           }
         ){
@@ -48,8 +55,11 @@ class DemandeSchema {
           }
           demande{
             id
-            status
+            propagating
+            isFinished
             base64
+            lon
+            lat
             ordonnance
             commentaire
             createdAt
@@ -74,8 +84,8 @@ class DemandeSchema {
   """;
 
   static const String UPDATE_DEMANDE = r"""
-      mutation ($id: UUID, $utilisateur:ID, $status: Boolean, $deleted: Boolean) {
-        updateDemande(newDemande: {id: $id, utilisateur:$utilisateur, status: $status, deleted: $deleted}) {
+      mutation ($id: UUID, $utilisateur:ID, $isFinished: Boolean, $deleted: Boolean) {
+        updateDemande(newDemande: {id: $id, utilisateur:$utilisateur, isFinished: $isFinished, deleted: $deleted}) {
           ok
           errors {
             field
@@ -83,8 +93,11 @@ class DemandeSchema {
           }
           demande {
             id
-            status
+            propagating
+            isFinished
             base64
+            lon
+            lat
             ordonnance
             commentaire
             createdAt
@@ -117,8 +130,11 @@ class DemandeSchema {
             quantite
             demande{
               id
-              status
+              propagating
+              isFinished
               base64
+              lon
+              lat
               ordonnance
               commentaire
               createdAt
@@ -185,10 +201,14 @@ class DemandeSchema {
             demande{
               id
               status
-              base64
+              propagating
+              isFinished
               ordonnance
               commentaire
+              lon
+              lat
               createdAt
+              base64
               utilisateur{
                 id
                 fullname
@@ -236,12 +256,14 @@ class DemandeSchema {
         ) {
           results {
             id
-            status
+            isValided
+            propagated
             demande {
               id
-              status
-              base64
+              propagating
+              isFinished
               ordonnance
+              base64
               commentaire
               utilisateur {
                 id
@@ -298,10 +320,12 @@ class DemandeSchema {
           }
           officinedemande {
             id
-            status
+            isValided
+            propagated
             demande {
               id
-              status
+              propagating
+              isFinished
               base64
               ordonnance
               commentaire

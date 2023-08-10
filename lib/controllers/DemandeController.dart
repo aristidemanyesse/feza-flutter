@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/controllers/ProduitController.dart';
 import 'package:ipi/controllers/UserController.dart';
@@ -27,6 +28,7 @@ class DemandeController extends GetxController {
   RxBool wait = false.obs;
 
   UtilisateurController controller = Get.find();
+  MapWidgetController mapController = Get.find();
   ProduitController produitController = Get.find();
   OfficineController officineController = Get.find();
   TakeImageController imageCcontroller = Get.find();
@@ -72,6 +74,8 @@ class DemandeController extends GetxController {
         ResponseModel response = await DemandeProvider.createDemande({
           "utilisateur": user?.id,
           "commentaire": "",
+          "lon": mapController.currentPosition.value.longitude,
+          "lat": mapController.currentPosition.value.latitude,
           "base64": imageCcontroller.base64.value,
         });
         if (response.ok) {
@@ -153,7 +157,7 @@ class DemandeController extends GetxController {
     ResponseModel response = await DemandeProvider.update({
       "id": demande.id,
       "utilisateur": demande.utilisateur?.id,
-      "status": demande.status,
+      "status": demande.is_finished,
       "deleted": true,
     });
     if (response.ok) {
