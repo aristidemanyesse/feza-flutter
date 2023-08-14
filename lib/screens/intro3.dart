@@ -70,9 +70,11 @@ class Intro3State extends State<Intro3> {
                     height: 45,
                     width: Helper.getScreenWidth(context) * 0.7,
                     child: ElevatedButton(
-                        onPressed: () {
-                          Get.off(LoginScreen());
-                        },
+                        onPressed: _isChecked
+                            ? () {
+                                Get.off(LoginScreen());
+                              }
+                            : null,
                         child: Text(
                           "Je suis prêt !",
                           style: TextStyle(fontSize: 15),
@@ -92,27 +94,25 @@ class Intro3State extends State<Intro3> {
                           });
                         },
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('Je confirme avoir lu et approuvé  ',
-                              style: TextStyle(color: AppColor.primary)),
-                          SizedBox(
-                            height: 3,
-                          ),
-                          GestureDetector(
-                            onTap: _isChecked
-                                ? () {
-                                    Get.dialog(CGU());
-                                  }
-                                : null,
-                            child: Text(
+                      GestureDetector(
+                        onTap: () {
+                          Get.dialog(CGU());
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Je confirme avoir lu et approuvé  ',
+                                style: TextStyle(color: AppColor.primary)),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Text(
                               'la politique de confidentialité de IPI',
                               style: TextStyle(color: AppColor.blue),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),

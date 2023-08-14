@@ -64,8 +64,7 @@ class DemandeItemCardState extends State<DemandeItemCard> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return DetailDemande(
-            demande: widget.demande, officines: officines, produits: produits);
+        return DetailDemande(demande: widget.demande, produits: produits);
       },
     );
   }

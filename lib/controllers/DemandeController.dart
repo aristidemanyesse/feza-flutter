@@ -113,7 +113,9 @@ class DemandeController extends GetxController {
           officineController.officines.value = [];
           onInit();
           Get.back();
-          Get.dialog(FelicitationScreen());
+          Get.dialog(FelicitationScreen(
+              text:
+                  "Nous avons envoyé vos demandes aux pharmacies concernées, elles vous repondront sous peu ..."));
         } else {
           Get.back();
           Fluttertoast.showToast(

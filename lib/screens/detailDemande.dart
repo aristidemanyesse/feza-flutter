@@ -3,6 +3,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:ipi/components/ReponseCard.dart';
 import 'package:ipi/components/indicator.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
@@ -25,27 +26,18 @@ import '../components/ligneProduitAvialable.dart';
 
 class DetailDemande extends StatefulWidget {
   late List<LigneDemandeModel> produits = [];
-  late List<OfficineDemandeModel> officines = [];
   late DemandeModel demande;
   late bool news = false;
 
-  DetailDemande(
-      {Key? key,
-      required this.demande,
-      required this.officines,
-      required this.produits})
+  DetailDemande({Key? key, required this.demande, required this.produits})
       : super(key: key);
   @override
   State<DetailDemande> createState() => DetailDemandeState();
 }
 
 class DetailDemandeState extends State<DetailDemande> {
-  MapWidgetController mpController = Get.find();
   ReponseController reponseController = Get.find();
-
-  late Map<OfficineModel, List<LigneReponseModel>> datas = {};
-  late Map<OfficineModel, ReponseModel> reponses = {};
-  late Map<LigneReponseModel, List<SubsLigneReponseModel>> subsLignes = {};
+  late List<ReponseModel> reponses = [];
 
   final f = DateFormat("dd/MM/yyyy à HH:mm");
 
@@ -61,44 +53,8 @@ class DetailDemandeState extends State<DetailDemande> {
   }
 
   Future<void> getData() async {
-    for (OfficineDemandeModel offdem in widget.officines) {
-      List<ReponseModel> data = await ReponseProvider.all(
-          {"officine": offdem.officine!.id, "demande": widget.demande.id});
-      List<LigneReponseModel> lignes = [];
-      if (data.length > 0) {
-        ReponseModel reponse = data[0];
-        lignes =
-            await ReponseProvider.allLignesReponse({"reponse": reponse.id});
-        for (var ligne in lignes) {
-          subsLignes[ligne] =
-              await ReponseProvider.subsLigneReponse({"ligne_id": ligne.id});
-        }
-        datas[reponse.demande!.officine!] = lignes;
-        reponses[reponse.demande!.officine!] = reponse;
-      } else {
-        datas[offdem.officine!] = lignes;
-      }
-    }
+    reponses = await ReponseProvider.all({"demande": widget.demande.id});
     setState(() {});
-  }
-
-  void sharePosition(OfficineModel officine) {
-    // await FlutterShare.share(
-    //     title: 'Example share',
-    //     text: 'Example share text',
-    //     linkUrl: 'https://flutter.dev/',
-    //     chooserTitle: 'Example Chooser Title');
-
-    Share.share(mpController.currentPosition.value.toString(),
-        subject: 'Partage de la position de ${officine.name}');
-  }
-
-  void copy(OfficineModel officine) {
-    FlutterClipboard.copy(mpController.currentPosition.value.toString())
-        .then((value) => Fluttertoast.showToast(
-              msg: "Localisation copiéé!",
-              gravity: ToastGravity.BOTTOM,
-            ));
   }
 
   @override
@@ -169,7 +125,7 @@ class DetailDemandeState extends State<DetailDemande> {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: reponses.keys.length == 0
+            child: reponses.length == 0
                 ? Center(
                     child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -188,254 +144,8 @@ class DetailDemandeState extends State<DetailDemande> {
                   ))
                 : SingleChildScrollView(
                     child: Column(
-                      children: reponses.keys.map((officine) {
-                        ReponseModel reponse = reponses[officine]!;
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 15),
-                          child: ExpansionTile(
-                            leading: Image.asset(
-                              "assets/images/icons/pharma.png",
-                              height: 30,
-                            ),
-                            trailing: reponse.read!
-                                ? null
-                                : Icon(
-                                    Icons.chat_rounded,
-                                    color: Colors.green,
-                                  ),
-                            onExpansionChanged: (value) {
-                              if (value && !reponse.read!) {
-                                reponseController.updateReponse(reponse);
-                              }
-                            },
-                            collapsedBackgroundColor:
-                                Colors.white.withOpacity(0.8),
-                            backgroundColor: Colors.white.withOpacity(0.5),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  officine.name ?? "",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: reponse.read!
-                                          ? Colors.grey
-                                          : Color.fromARGB(255, 6, 114, 49),
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 3),
-                                Text(
-                                  "${officine.circonscription!.name} ${officine.localisation ?? ''}",
-                                  style: TextStyle(fontSize: 12),
-                                )
-                              ],
-                            ),
-                            children: [
-                              Container(
-                                height: 2,
-                                color: Colors.grey.shade300,
-                                margin: EdgeInsets.fromLTRB(0, 0, 0, 7),
-                              ),
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 15),
-                                child: Column(
-                                  children: datas[officine]!.map((ligne) {
-                                    return Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Ligne(ligneReponse: ligne),
-                                        Column(
-                                          children:
-                                              subsLignes[ligne]!.map((sub) {
-                                            return LigneSub(sub: sub);
-                                          }).toList(),
-                                        ),
-                                        Container(
-                                          height: 2,
-                                          color: Colors.grey[300],
-                                          margin:
-                                              EdgeInsets.fromLTRB(0, 0, 0, 7),
-                                        ),
-                                      ],
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                    right: 20, top: 5, bottom: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      "Total = ",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    Text(
-                                      "${reponse.price} Fcfa",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontStyle: FontStyle.italic),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                height: 2,
-                                color: Colors.grey,
-                                margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                              ),
-                              reponses[officine]!.commentaire != ""
-                                  ? Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: 13, vertical: 5),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Le pharmacien: ",
-                                            style: TextStyle(
-                                                fontStyle: FontStyle.italic,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                          SizedBox(
-                                            width: 3,
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              reponses[officine]!.commentaire ??
-                                                  "",
-                                              style: TextStyle(
-                                                  height: 1.2,
-                                                  fontStyle: FontStyle.italic),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  : Container(),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "~ Prompt rétablissement à vous ! ~",
-                                    style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 11),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    child: InkWell(
-                                      onTap: () {
-                                        UrlLauncher.launchUrl(
-                                            "tel://${officine.contact}" as Uri);
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: AppColor.blue, width: 1),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(100))),
-                                        child: Icon(
-                                          Icons.call,
-                                          size: 24,
-                                          color: AppColor.blue,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: InkWell(
-                                      onTap: () {
-                                        copy(officine);
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: AppColor.blue, width: 1),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(100))),
-                                        child: Icon(
-                                          Icons.copy_all_outlined,
-                                          size: 24,
-                                          color: AppColor.blue,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: InkWell(
-                                      onTap: () {
-                                        sharePosition(officine);
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: AppColor.blue, width: 1),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(100))),
-                                        child: Icon(
-                                          Icons.share,
-                                          size: 24,
-                                          color: AppColor.blue,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: InkWell(
-                                      onTap: () {},
-                                      child: Container(
-                                        padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: AppColor.blue, width: 1),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(100))),
-                                        child: Icon(
-                                          Icons.route_outlined,
-                                          size: 24,
-                                          color: AppColor.blue,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
-                        );
+                      children: reponses.map((reponse) {
+                        return ReponseCard(reponse: reponse);
                       }).toList(),
                     ),
                   ),

@@ -132,27 +132,25 @@ class LandingScreenState extends State<LandingScreen> {
                               });
                             },
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('Je confirme avoir lu et approuvé  ',
-                                  style: TextStyle(color: AppColor.primary)),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              GestureDetector(
-                                onTap: _isChecked
-                                    ? () {
-                                        Get.dialog(CGU());
-                                      }
-                                    : null,
-                                child: Text(
+                          GestureDetector(
+                            onTap: () {
+                              Get.dialog(CGU());
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Je confirme avoir lu et approuvé  ',
+                                    style: TextStyle(color: AppColor.primary)),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
                                   'la politique de confidentialité de IPI',
                                   style: TextStyle(color: AppColor.blue),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),

@@ -21,7 +21,7 @@ class Ligne extends StatelessWidget {
           Icon(
               ligneReponse.status ?? false
                   ? Icons.check_circle_outline
-                  : Icons.close,
+                  : Icons.stop_circle,
               size: 20,
               color:
                   ligneReponse.status ?? false ? AppColor.green : Colors.red),
@@ -172,7 +172,7 @@ class LigneSub extends StatelessWidget {
                   child: Text(
                     sub.produit!.name,
                     style: TextStyle(
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                       fontSize: 12,
                       color: Colors.black,
                     ),

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ipi/const/colors.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:lottie/lottie.dart';
 
 class FelicitationScreen extends StatefulWidget {
+  String text = "";
+
+  FelicitationScreen({required this.text});
+
   @override
   _FelicitationScreenState createState() => _FelicitationScreenState();
 }
@@ -51,7 +56,7 @@ class _FelicitationScreenState extends State<FelicitationScreen> {
                   margin: EdgeInsets.symmetric(horizontal: 30),
                   child: DefaultTextStyle(
                     child: Text(
-                      "Nous avons envoyé vos demandes aux pharmacies concernées, elles vous repondront dans quelques instants ...",
+                      widget.text,
                       textAlign: TextAlign.center,
                     ),
                     style: TextStyle(
@@ -73,7 +78,7 @@ class _FelicitationScreenState extends State<FelicitationScreen> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
                           color: Colors.transparent,
-                          border: Border.all(width: 1, color: Colors.grey)),
+                          border: Border.all(width: 1, color: AppColor.blue)),
                       child: TextButton(
                         onPressed: () {
                           Get.back();
@@ -84,7 +89,7 @@ class _FelicitationScreenState extends State<FelicitationScreen> {
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 7, 190, 172)),
+                              color: AppColor.blue),
                         ),
                       ),
                     )
