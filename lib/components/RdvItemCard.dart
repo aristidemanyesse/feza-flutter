@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ipi/models/ProduitModel.dart';
 import 'package:ipi/models/RdvLigneReponseModel.dart';
-import 'package:ipi/webservice/apiservice.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 
 import '../const/colors.dart';

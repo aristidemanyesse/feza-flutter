@@ -1,28 +1,17 @@
 import 'dart:async';
-import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:ipi/components/ReponseCard.dart';
 import 'package:ipi/components/indicator.dart';
-import 'package:ipi/const/colors.dart';
-import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/ReponseController.dart';
 import 'package:ipi/models/DemandeModel.dart';
 import 'package:ipi/models/LigneDemandeModel.dart';
-import 'package:ipi/models/LigneReponseModel.dart';
-import 'package:ipi/models/OfficineDemandeModel.dart';
-import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/models/ReponseModel.dart';
-import 'package:ipi/models/SubsLigneReponseModel.dart';
 import 'package:ipi/provider/ReponseProvider.dart';
 import 'package:ipi/utils/helper.dart';
 import "package:intl/intl.dart";
 import 'package:lottie/lottie.dart';
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
-import 'package:share_plus/share_plus.dart';
 
-import '../components/ligneProduitAvialable.dart';
 
 class DetailDemande extends StatefulWidget {
   late List<LigneDemandeModel> produits = [];

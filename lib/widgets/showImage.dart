@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/widgets/takeImage.dart';
 

@@ -36,7 +36,7 @@ class ConfirmNumberDialog extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 5),
                 alignment: Alignment.center,
                 child: Text(
-                  "Es-ce bien votre numero ?".toUpperCase(),
+                  "Est-ce bien votre numero ?".toUpperCase(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,

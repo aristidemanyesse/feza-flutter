@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/LigneReponseModel.dart';
 import 'package:ipi/models/SubsLigneReponseModel.dart';
-import 'package:ipi/webservice/apiservice.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 
 class Ligne extends StatelessWidget {
@@ -18,13 +17,19 @@ class Ligne extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-              ligneReponse.status ?? false
-                  ? Icons.check_circle_outline
-                  : Icons.stop_circle,
-              size: 20,
-              color:
-                  ligneReponse.status ?? false ? AppColor.green : Colors.red),
+          ligneReponse.status ?? false
+              ? Icon(Icons.check_circle_outline,
+                  size: 20, color: AppColor.green)
+              : Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.red),
+                      borderRadius: BorderRadius.circular(100)),
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.red,
+                    size: 15,
+                  ),
+                ),
           SizedBox(
             width: 5,
           ),

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/components/RdvItemCard.dart';
-import 'package:ipi/components/SuggestionItemCard.dart';
 import 'package:ipi/components/indicator.dart';
-import 'package:ipi/components/searchBarGroup.dart';
-import 'package:ipi/const/colors.dart';
-import 'package:ipi/controllers/ProduitController.dart';
 import 'package:ipi/controllers/ReponseController.dart';
 import 'package:ipi/utils/helper.dart';
 

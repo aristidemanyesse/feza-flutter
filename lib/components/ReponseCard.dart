@@ -11,7 +11,6 @@ import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/models/ReponseModel.dart';
 import 'package:ipi/models/SubsLigneReponseModel.dart';
 import 'package:ipi/provider/ReponseProvider.dart';
-import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/widgets/felicitation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;

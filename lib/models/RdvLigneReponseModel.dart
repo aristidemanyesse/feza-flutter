@@ -1,5 +1,4 @@
 import 'package:ipi/models/LigneReponseModel.dart';
-import 'package:ipi/models/ProduitModel.dart';
 
 class RdvLigneReponseModel {
   RdvLigneReponseModel({

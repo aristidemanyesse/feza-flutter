@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:get/get.dart';
 import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
@@ -7,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:ipi/components/loader.dart';
 import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'package:ipi/const/colors.dart';
-import 'package:ipi/utils/helper.dart';
 import 'dart:io';
 
 class SearchPage extends StatefulWidget {
@@ -51,8 +52,53 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
           children: [
             Container(height: Get.size.height * taille, child: MapWidget()),
             SearchBottomSheet(),
+            Obx(() {
+              return Visibility(
+                visible: officineController.wait.value,
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Recherche des pharmacies en cours",
+                              style: TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "Veuillez patienter ...",
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 30),
+                              child: LinearProgressIndicator(),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
             Positioned(
-              top: Helper.getScreenHeight(context) * 0.45,
+              top: 35,
               right: 5,
               child: Container(
                 padding: EdgeInsets.all(8),
@@ -64,7 +110,7 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
                 child: GestureDetector(
                   child: Icon(
                     Icons.location_searching,
-                    size: 26,
+                    size: 22,
                   ),
                   onTap: () {
                     mapController.changeCenter();

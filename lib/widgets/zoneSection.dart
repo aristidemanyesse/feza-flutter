@@ -34,7 +34,7 @@ class ZoneSection extends StatelessWidget {
           Indicator(),
           Column(
             children: [
-              Text("1 - Dans quelle zone cherchée ?",
+              Text("1 - Dans quelle zone chercher ?",
                   style: Helper.getTheme(context).headlineLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,

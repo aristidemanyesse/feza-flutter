@@ -16,7 +16,6 @@ class ProduitController extends GetxController {
 
   void onInit() async {
     List<dynamic> datas = box.read("produits") ?? [];
-    // produits.value = box.read("produits") ?? [];
     if (datas.length > 0) {
       for (var elt in datas) {
         produits.add(ProduitModel.fromJson(elt));
@@ -43,7 +42,9 @@ class ProduitController extends GetxController {
   }
 
   void addProduitSelected(ProduitModel produit) {
-    produitsSelected.add(produit);
-    quantiteProduitsSelected[produit] = 1;
+    if (!produitsSelected.contains(produit)) {
+      produitsSelected.add(produit);
+      quantiteProduitsSelected[produit] = 1;
+    }
   }
 }
