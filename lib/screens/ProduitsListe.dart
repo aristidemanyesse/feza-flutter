@@ -5,6 +5,7 @@ import 'package:ipi/components/indicator.dart';
 import 'package:ipi/components/searchBarGroup.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/ProduitController.dart';
+import 'package:ipi/widgets/confirmQuantite.dart';
 
 class ProduitsListe extends StatefulWidget {
   ProduitsListe({
@@ -72,54 +73,23 @@ class ProduitsListeState extends State<ProduitsListe> {
                         SizedBox(
                           width: 10,
                         ),
-                        Container(
-                          padding: EdgeInsets.symmetric(vertical: 0),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(40)),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  controller.quantiteProduitsSelected[produit] =
-                                      controller.quantiteProduitsSelected[
-                                              produit]! +
-                                          1;
-                                },
-                                child: Icon(
-                                  Icons.arrow_drop_up,
-                                  color: AppColor.blue,
-                                ),
+                        GestureDetector(
+                          onTap: () {
+                            Get.dialog(ConfirmQuantite(produit));
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                border:
+                                    Border.all(width: 1, color: AppColor.blue),
+                                borderRadius: BorderRadius.circular(100)),
+                            child: Center(
+                              child: Text(
+                                "x${controller.quantiteProduitsSelected[produit]}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              Container(
-                                margin: EdgeInsets.symmetric(vertical: 0),
-                                child: Text(
-                                  "${controller.quantiteProduitsSelected[produit]}",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  if (controller
-                                          .quantiteProduitsSelected[produit]! >
-                                      1) {
-                                    controller
-                                            .quantiteProduitsSelected[produit] =
-                                        controller.quantiteProduitsSelected[
-                                                produit]! -
-                                            1;
-                                  }
-                                },
-                                child: Icon(
-                                  Icons.arrow_drop_down,
-                                  color: AppColor.blue,
-                                  size: 24,
-                                ),
-                              )
-                            ],
+                            ),
                           ),
                         ),
                         SizedBox(

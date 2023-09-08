@@ -176,7 +176,7 @@ class HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                     Expanded(
                       child: Container(

@@ -68,7 +68,7 @@ class SearchBottomSheetState extends State<SearchBottomSheet>
                   color: Color.fromARGB(255, 245, 239, 235),
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   child: PageView(
-                    physics: NeverScrollableScrollPhysics(),
+                    // physics: NeverScrollableScrollPhysics(),
                     controller: _controller,
                     children: _pages,
                     onPageChanged: (value) {
