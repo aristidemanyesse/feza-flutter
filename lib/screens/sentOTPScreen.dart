@@ -90,7 +90,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
 
   void sendOTP() {
     Timer(Duration(milliseconds: 3000), () {
-      Get.snackbar('IPI - Vérification OTP',
+      Get.snackbar('iPi - Vérification OTP',
           'Votre code OTP est le ${controller.currentUser.value?.otp}');
     });
   }

@@ -1,5 +1,7 @@
+import 'package:get/get.dart';
 import 'package:graphql/client.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:ipi/controllers/ConnexionController.dart';
 
 class ApiService {
   // static const BASE_URL = "http://192.168.0.101:8005/";
@@ -10,6 +12,7 @@ class ApiService {
 
   static Future<Map<String, dynamic>?> request(
       String query, Map<String, dynamic> variables) async {
+    ConnexionController IController = Get.find();
     final HttpLink httpLink = HttpLink(GRAPH_URL);
 
     final GraphQLClient client = GraphQLClient(
@@ -22,12 +25,15 @@ class ApiService {
       variables: variables,
     );
 
-    final QueryResult result = await client.query(options);
-    if (result.hasException) {
-      print("Erreur Apiservice::::: ${result.exception.toString()}");
-      return null;
+    if (IController.isConnected.value) {
+      final QueryResult result = await client.query(options);
+      if (result.hasException) {
+        print("Erreur Apiservice::::: ${result.exception.toString()}");
+        return null;
+      }
+      return result.data;
     }
-    return result.data;
+    return null;
 
     // ConnexionController controller = Get.find();
     // if (controller.isConnected.value) {

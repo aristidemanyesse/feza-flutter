@@ -292,7 +292,7 @@ class ReponseCardState extends State<ReponseCard> {
                     Get.back();
                     Get.dialog(FelicitationScreen(
                       text:
-                          "Merci d'avoir utiliser IPI pour votre recherche. \n Nous vous souhaitons prompt rétablissement et à très bientôt !!!",
+                          "Merci d'avoir utiliser iPi pour votre recherche. \n Nous vous souhaitons prompt rétablissement et à très bientôt !!!",
                     ));
                   },
                   child: Container(

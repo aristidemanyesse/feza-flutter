@@ -115,7 +115,7 @@ class PharmaciesGardeState extends State<PharmaciesGarde> {
               Obx(() {
                 return Visibility(
                   child: LoaderScreen(
-                      title: "IPI recherche les pharmacies de garde ..."),
+                      title: "iPi recherche les pharmacies de garde ..."),
                   visible: officineController.wait.value,
                 );
               }),

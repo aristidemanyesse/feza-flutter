@@ -59,8 +59,7 @@ class UtilisateurController extends GetxController {
     datas["contact"] = contact;
     datas["id"] = currentUser.value?.id;
     datas["imei"] = currentUser.value?.imei;
-    datas["circonscription"] = currentUser.value?.circonscription?.id;
-    datas["circonscription"] = currentUser.value?.circonscription?.id;
+    datas["circonscription"] = currentUser.value?.circonscription?.id ?? "";
     ResponseModel response = await UtilisateurProvider.update(datas);
     if (response.ok) {
       var test = currentUser.value?.contact;

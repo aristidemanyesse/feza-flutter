@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/schemas/UtilisateurSchema.dart';
@@ -7,7 +6,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:device_info/device_info.dart';
 
-class UtilisateurProvider extends ChangeNotifier {
+class UtilisateurProvider {
   UtilisateurModel utilisateurs = UtilisateurModel();
 
   static Future<List<UtilisateurModel>> all(

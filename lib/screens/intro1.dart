@@ -36,7 +36,7 @@ class Intro1State extends State<Intro1> {
                 height: 10,
               ),
               Text(
-                "Avec IPI, trouves en un clic les pharmacies à proximité qui ont le médicament que tu recherches !",
+                "Avec iPi, trouves en un clic les pharmacies à proximité qui ont le médicament que tu recherches !",
                 textAlign: TextAlign.left,
                 style: TextStyle(height: 1.5, color: AppColor.primary),
               ),
@@ -62,7 +62,7 @@ class Intro1State extends State<Intro1> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("IPI @ Copyright 2023"),
+                        Text("iPi @ Copyright 2023"),
                       ],
                     ),
                   ),

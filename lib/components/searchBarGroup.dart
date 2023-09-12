@@ -29,17 +29,6 @@ class SearchBarGroupState extends State<SearchBarGroup> {
     nomsProduits = controller.nomsProduits;
     produits = controller.produits;
     super.initState();
-
-    ever(controller.produitsSelected, (value) {
-      print("nkfhldl");
-      setState(() {
-        List<String> _selected = value.map((element) => element.name).toList();
-        print(_selected);
-        nomsProduits = nomsProduits
-            .where((element) => !_selected.contains(element))
-            .toList();
-      });
-    });
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/controllers/ProduitController.dart';
@@ -28,6 +29,7 @@ class DemandeController extends GetxController {
   RxBool wait = false.obs;
 
   UtilisateurController controller = Get.find();
+  AppController appController = Get.find();
   MapWidgetController mapController = Get.find();
   ProduitController produitController = Get.find();
   OfficineController officineController = Get.find();
@@ -82,7 +84,6 @@ class DemandeController extends GetxController {
           DemandeModel demande = response.data;
 
           for (ProduitModel produit in produits) {
-            print(produitController.quantiteProduitsSelected[produit]);
             ResponseModel response = await DemandeProvider.createLigneDemande({
               "produit": produit.id,
               "quantite": produitController.quantiteProduitsSelected[produit],
@@ -110,7 +111,10 @@ class DemandeController extends GetxController {
             }
           }
           produitController.produitsSelected.value = [];
+          produitController.quantiteProduitsSelected.value = {};
           officineController.officines.value = [];
+          appController.searchByAround.value = false;
+
           onInit();
           Get.back();
           Get.dialog(FelicitationScreen(

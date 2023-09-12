@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/CirconscriptionController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/controllers/UserController.dart';
+import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/models/CirconscriptionModel.dart';
@@ -24,6 +26,7 @@ class CirconscriptionChoicesDialog extends StatefulWidget {
 class _CirconscriptionChoicesDialogState
     extends State<CirconscriptionChoicesDialog> {
   CirconscriptionController controller = Get.find();
+  SearchBottomSheetController scontroller = Get.find();
 
   late List<CirconscriptionModel> circonscriptions = [];
   late List<CirconscriptionModel> _circonscriptions = [];
@@ -174,11 +177,12 @@ class Ligne extends StatelessWidget {
   UtilisateurController userController = Get.find();
   OfficineController officineController = Get.find();
   MapWidgetController mpController = Get.find();
+  AppController appController = Get.find();
+  SearchBottomSheetController scontroller = Get.find();
 
   Ligne({required this.circonscription});
 
-  void changeCirconscription(
-      BuildContext context, CirconscriptionModel circonscription) async {
+  void changeCirconscription(CirconscriptionModel circonscription) async {
     UtilisateurModel? user = userController.currentUser.value;
     Map<String, dynamic> variables = user!.toJson();
     variables["circonscription"] = circonscription.id;
@@ -186,9 +190,11 @@ class Ligne extends StatelessWidget {
     Get.back();
     if (response.ok) {
       userController.currentUser.value = response.data;
-      Get.snackbar("IPI - Changement de zone",
+      Get.snackbar("iPi - Changement de zone",
           "Votre zone est maintenant ${circonscription.name}");
       officineController.officinesInZone(mpController.currentPosition.value);
+      appController.searchByAround.value = false;
+      scontroller.page.value = 1;
     } else {
       Fluttertoast.showToast(
           msg: "Une erreur s'est produite, veuillez recommencer !",
@@ -205,7 +211,7 @@ class Ligne extends StatelessWidget {
     // TODO: implement build
     return GestureDetector(
       onTap: () {
-        changeCirconscription(context, circonscription);
+        changeCirconscription(circonscription);
       },
       child: Container(
         child: Column(

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/ProduitController.dart';
-import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/models/ProduitModel.dart';
-import 'package:ipi/widgets/pleaseWait.dart';
 
 class ConfirmQuantite extends StatelessWidget {
   final ProduitModel produit;
@@ -78,8 +76,8 @@ class ConfirmQuantite extends StatelessWidget {
                         }
                       },
                       child: Icon(
-                        Icons.arrow_left,
-                        size: 50,
+                        Icons.remove,
+                        size: 35,
                         color: AppColor.blue,
                       ),
                     ),
@@ -98,9 +96,9 @@ class ConfirmQuantite extends StatelessWidget {
                             controller.quantiteProduitsSelected[produit]! + 1;
                       },
                       child: Icon(
-                        Icons.arrow_right,
+                        Icons.add,
                         color: AppColor.blue,
-                        size: 50,
+                        size: 35,
                       ),
                     )
                   ],
@@ -114,7 +112,7 @@ class ConfirmQuantite extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "(Prix approximatif)",
+                    "(Prix approximatif NPSP)",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 13,

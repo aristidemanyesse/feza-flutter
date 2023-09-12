@@ -53,43 +53,46 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
             Container(height: Get.size.height * taille, child: MapWidget()),
             SearchBottomSheet(),
             Obx(() {
-              return Visibility(
-                visible: officineController.wait.value,
-                child: Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Recherche des pharmacies en cours",
-                              style: TextStyle(
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "Veuillez patienter ...",
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30),
-                              child: LinearProgressIndicator(),
-                            )
-                          ],
+              return Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Visibility(
+                  visible: officineController.wait.value,
+                  child: Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Container(
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Recherche des pharmacies en cours",
+                                style: TextStyle(
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "Veuillez patienter ...",
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 30),
+                                child: LinearProgressIndicator(),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -121,7 +124,7 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
             Visibility(
                 child: LoaderScreen(
                   title:
-                      "IPI envoie votre demande aux pharmacies sélectionnées...",
+                      "iPi envoie votre demande aux pharmacies sélectionnées...",
                 ),
                 visible: demandeController.wait.value),
             Positioned(

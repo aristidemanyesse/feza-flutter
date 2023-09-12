@@ -45,7 +45,7 @@ class ZoneSection extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   if (utilisateurController
-                          .currentUser.value?.circonscription !=
+                          .currentUser.value?.circonscription?.id !=
                       null) {
                     controller.page.value = 1;
                     appController.searchByAround.value = false;
@@ -64,9 +64,9 @@ class ZoneSection extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
                       border: Border.all(color: AppColor.blue),
-                      color: appController.searchByAround.value
-                          ? Colors.transparent
-                          : AppColor.blue,
+                      color: !appController.searchByAround.value
+                          ? AppColor.blue
+                          : Colors.transparent,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

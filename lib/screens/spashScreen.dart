@@ -20,16 +20,30 @@ class _SplashScreenState extends State<SplashScreen> {
   final box = GetStorage();
   UtilisateurController _controller = Get.find();
 
+  void newSection() {
+    box.erase();
+    UtilisateurProvider.getUniqID().then((value) => box.write("imei", value));
+    Get.to(IntroScreen());
+  }
+
   @override
   void initState() {
+    String? id = box.read("userId");
+
     Future.delayed(Duration(seconds: 2)).then((value) {
       if (_controller.currentUser.value != null) {
         Get.to(HomeScreen());
+      } else if (id != null) {
+        UtilisateurProvider.all({"id": id}).then((users) {
+          if (users.length > 0) {
+            _controller.currentUser.value = users[0];
+            Get.to(HomeScreen());
+          } else {
+            newSection();
+          }
+        });
       } else {
-        box.erase();
-        UtilisateurProvider.getUniqID()
-            .then((value) => box.write("imei", value));
-        Get.to(IntroScreen());
+        newSection();
       }
     });
     super.initState();

@@ -43,8 +43,8 @@ class ProduitController extends GetxController {
 
   void addProduitSelected(ProduitModel produit) {
     if (!produitsSelected.contains(produit)) {
-      produitsSelected.add(produit);
       quantiteProduitsSelected[produit] = 1;
+      produitsSelected.add(produit);
     }
   }
 }

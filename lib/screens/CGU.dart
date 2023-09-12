@@ -66,13 +66,13 @@ class CGUState extends State<CGU> {
                           color: AppColor.blue,
                           fontWeight: FontWeight.bold,
                           fontSize: 15),
-                      child: Text("Politique de confidentialité de IPI")),
+                      child: Text("Politique de confidentialité de iPi")),
                   DefaultTextStyle(
                       style: TextStyle(
                           color: Colors.black54, fontSize: 13, height: 1.3),
                       textAlign: TextAlign.justify,
                       child: Text(
-                          "Nous nous engageons à protéger votre vie privée. Cette politique de confidentialité explique comment nous collectons, utilisons et partageons vos informations personnelles lorsque vous utilisez l'application IPI.")),
+                          "Nous nous engageons à protéger votre vie privée. Cette politique de confidentialité explique comment nous collectons, utilisons et partageons vos informations personnelles lorsque vous utilisez l'application iPi.")),
                   SizedBox(
                     height: 10,
                   ),
@@ -90,7 +90,7 @@ class CGUState extends State<CGU> {
                           color: Colors.black54, fontSize: 13, height: 1.3),
                       textAlign: TextAlign.justify,
                       child: Text(
-                          "Nous collectons les informations personnelles suivantes lorsque vous utilisez l'application IPI : Votre nom, Votre numéro de téléphone, Votre emplacement, Les informations de votre téléphone, telles que le modèle, l'opérateur et le système d'exploitation")),
+                          "Nous collectons les informations personnelles suivantes lorsque vous utilisez l'application iPi : Votre nom, Votre numéro de téléphone, Votre emplacement, Les informations de votre téléphone, telles que le modèle, l'opérateur et le système d'exploitation")),
                   SizedBox(
                     height: 10,
                   ),
@@ -108,7 +108,7 @@ class CGUState extends State<CGU> {
                           color: Colors.black54, fontSize: 13, height: 1.3),
                       textAlign: TextAlign.justify,
                       child: Text(
-                          "Nous utilisons vos informations personnelles pour les finalités suivantes : Pour vous fournir les fonctionnalités de l'application IPI, telles que la possibilité de vous connecter, de consulter la liste des officines et de médicaments, de faire des demandes auprès d'elles et de recevoir des notifications; Pour améliorer l'application IPI en analysant la façon dont vous l'utilisez; Pour vous envoyer des communications marketing, telles que des offres spéciales et des nouvelles produits; Pour vous fournir un service client, tel que la résolution des problèmes techniques et le traitement des demandes de remboursement.")),
+                          "Nous utilisons vos informations personnelles pour les finalités suivantes : Pour vous fournir les fonctionnalités de l'application iPi, telles que la possibilité de vous connecter, de consulter la liste des officines et de médicaments, de faire des demandes auprès d'elles et de recevoir des notifications; Pour améliorer l'application iPi en analysant la façon dont vous l'utilisez; Pour vous envoyer des communications marketing, telles que des offres spéciales et des nouvelles produits; Pour vous fournir un service client, tel que la résolution des problèmes techniques et le traitement des demandes de remboursement.")),
                   SizedBox(
                     height: 10,
                   ),
@@ -126,7 +126,7 @@ class CGUState extends State<CGU> {
                           color: Colors.black54, fontSize: 13, height: 1.3),
                       textAlign: TextAlign.justify,
                       child: Text(
-                          "Nous ne partageons pas vos informations personnelles avec des tiers, sauf dans les cas suivants: Avec des fournisseurs de services qui nous aident à fournir les fonctionnalités de l'application IPI, tels que les fournisseurs de services de paiement et les fournisseurs d'hébergement; Avec les autorités compétentes si nous sommes tenus de le faire par la loi.")),
+                          "Nous ne partageons pas vos informations personnelles avec des tiers, sauf dans les cas suivants: Avec des fournisseurs de services qui nous aident à fournir les fonctionnalités de l'application iPi, tels que les fournisseurs de services de paiement et les fournisseurs d'hébergement; Avec les autorités compétentes si nous sommes tenus de le faire par la loi.")),
                   SizedBox(
                     height: 10,
                   ),
@@ -180,7 +180,7 @@ class CGUState extends State<CGU> {
                           color: Colors.black54, fontSize: 13, height: 1.3),
                       textAlign: TextAlign.justify,
                       child: Text(
-                          "Nous pouvons mettre à jour cette politique de confidentialité de temps à autre. Si nous apportons des modifications importantes, nous vous en informerons par e-mail ou sur l'application IPI directement.")),
+                          "Nous pouvons mettre à jour cette politique de confidentialité de temps à autre. Si nous apportons des modifications importantes, nous vous en informerons par e-mail ou sur l'application iPi directement.")),
                   SizedBox(
                     height: 25,
                   ),
@@ -197,7 +197,7 @@ class CGUState extends State<CGU> {
                                 fontSize: 13,
                                 height: 1.3),
                             textAlign: TextAlign.justify,
-                            child: Text("IPI @ Copyright 2023")),
+                            child: Text("iPi @ Copyright 2023")),
                       ],
                     ),
                   ),

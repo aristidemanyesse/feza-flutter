@@ -58,7 +58,7 @@ class Intro2 extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("IPI @ Copyright 2023"),
+                        Text("iPi @ Copyright 2023"),
                       ],
                     ),
                   ),

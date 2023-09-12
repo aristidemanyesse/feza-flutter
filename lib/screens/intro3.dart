@@ -108,7 +108,7 @@ class Intro3State extends State<Intro3> {
                               height: 3,
                             ),
                             Text(
-                              'la politique de confidentialité de IPI',
+                              'la politique de confidentialité de iPi',
                               style: TextStyle(color: AppColor.blue),
                             ),
                           ],
@@ -126,7 +126,7 @@ class Intro3State extends State<Intro3> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("IPI @ Copyright 2023"),
+                        Text("iPi @ Copyright 2023"),
                       ],
                     ),
                   ),

@@ -67,7 +67,7 @@ class MyAppState extends State<MyApp> {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             child: GetMaterialApp(
-              title: 'IPI',
+              title: 'iPi',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 fontFamily: "Metropolis",
@@ -118,21 +118,23 @@ class MyAppState extends State<MyApp> {
               home: SplashScreen(),
             ),
           ),
-          SafeArea(
-              child: !controller.isConnected.value
-                  ? Container(
-                      height: Helper.getScreenHeight(context) * 0.04,
-                      width: double.infinity,
-                      color: const Color.fromRGBO(244, 67, 54, 1)
-                          .withOpacity(0.85),
-                      child: Center(
-                        child: Text("Vérifiez votre connexion internet !",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 14),
-                            textDirection: TextDirection.ltr),
-                      ),
-                    )
-                  : Container())
+          Obx(() {
+            return SafeArea(
+                child: !controller.isConnected.value
+                    ? Container(
+                        height: Helper.getScreenHeight(context) * 0.04,
+                        width: double.infinity,
+                        color: const Color.fromRGBO(244, 67, 54, 1)
+                            .withOpacity(0.85),
+                        child: Center(
+                          child: Text("Vérifiez votre connexion internet !",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 14),
+                              textDirection: TextDirection.ltr),
+                        ),
+                      )
+                    : Container());
+          })
         ],
       ),
     );

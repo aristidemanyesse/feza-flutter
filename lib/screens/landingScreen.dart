@@ -58,7 +58,7 @@ class LandingScreenState extends State<LandingScreen> {
                       height: Helper.getScreenHeight(context) * 0.15,
                     ),
                     Text(
-                      "IPI",
+                      "iPi",
                       textAlign: TextAlign.center,
                       style: Helper.getTheme(context)
                           .headlineLarge
@@ -145,7 +145,7 @@ class LandingScreenState extends State<LandingScreen> {
                                   height: 3,
                                 ),
                                 Text(
-                                  'la politique de confidentialité de IPI',
+                                  'la politique de confidentialité de iPi',
                                   style: TextStyle(color: AppColor.blue),
                                 ),
                               ],
@@ -161,7 +161,7 @@ class LandingScreenState extends State<LandingScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("IPI @ Copyright 2023"),
+                          Text("iPi @ Copyright 2023"),
                         ],
                       ),
                     ),
