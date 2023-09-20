@@ -121,13 +121,10 @@ class _SendOTPScreen extends State<SendOTPScreen> {
     CommunicateProvider.send_SMS({
       "number": controller.currentUser.value?.contact,
       "message":
-          "iPi - OTP - Bonjour, votre code OTP est: ${controller.currentUser.value?.otp} ! Bonne santé !"
+          "iPi vérification - Bonjour votre code OTP est ${controller.currentUser.value?.otp} . Bonne santé !"
     });
+    myDuration = Duration(minutes: 2);
     startTimer();
-    // Timer(Duration(milliseconds: 3000), () {
-    //   Get.snackbar('iPi - Vérification OTP',
-    //       'Votre code OTP est le ${controller.currentUser.value?.otp}');
-    // });
   }
 
   @override
@@ -153,7 +150,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                       width: double.infinity,
                       height: Helper.getScreenHeight(context) * 0.2,
                       decoration: ShapeDecoration(
-                        color: AppColor.blue,
+                        color: AppColor.orange,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -178,6 +175,9 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                 ),
               )
             ]),
+            SizedBox(
+              height: 20,
+            ),
             Container(
               alignment: Alignment.center,
               child: MyLogo(height: 80, width: 80),
@@ -273,7 +273,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                   SizedBox(
                     height: 15,
                   ),
-                  minutes == "0" && seconds == "0"
+                  minutes == "00" && seconds == "00"
                       ? GestureDetector(
                           onTap: () {
                             sendOTP();
@@ -300,21 +300,27 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                             ],
                           ),
                         )
-                      : Container(
-                          margin: EdgeInsets.only(left: 7),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(color: AppColor.blue),
-                          ),
-                          child: Text(
-                            "$minutes:$seconds",
-                            style: TextStyle(
-                              color: AppColor.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )),
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("patienter ..."),
+                            Container(
+                                margin: EdgeInsets.only(left: 7),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  border: Border.all(color: AppColor.blue),
+                                ),
+                                child: Text(
+                                  "$minutes:$seconds",
+                                  style: TextStyle(
+                                    color: AppColor.blue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )),
+                          ],
+                        )
                 ],
               ),
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColor {
   static const blue = Color.fromARGB(255, 63, 148, 227);
+  static const orange = Color.fromARGB(255, 231, 127, 37);
   static const green = Color.fromARGB(255, 10, 108, 46);
   static const primary = Color(0xFF4A4B4D);
   static const secondary = Color(0xFF7C7D7E);

@@ -122,7 +122,7 @@ class HomeScreenState extends State<HomeScreen> {
                                                 .headlineSmall
                                                 ?.copyWith(
                                                     fontSize: 18,
-                                                    color: AppColor.blue,
+                                                    color: AppColor.orange,
                                                     fontWeight:
                                                         FontWeight.bold),
                                           );

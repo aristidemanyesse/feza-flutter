@@ -15,20 +15,12 @@ class ProduitController extends GetxController {
   RxBool ready = false.obs;
 
   void onInit() async {
-    List<dynamic> datas = box.read("produits") ?? [];
-    if (datas.length > 0) {
-      for (var elt in datas) {
-        produits.add(ProduitModel.fromJson(elt));
-        nomsProduits.add(elt["name"]);
-      }
-    } else {
-      produits.value = await ProduitProvider.all({});
-      for (ProduitModel item in produits) {
-        nomsProduits.add(item.name);
-      }
-      box.write("produits", produits);
-      box.write("nomsProduits", nomsProduits);
+    produits.value = await ProduitProvider.all({});
+    for (ProduitModel item in produits) {
+      nomsProduits.add(item.name);
     }
+    box.write("produits", produits);
+    box.write("nomsProduits", nomsProduits);
 
     if (nomsProduits.length > 0) {
       ready.value = true;

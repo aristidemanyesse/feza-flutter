@@ -41,37 +41,40 @@ class _LoaderScreenState extends State<LoaderScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          width: Helper.getScreenWidth(context),
-          height: Helper.getScreenHeight(context),
-          color: Colors.white.withOpacity(0.8),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Lottie.asset("assets/lotties/search2.json",
-                    width: Helper.getScreenWidth(context) * 0.7),
-                Text(
-                  widget.title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16,
-                      height: 2,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87),
-                )
-              ],
+    return Material(
+      type: MaterialType.transparency,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: Helper.getScreenWidth(context),
+            height: Helper.getScreenHeight(context),
+            color: Colors.white.withOpacity(0.8),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Lottie.asset("assets/lotties/search2.json",
+                      width: Helper.getScreenWidth(context) * 0.7),
+                  Text(
+                    widget.title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 16,
+                        height: 2,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87),
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

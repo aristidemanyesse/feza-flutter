@@ -68,7 +68,7 @@ class LandingScreenState extends State<LandingScreen> {
                       height: 10,
                     ),
                     Text(
-                      "Ici, les Pharmacies Ivoiriennes",
+                      "ici Pharmacies ivoiriennes",
                       textAlign: TextAlign.center,
                       style: Helper.getTheme(context)
                           .headlineLarge

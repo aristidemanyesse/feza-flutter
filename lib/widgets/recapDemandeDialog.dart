@@ -82,195 +82,187 @@ class _RecapDemandeDialogState extends State<RecapDemandeDialog> {
                   ],
                 ),
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Recherche dans ",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColor.blue),
-                                ),
-                                Text(
-                                  appController.searchByAround.value
-                                      ? "un rayon de ${appController.radius.value} Km"
-                                      : "${utilisateurController.currentUser.value?.circonscription?.name}",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColor.blue),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 15),
-                              child: Text(
-                                "- ${officineController.officines.length} pharmacies dans cette zone",
-                                style: TextStyle(fontSize: 14),
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "Recherche dans ",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColor.blue),
                               ),
+                              Text(
+                                appController.searchByAround.value
+                                    ? "un rayon de ${appController.radius.value} Km"
+                                    : "${utilisateurController.currentUser.value?.circonscription?.name}",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColor.blue),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 15),
+                            child: Text(
+                              "- ${officineController.officines.length} pharmacies dans cette zone",
+                              style: TextStyle(fontSize: 14),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      produitController.produitsSelected.length > 0
-                          ? Column(
+                    ),
+                    produitController.produitsSelected.length > 0
+                        ? Column(
+                            children: [
+                              SizedBox(
+                                height: 25,
+                              ),
+                              Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Médicaments (${produitController.produitsSelected.length})",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.blue),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 15),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: produitController
+                                            .produitsSelected
+                                            .map((produit) {
+                                          return Container(
+                                            margin: EdgeInsets.only(bottom: 7),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "- ",
+                                                  style: TextStyle(
+                                                    fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Marquee(
+                                                    child: Text(
+                                                      "${produit.name}",
+                                                      style: TextStyle(
+                                                          fontSize: 13),
+                                                    ),
+                                                    direction: Axis.horizontal,
+                                                    textDirection:
+                                                        TextDirection.ltr,
+                                                    animationDuration:
+                                                        Duration(seconds: 4),
+                                                    backDuration: Duration(
+                                                        milliseconds: 5000),
+                                                    pauseDuration: Duration(
+                                                        milliseconds: 1000),
+                                                    directionMarguee:
+                                                        DirectionMarguee
+                                                            .oneDirection,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Text(
+                                                  "x ",
+                                                  style: TextStyle(
+                                                    fontStyle: FontStyle.italic,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "${produitController.quantiteProduitsSelected[produit]}",
+                                                  style: TextStyle(
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          )
+                        : Container(),
+                    takeImageController.ok.value
+                        ? Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(
                                   height: 25,
                                 ),
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Médicaments (${produitController.produitsSelected.length})",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColor.blue),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 15),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: produitController
-                                              .produitsSelected
-                                              .map((produit) {
-                                            return Container(
-                                              margin:
-                                                  EdgeInsets.only(bottom: 7),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    "- ",
-                                                    style: TextStyle(
-                                                      fontStyle:
-                                                          FontStyle.italic,
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Marquee(
-                                                      child: Text(
-                                                        "${produit.name}",
-                                                        style: TextStyle(
-                                                            fontSize: 13),
-                                                      ),
-                                                      direction:
-                                                          Axis.horizontal,
-                                                      textDirection:
-                                                          TextDirection.ltr,
-                                                      animationDuration:
-                                                          Duration(seconds: 4),
-                                                      backDuration: Duration(
-                                                          milliseconds: 5000),
-                                                      pauseDuration: Duration(
-                                                          milliseconds: 1000),
-                                                      directionMarguee:
-                                                          DirectionMarguee
-                                                              .oneDirection,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 15,
-                                                  ),
-                                                  Text(
-                                                    "x ",
-                                                    style: TextStyle(
-                                                      fontStyle:
-                                                          FontStyle.italic,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "${produitController.quantiteProduitsSelected[produit]}",
-                                                    style: TextStyle(
-                                                        fontStyle:
-                                                            FontStyle.italic,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  )
-                                                ],
-                                              ),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            )
-                          : Container(),
-                      takeImageController.ok.value
-                          ? Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 25,
-                                  ),
-                                  Text(
-                                    "Ordonnance",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColor.blue),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Hero(
-                                    tag: "image",
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Get.to(ShowImage(File(
-                                            takeImageController
-                                                .file.value.path)));
-                                      },
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(15),
-                                        child: Container(
-                                          height: 200.0,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Image.file(
-                                            File(takeImageController
-                                                .file.value.path),
-                                            fit: BoxFit.cover,
-                                            height: 200.0,
-                                          ),
+                                Text(
+                                  "Ordonnance",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColor.blue),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Hero(
+                                  tag: "image",
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Get.to(ShowImage(File(takeImageController
+                                          .file.value.path)));
+                                    },
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Container(
+                                        height: 100.0,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Image.file(
+                                          File(takeImageController
+                                              .file.value.path),
+                                          fit: BoxFit.cover,
+                                          height: 100.0,
                                         ),
                                       ),
                                     ),
-                                  )
-                                ],
-                              ),
-                            )
-                          : Container(),
-                    ],
-                  ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        : Container(),
+                  ],
                 ),
               ),
               SizedBox(
@@ -280,7 +272,7 @@ class _RecapDemandeDialogState extends State<RecapDemandeDialog> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    height: 45,
+                    height: 40,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(color: AppColor.blue),
@@ -303,7 +295,7 @@ class _RecapDemandeDialogState extends State<RecapDemandeDialog> {
                   ),
                   Expanded(
                     child: Container(
-                      height: 45,
+                      height: 40,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
                           color: AppColor.blue),

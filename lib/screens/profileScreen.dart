@@ -102,16 +102,16 @@ class ProfileScreenState extends State<ProfileScreen> {
                               color: AppColor.placeholder,
                               offset: Offset(0, 15),
                               blurRadius: 5.0,
-                              spreadRadius: 4),
+                              spreadRadius: 6),
                           child: Container(
                             width: double.infinity,
                             height: Helper.getScreenHeight(context) * 0.15,
                             decoration: ShapeDecoration(
-                              color: AppColor.blue,
+                              color: AppColor.orange,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(15),
-                                  bottomRight: Radius.circular(15),
+                                  bottomLeft: Radius.circular(5),
+                                  bottomRight: Radius.circular(5),
                                 ),
                               ),
                             ),
@@ -137,7 +137,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       )
                     ]),
                     SizedBox(
-                      height: 20,
+                      height: 50,
                     ),
                     Stack(children: [
                       Container(

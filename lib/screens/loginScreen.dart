@@ -85,7 +85,7 @@ class _LoginScreen extends State<LoginScreen> {
                           width: double.infinity,
                           height: Helper.getScreenHeight(context) * 0.2,
                           decoration: ShapeDecoration(
-                            color: AppColor.blue,
+                            color: AppColor.orange,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -97,7 +97,7 @@ class _LoginScreen extends State<LoginScreen> {
                     ),
                   ),
                   Container(
-                    height: Helper.getScreenHeight(context) * 0.2,
+                    height: Helper.getScreenHeight(context) * 0.17,
                     child: Center(
                       child: Align(
                           alignment: Alignment.center,
@@ -110,6 +110,9 @@ class _LoginScreen extends State<LoginScreen> {
                     ),
                   ),
                 ]),
+                SizedBox(
+                  height: 25,
+                ),
                 Align(
                   alignment: Alignment.center,
                   child: MyLogo(

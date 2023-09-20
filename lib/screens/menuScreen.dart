@@ -89,7 +89,7 @@ class _MenuScreen extends State<MenuScreen> {
                                     bottomRight: Radius.circular(30),
                                   ),
                                 ),
-                                color: AppColor.blue),
+                                color: AppColor.orange),
                           ),
                           Padding(
                             padding:

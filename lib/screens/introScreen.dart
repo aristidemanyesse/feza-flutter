@@ -111,16 +111,15 @@ class _IntroScreenState extends State<IntroScreen> {
                 ),
               ),
               Positioned(
-                top: 7,
-                right: 10,
+                top: 15,
+                right: 15,
                 child: GestureDetector(
                   onTap: () {
                     Get.to(LandingScreen());
                   },
-                  child: Icon(
-                    Icons.close,
-                    size: 30,
-                    color: Colors.black,
+                  child: Text(
+                    "Passer",
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ),
               )

@@ -30,20 +30,17 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     String? id = box.read("userId");
+    String? imei = box.read("imei");
 
     Future.delayed(Duration(seconds: 1)).then((value) {
       if (_controller.currentUser.value != null) {
-        print("*****ddssd");
         Get.to(HomeScreen());
       } else if (id != null) {
-        print("*****");
-        UtilisateurProvider.all({"id": id}).then((users) {
+        UtilisateurProvider.all({"id": id, "imei": imei}).then((users) {
           if (users.length > 0) {
-            print("chaaaaaaammack");
             _controller.currentUser.value = users[0];
             Get.to(HomeScreen());
           } else {
-            print("lkrgg");
             newSection();
           }
         });
