@@ -34,22 +34,5 @@ class ApiService {
       return result.data;
     }
     return null;
-
-    // ConnexionController controller = Get.find();
-    // if (controller.isConnected.value) {
-    //   final QueryResult result = await client.query(options);
-    //   if (result.hasException) {
-    //     print("Erreur Apiservice::::: ${result.exception.toString()}");
-    //     return null;
-    //   }
-    //   return result.data;
-    // } else {
-    //   Fluttertoast.showToast(
-    //     backgroundColor: Colors.red.withOpacity(0.85),
-    //     msg: "Désolé, vérifiez votre connexion internet !",
-    //     gravity: ToastGravity.BOTTOM,
-    //   );
-    //   return {};
-    // }
   }
 }

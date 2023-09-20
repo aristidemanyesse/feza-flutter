@@ -74,14 +74,14 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    user = controller.currentUser.value!;
-    myNameController.text = user.fullname ?? "";
-    myNumeroController.text = user.contact ?? "";
+    myNameController.text = controller.currentUser.value!.fullname ?? "";
+    myNumeroController.text = controller.currentUser.value!.contact ?? "";
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    imageController.isOrdonnance.value = false;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 245, 239, 235),
       body: Stack(
@@ -147,11 +147,10 @@ class ProfileScreenState extends State<ProfileScreen> {
                             border: Border.all(color: Colors.grey, width: 3)),
                         child: ClipOval(
                           child: Obx(() {
-                            imageController.isOrdonnance.value = false;
                             return Container(
                               height: 120,
                               width: 120,
-                              child: imageController.ok.value
+                              child: !imageController.ok.value
                                   ? Image.asset(
                                       Helper.getAssetName(
                                         "user.jpg",
@@ -195,19 +194,21 @@ class ProfileScreenState extends State<ProfileScreen> {
                       visible: !isUpdated,
                       child: Column(
                         children: [
-                          Text(
-                            user.fullname ?? "_",
-                            style: Helper.getTheme(context)
-                                .headlineMedium
-                                ?.copyWith(
-                                  color: AppColor.primary,
-                                ),
-                          ),
+                          Obx(() {
+                            return Text(
+                              controller.currentUser.value!.fullname ?? "",
+                              style: Helper.getTheme(context)
+                                  .headlineMedium
+                                  ?.copyWith(
+                                    color: AppColor.primary,
+                                  ),
+                            );
+                          }),
                           SizedBox(
                             height: 20,
                           ),
                           Text(
-                            "+225 ${user.contact}",
+                            "+225 ${controller.currentUser.value!.contact}",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),

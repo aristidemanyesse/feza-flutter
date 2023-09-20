@@ -50,7 +50,7 @@ class ConfirmNumberDialog extends StatelessWidget {
               ),
               Container(
                 child: Text(
-                  "Nous allons envoyer un code à ce numero ...",
+                  "Nous allons envoyer un code SMS à ce numero ...",
                   textAlign: TextAlign.center,
                   style:
                       TextStyle(fontSize: 14, height: 1.5, color: Colors.black),

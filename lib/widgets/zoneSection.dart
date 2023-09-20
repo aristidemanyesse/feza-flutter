@@ -12,10 +12,6 @@ import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'package:ipi/widgets/zoneChoicesDialog.dart';
 
 class ZoneSection extends StatelessWidget {
-  ZoneSection({
-    super.key,
-  });
-
   UtilisateurController utilisateurController = Get.find();
   AppController appController = Get.find();
   SearchBottomSheetController controller = Get.find();
@@ -25,14 +21,16 @@ class ZoneSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: double.infinity,
-      width: double.infinity,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Indicator(),
+          SizedBox(
+            height: 10,
+          ),
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text("1 - Dans quelle zone chercher ?",
                   style: Helper.getTheme(context).headlineLarge?.copyWith(

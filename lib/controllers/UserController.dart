@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ipi/models/ResponseModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/provider/CommunicateProvider.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/sentOTPScreen.dart';
@@ -15,7 +16,7 @@ class UtilisateurController extends GetxController {
   void onInit() async {
     String id = box.read('userId') ?? "";
     String imei = box.read('imei') ?? "";
-    if (id.length > 15) {
+    if (id.length > 4) {
       var datas = await UtilisateurProvider.all({"id": id, "imei": imei});
       currentUser.value = datas[0];
       valide.value = false;
@@ -72,6 +73,11 @@ class UtilisateurController extends GetxController {
         if (test == contact) {
           Get.off(MenuScreen());
         } else {
+          CommunicateProvider.send_SMS({
+            "number": currentUser.value?.contact,
+            "message":
+                "iPi - OTP - Bonjour, votre code OTP est: ${currentUser.value?.otp} ! Bonne santé !"
+          });
           Get.off(SendOTPScreen());
         }
         Get.snackbar(

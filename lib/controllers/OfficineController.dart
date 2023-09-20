@@ -30,6 +30,10 @@ class OfficineController extends GetxController {
     super.onInit();
   }
 
+  bool containsOfficine(List<OfficineModel> officines, OfficineModel officine) {
+    return officines.any((element) => element.id == officine.id);
+  }
+
   void officinesInZone(LatLng center) async {
     wait.value = true;
     routeCoordinates.value = Polyline(points: []);
@@ -77,7 +81,7 @@ class OfficineController extends GetxController {
       for (var element in datas) {
         var offs = await OfficineProvider.all({"id": element["officine"]});
         OfficineModel officine = offs[0];
-        if (!officines.contains(officine)) {
+        if (!containsOfficine(officines, officine)) {
           officines.add(officine);
         }
 

@@ -23,6 +23,7 @@ class SearchBottomSheetState extends State<SearchBottomSheet>
 
   SearchBottomSheetController controller = Get.find();
   AppController appController = Get.find();
+  double taille = 0.37;
 
   var _controller = new PageController();
   final List<Widget> _pages = [
@@ -53,9 +54,9 @@ class SearchBottomSheetState extends State<SearchBottomSheet>
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.35,
-      maxChildSize: 0.35,
-      minChildSize: 0.35,
+      initialChildSize: taille,
+      maxChildSize: taille,
+      minChildSize: taille,
       builder: (context, scrollController) {
         return Column(
           children: [

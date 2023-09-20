@@ -121,12 +121,6 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
                 ),
               ),
             ),
-            Visibility(
-                child: LoaderScreen(
-                  title:
-                      "iPi envoie votre demande aux pharmacies sélectionnées...",
-                ),
-                visible: demandeController.wait.value),
             Positioned(
               top: 10,
               child: SafeArea(

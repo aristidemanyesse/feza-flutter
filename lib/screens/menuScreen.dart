@@ -7,6 +7,7 @@ import 'package:ipi/controllers/GardeController.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/models/GardeModel.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
 import 'package:ipi/screens/profileScreen.dart';
 import 'package:ipi/utils/helper.dart';
@@ -33,6 +34,7 @@ class _MenuScreen extends State<MenuScreen> {
   void initState() {
     initializeDateFormatting("fr");
     f = DateFormat("dd MMMM", "fr");
+    userController.onInit();
     super.initState();
   }
 
@@ -193,7 +195,7 @@ class _MenuScreen extends State<MenuScreen> {
                   margin: EdgeInsets.only(left: 12),
                   child: InkWell(
                     onTap: () {
-                      Get.back();
+                      Get.off(HomeScreen());
                     },
                     child: Container(
                       padding: EdgeInsets.all(10),

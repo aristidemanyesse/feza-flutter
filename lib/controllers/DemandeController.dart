@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ipi/components/loader.dart';
 import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
@@ -66,7 +67,9 @@ class DemandeController extends GetxController {
   }
 
   void makeDemande() async {
-    Get.dialog(PleaseWait());
+    Get.dialog(LoaderScreen(
+      title: "iPi envoie votre demande aux pharmacies sélectionnées...",
+    ));
     List<OfficineModel> officines = officineController.officines;
     List<ProduitModel> produits = produitController.produitsSelected;
     UtilisateurModel? user = controller.currentUser.value;
@@ -163,8 +166,22 @@ class DemandeController extends GetxController {
     ResponseModel response = await DemandeProvider.update({
       "id": demande.id,
       "utilisateur": demande.utilisateur?.id,
-      "status": demande.is_finished,
+      "status": demande.isFinished,
       "deleted": true,
+    });
+    if (response.ok) {
+      getData();
+      Get.back();
+    }
+  }
+
+  void satisfiedDemande(DemandeModel demande) async {
+    Get.dialog(PleaseWait());
+    ResponseModel response = await DemandeProvider.update({
+      "id": demande.id,
+      "utilisateur": demande.utilisateur?.id,
+      "status": demande.isFinished,
+      "isSatisfied": true,
     });
     if (response.ok) {
       getData();

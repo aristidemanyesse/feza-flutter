@@ -5,7 +5,8 @@ class DemandeModel {
     this.id,
     this.ordonnance,
     this.commentaire,
-    this.is_finished,
+    this.isFinished,
+    this.isSatisfied,
     this.utilisateur,
     this.lon,
     this.lat,
@@ -20,7 +21,8 @@ class DemandeModel {
   String? id;
   UtilisateurModel? utilisateur;
   bool? propagating;
-  bool? is_finished;
+  bool? isFinished;
+  bool? isSatisfied;
   double? lon;
   double? lat;
   String? commentaire;
@@ -38,7 +40,8 @@ class DemandeModel {
       lon: json["lon"],
       lat: json["lat"],
       propagating: json["propagating"],
-      is_finished: json["isFinished"],
+      isFinished: json["isFinished"],
+      isSatisfied: json["isSatisfied"],
       utilisateur: UtilisateurModel.fromJson(json["utilisateur"]),
       deleted: json["deleted"],
       protected: json["protected"],
@@ -53,7 +56,8 @@ class DemandeModel {
         "lat": lat,
         "lon": lon,
         "propagating": propagating,
-        "is_finished": is_finished,
+        "isFinished": isFinished,
+        "isSatisfied": isSatisfied,
         "utilisateur": utilisateur?.toJson(),
         "deleted": deleted,
         "protected": protected,

@@ -1,12 +1,12 @@
 import 'dart:async';
-
-import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
+import 'package:csshadow/csshadow.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ipi/components/myLogo.dart';
 import 'package:ipi/components/optInput.dart';
 import 'package:ipi/controllers/UserController.dart';
+import 'package:ipi/provider/CommunicateProvider.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/landingScreen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -63,6 +63,35 @@ class _SendOTPScreen extends State<SendOTPScreen> {
     }
   }
 
+  Timer? countdownTimer;
+  Duration myDuration = Duration(minutes: 2);
+
+  void startTimer() {
+    countdownTimer =
+        Timer.periodic(Duration(seconds: 1), (_) => setCountDown());
+  }
+
+  // Step 5
+  void resetTimer() {
+    setState(() => countdownTimer!.cancel());
+    setState(() => myDuration = Duration(minutes: 2));
+  }
+
+  // Step 6
+  void setCountDown() {
+    final reduceSecondsBy = 1;
+    setState(() {
+      final seconds = myDuration.inSeconds - reduceSecondsBy;
+      if (seconds < 0) {
+        countdownTimer!.cancel();
+      } else {
+        myDuration = Duration(seconds: seconds);
+      }
+    });
+  }
+
+  String strDigits(int n) => n.toString().padLeft(2, '0');
+
   Future<void> validation() async {
     if (controller.currentUser.value?.otp.toString() == code) {
       controller.currentUser.value?.imei = box.read('imei');
@@ -89,14 +118,22 @@ class _SendOTPScreen extends State<SendOTPScreen> {
   }
 
   void sendOTP() {
-    Timer(Duration(milliseconds: 3000), () {
-      Get.snackbar('iPi - Vérification OTP',
-          'Votre code OTP est le ${controller.currentUser.value?.otp}');
+    CommunicateProvider.send_SMS({
+      "number": controller.currentUser.value?.contact,
+      "message":
+          "iPi - OTP - Bonjour, votre code OTP est: ${controller.currentUser.value?.otp} ! Bonne santé !"
     });
+    startTimer();
+    // Timer(Duration(milliseconds: 3000), () {
+    //   Get.snackbar('iPi - Vérification OTP',
+    //       'Votre code OTP est le ${controller.currentUser.value?.otp}');
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
+    final minutes = strDigits(myDuration.inMinutes.remainder(60));
+    final seconds = strDigits(myDuration.inSeconds.remainder(60));
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 245, 239, 235),
       body: SingleChildScrollView(
@@ -165,7 +202,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                   SizedBox(
                     height: 15,
                   ),
-                  Text("Nous venons de vous envoyer un code sur le "),
+                  Text("Nous venons de vous envoyer un code SMS sur le "),
                   SizedBox(
                     height: 15,
                   ),
@@ -236,15 +273,34 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                   SizedBox(
                     height: 15,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      sendOTP();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Je n'ai pas reçu de code. "),
-                        Container(
+                  minutes == "0" && seconds == "0"
+                      ? GestureDetector(
+                          onTap: () {
+                            sendOTP();
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Je n'ai pas reçu de code. "),
+                              Container(
+                                  margin: EdgeInsets.only(left: 7),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(color: AppColor.blue),
+                                  ),
+                                  child: Text(
+                                    "Renvoyez-le !",
+                                    style: TextStyle(
+                                      color: AppColor.blue,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        )
+                      : Container(
                           margin: EdgeInsets.only(left: 7),
                           padding:
                               EdgeInsets.symmetric(horizontal: 10, vertical: 3),
@@ -253,16 +309,12 @@ class _SendOTPScreen extends State<SendOTPScreen> {
                             border: Border.all(color: AppColor.blue),
                           ),
                           child: Text(
-                            "Renvoyez-le !",
+                            "$minutes:$seconds",
                             style: TextStyle(
                               color: AppColor.blue,
                               fontWeight: FontWeight.bold,
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                          )),
                 ],
               ),
             ),

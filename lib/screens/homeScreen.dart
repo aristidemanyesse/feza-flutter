@@ -55,7 +55,6 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      UtilisateurModel? user = userController.currentUser.value;
       List<DemandeModel>? demandes = demandeController.demandes;
       Map<String, int>? repondesDemandes = demandeController.repondesDemandes;
 
@@ -114,15 +113,20 @@ class HomeScreenState extends State<HomeScreen> {
                                         onTap: () {
                                           Get.to(ProfileScreen());
                                         },
-                                        child: Text(
-                                          user?.fullname ?? "",
-                                          style: Helper.getTheme(context)
-                                              .headlineSmall
-                                              ?.copyWith(
-                                                  fontSize: 18,
-                                                  color: AppColor.blue,
-                                                  fontWeight: FontWeight.bold),
-                                        ),
+                                        child: Obx(() {
+                                          return Text(
+                                            userController.currentUser.value!
+                                                    .fullname ??
+                                                "",
+                                            style: Helper.getTheme(context)
+                                                .headlineSmall
+                                                ?.copyWith(
+                                                    fontSize: 18,
+                                                    color: AppColor.blue,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          );
+                                        }),
                                       ),
                                     ],
                                   ),

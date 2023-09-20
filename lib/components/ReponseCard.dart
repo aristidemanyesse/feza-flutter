@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:ipi/components/ligneProduitAvialable.dart';
 import 'package:ipi/const/colors.dart';
+import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/ReponseController.dart';
 import 'package:ipi/models/LigneReponseModel.dart';
@@ -27,6 +28,7 @@ class ReponseCard extends StatefulWidget {
 class ReponseCardState extends State<ReponseCard> {
   MapWidgetController mpController = Get.find();
   ReponseController reponseController = Get.find();
+  DemandeController demandeController = Get.find();
 
   late List<LigneReponseModel> lignes = [];
   late Map<LigneReponseModel, List<SubsLigneReponseModel>> subsLignes = {};
@@ -286,31 +288,37 @@ class ReponseCardState extends State<ReponseCard> {
                   ),
                 ),
               ),
-              Container(
-                child: InkWell(
-                  onTap: () {
-                    Get.back();
-                    Get.dialog(FelicitationScreen(
-                      text:
-                          "Merci d'avoir utiliser iPi pour votre recherche. \n Nous vous souhaitons prompt rétablissement et à très bientôt !!!",
-                    ));
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                    decoration: BoxDecoration(
-                        color: AppColor.blue,
-                        border: Border.all(color: AppColor.blue, width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
-                    child: Text(
-                      "Je suis satisfait !",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
+              (reponse.demande!.demande!.isSatisfied ?? false)
+                  ? Container(
+                      child: InkWell(
+                        onTap: () {
+                          demandeController
+                              .satisfiedDemande(reponse.demande!.demande!);
+                          Get.dialog(FelicitationScreen(
+                            text:
+                                "Merci d'avoir utiliser iPi pour votre recherche. \n Nous vous souhaitons prompt rétablissement et à très bientôt !!!",
+                          ));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 15),
+                          decoration: BoxDecoration(
+                              color: AppColor.blue,
+                              border:
+                                  Border.all(color: AppColor.blue, width: 1),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(40))),
+                          child: Text(
+                            "Je suis satisfait !",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
             ],
           ),
           SizedBox(

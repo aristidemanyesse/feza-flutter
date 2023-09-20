@@ -37,13 +37,14 @@ class ProduitsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: double.infinity,
-      width: double.infinity,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Indicator(),
+          SizedBox(
+            height: 10,
+          ),
           Column(
             children: [
               Text("2 - Que recherchez-vous ?",
@@ -184,7 +185,9 @@ class ProduitsSection extends StatelessWidget {
               })
             ],
           ),
-          Spacer(),
+          SizedBox(
+            height: 15,
+          ),
           Row(
             children: [
               GestureDetector(
