@@ -1,15 +1,16 @@
 import 'dart:ui';
 
 import 'package:get/get.dart';
+import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/components/MapWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:ipi/components/loader.dart';
-import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'package:ipi/const/colors.dart';
+import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'dart:io';
+
 
 class SearchPage extends StatefulWidget {
   SearchPage({
@@ -41,6 +42,9 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
     officineController.garde.value = false;
     super.initState();
   }
+
+  SearchBottomSheetController controller = Get.find();
+  AppController appController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +86,7 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
                                 height: 5,
                               ),
                               Text(
-                                "Veuillez patienter ...",
+                                "Commencez à renseigner vos besoins ...",
                               ),
                               SizedBox(
                                 height: 10,

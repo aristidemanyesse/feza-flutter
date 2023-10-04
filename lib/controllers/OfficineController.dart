@@ -35,67 +35,69 @@ class OfficineController extends GetxController {
   }
 
   void officinesInZone(LatLng center) async {
-    wait.value = true;
-    routeCoordinates.value = Polyline(points: []);
+    if (!wait.value) {
+      wait.value = true;
+      routeCoordinates.value = Polyline(points: []);
 
-    distanceTableaux.value = {};
-    routesOfficines.value = {};
-    officines.value = [];
+      distanceTableaux.value = {};
+      routesOfficines.value = {};
+      officines.value = [];
 
-    UtilisateurModel? user = userController.currentUser.value;
-    if (user == null) {
-      wait.value = false;
-      return;
-    }
-
-    List<dynamic> datas = [];
-    if (garde.value) {
-      datas = await OfficineProvider.garde_avialable({
-        "circonscription": (user.circonscription == null &&
-                !appController.searchByAround.value)
-            ? ""
-            : user.circonscription!.id,
-        "distance":
-            appController.searchByAround.value || user.circonscription == null
-                ? appController.radius.value
-                : 0,
-        "longitude": center.longitude,
-        "latitude": center.latitude
-      });
-    } else {
-      datas = await OfficineProvider.avialable({
-        "circonscription": (user.circonscription == null &&
-                !appController.searchByAround.value)
-            ? ""
-            : user.circonscription!.id,
-        "distance":
-            appController.searchByAround.value || user.circonscription == null
-                ? appController.radius.value
-                : 0,
-        "longitude": center.longitude,
-        "latitude": center.latitude
-      });
-    }
-
-    if (datas.length > 0) {
-      for (var element in datas) {
-        var offs = await OfficineProvider.all({"id": element["officine"]});
-        OfficineModel officine = offs[0];
-        if (!containsOfficine(officines, officine)) {
-          officines.add(officine);
-        }
-
-        double ladistance = element["distance"];
-        distanceTableaux[officine] = ladistance < 1000
-            ? "$ladistance m"
-            : "${(ladistance / 1000).toStringAsFixed(2)} km";
-
-        routesOfficines[officine.id!] = jsonDecode(element["route"]);
+      UtilisateurModel? user = userController.currentUser.value;
+      if (user == null) {
+        wait.value = false;
+        return;
       }
-    } else {
-      Get.dialog(NoPharmacieAvialable());
+
+      List<dynamic> datas = [];
+      if (garde.value) {
+        datas = await OfficineProvider.garde_avialable({
+          "circonscription": (user.circonscription == null &&
+                  !appController.searchByAround.value)
+              ? ""
+              : user.circonscription!.id,
+          "distance":
+              appController.searchByAround.value || user.circonscription == null
+                  ? appController.radius.value
+                  : 0,
+          "longitude": center.longitude,
+          "latitude": center.latitude
+        });
+      } else {
+        datas = await OfficineProvider.avialable({
+          "circonscription": (user.circonscription == null &&
+                  !appController.searchByAround.value)
+              ? ""
+              : user.circonscription!.id,
+          "distance":
+              appController.searchByAround.value || user.circonscription == null
+                  ? appController.radius.value
+                  : 0,
+          "longitude": center.longitude,
+          "latitude": center.latitude
+        });
+      }
+
+      if (datas.length > 0) {
+        for (var element in datas) {
+          var offs = await OfficineProvider.all({"id": element["officine"]});
+          OfficineModel officine = offs[0];
+          if (!containsOfficine(officines, officine)) {
+            officines.add(officine);
+          }
+
+          double ladistance = element["distance"];
+          distanceTableaux[officine] = ladistance < 1000
+              ? "$ladistance m"
+              : "${(ladistance / 1000).toStringAsFixed(2)} km";
+
+          routesOfficines[officine.id!] = jsonDecode(element["route"]);
+        }
+      } else {
+        Get.dialog(NoPharmacieAvialable());
+      }
+      wait.value = false;
     }
-    wait.value = false;
   }
 
   void routeOfOfficine(OfficineModel officine) async {

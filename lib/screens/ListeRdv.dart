@@ -52,7 +52,7 @@ class ListeRdvState extends State<ListeRdv> {
             height: 5,
           ),
           Text(
-              "Ces pharmacies vous contacterons lorque ces médicaments seront de nouveaux disponible.",
+              "Ces pharmacies vous contacterons lorque ces médicaments seront de nouveaux disponible chez elles.",
               textAlign: TextAlign.center,
               style: Helper.getTheme(context).headlineLarge?.copyWith(
                     fontWeight: FontWeight.w500,
@@ -67,24 +67,27 @@ class ListeRdvState extends State<ListeRdv> {
           const SizedBox(height: 15),
           Expanded(
             child: Obx(() {
-              return Column(
-                children: reponseController.rdvs.map((rdv) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(child: RdvItemCard(rdv: rdv)),
-                        SizedBox(
-                          width: 5,
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
+              return SingleChildScrollView(
+                child: Column(
+                  children: reponseController.rdvs.map((rdv) {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(child: RdvItemCard(rdv: rdv)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
               );
             }),
           ),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

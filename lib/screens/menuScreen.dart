@@ -72,6 +72,17 @@ class _MenuScreen extends State<MenuScreen> {
                     width: 100,
                   ),
                   SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "ici Pharmacies ivoiriennes",
+                    textAlign: TextAlign.center,
+                    style: Helper.getTheme(context).headlineLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: AppColor.orange),
+                  ),
+                  SizedBox(
                     height: Helper.getScreenHeight(context) * 0.1,
                   ),
                   SizedBox(
@@ -89,7 +100,7 @@ class _MenuScreen extends State<MenuScreen> {
                                     bottomRight: Radius.circular(30),
                                   ),
                                 ),
-                                color: AppColor.orange),
+                                color: AppColor.blue),
                           ),
                           Padding(
                             padding:

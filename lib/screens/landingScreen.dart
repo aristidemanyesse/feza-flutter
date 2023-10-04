@@ -70,9 +70,10 @@ class LandingScreenState extends State<LandingScreen> {
                     Text(
                       "ici Pharmacies ivoiriennes",
                       textAlign: TextAlign.center,
-                      style: Helper.getTheme(context)
-                          .headlineLarge
-                          ?.copyWith(fontWeight: FontWeight.bold, fontSize: 20),
+                      style: Helper.getTheme(context).headlineLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: AppColor.orange),
                     ),
                     Expanded(
                       child: Container(),

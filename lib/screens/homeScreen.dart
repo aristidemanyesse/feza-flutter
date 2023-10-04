@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,11 +6,11 @@ import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/controllers/ReponseController.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/models/DemandeModel.dart';
-import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/screens/ListeRdv.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/makeDemandeScreen.dart';
 import 'package:ipi/screens/profileScreen.dart';
+import 'package:ipi/screens/spashScreen.dart';
 import 'package:ipi/widgets/confirmDialog.dart';
 import 'package:ipi/widgets/selectCirconscriptionBloc.dart';
 import 'package:lottie/lottie.dart';
@@ -33,6 +32,9 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     demandeController.onInit();
+    if (userController.currentUser.value!.isValide != true) {
+      Get.off(SplashScreen());
+    }
     super.initState();
   }
 

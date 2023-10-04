@@ -1,6 +1,4 @@
-import 'dart:io';
 
-import 'package:csshadow/csshadow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -9,7 +7,6 @@ import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/models/UtilisateurModel.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
-import 'package:ipi/screens/landingScreen.dart';
 import 'package:ipi/screens/spashScreen.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/widgets/confirmDialog.dart';
@@ -43,6 +40,11 @@ class ProfileScreenState extends State<ProfileScreen> {
     controller.currentUser.value = null;
     box.erase();
     UtilisateurProvider.getUniqID().then((value) => box.write("imei", value));
+    controller.updateUser(
+        contact: controller.currentUser.value?.contact ?? "",
+        name: controller.currentUser.value?.fullname ?? "",
+        redirect: false,
+        isValide: false);
     await Future.delayed(Duration(milliseconds: 3000));
     Get.to(SplashScreen());
   }
@@ -58,12 +60,11 @@ class ProfileScreenState extends State<ProfileScreen> {
         test = true;
         err = "";
         myFocusNode.unfocus();
-      } else {
         test = false;
       }
     } else if (myNumeroController.text.length > 0) {
       test = false;
-      err = 'Un numero de téléphone valide !';
+      err = 'Renseignez un numero de téléphone valide !';
     }
 
     setState(() {
@@ -86,86 +87,55 @@ class ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Color.fromARGB(255, 245, 239, 235),
       body: Stack(
         children: [
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: Image.asset(
+              Helper.getAssetName("landing.jpg", "bg"),
+              fit: BoxFit.scaleDown,
+              repeat: ImageRepeat.repeatY,
+            ),
+          ),
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Color.fromARGB(255, 245, 239, 235).withOpacity(0.90),
+          ),
           SafeArea(
             child: Container(
               height: Helper.getScreenHeight(context),
               width: Helper.getScreenWidth(context),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Stack(children: [
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: CsShadow(
-                          clipper: CustomClipperAppBar(),
-                          shadow: BoxShadow(
-                              color: AppColor.placeholder,
-                              offset: Offset(0, 15),
-                              blurRadius: 5.0,
-                              spreadRadius: 6),
-                          child: Container(
-                            width: double.infinity,
-                            height: Helper.getScreenHeight(context) * 0.15,
-                            decoration: ShapeDecoration(
-                              color: AppColor.orange,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(5),
-                                  bottomRight: Radius.circular(5),
-                                ),
-                              ),
-                            ),
-                            child: Image.asset(
-                              Helper.getAssetName("login_bg.png", "bg"),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: Helper.getScreenHeight(context) * 0.12,
-                        child: Center(
-                          child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                "Mon profil",
-                                style: Helper.getTheme(context)
-                                    .headlineLarge
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              )),
-                        ),
-                      )
-                    ]),
-                    SizedBox(
-                      height: 50,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Mon profil",
+                    style: Helper.getTheme(context).headlineLarge?.copyWith(
+                        fontWeight: FontWeight.bold, color: AppColor.orange),
+                  ),
+                  Spacer(),
+                  Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(color: Colors.grey, width: 3),
                     ),
-                    Stack(children: [
-                      Container(
-                        padding: EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(color: Colors.grey, width: 3)),
-                        child: ClipOval(
-                          child: Obx(() {
-                            return Container(
-                              height: 120,
-                              width: 120,
-                              child: !imageController.ok.value
-                                  ? Image.asset(
-                                      Helper.getAssetName(
-                                        "user.jpg",
-                                        "icons",
-                                      ),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.file(
-                                      File(imageController.file.value.path),
-                                      fit: BoxFit.cover,
-                                      height: 200.0,
-                                      width: double.infinity,
-                                    ),
-                            );
-                          }),
+                    child: Stack(children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Container(
+                          height: 120,
+                          width: 120,
+                          child: Image.asset(
+                            Helper.getAssetName(
+                              "user.jpg",
+                              "icons",
+                            ),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                       Visibility(
@@ -178,75 +148,163 @@ class ProfileScreenState extends State<ProfileScreen> {
                               Get.dialog(TakeImage());
                             },
                             child: Container(
-                                child: Icon(
-                              Icons.camera_alt,
-                              color: AppColor.blue,
-                              size: 35,
-                            )),
+                              child: Icon(
+                                Icons.camera_alt,
+                                color: AppColor.blue,
+                                size: 35,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ]),
-                    SizedBox(
-                      height: 60,
+                  ),
+                  Spacer(),
+                  Visibility(
+                    visible: !isUpdated,
+                    child: Column(
+                      children: [
+                        Obx(() {
+                          return Text(
+                            controller.currentUser.value!.fullname ?? "",
+                            style: Helper.getTheme(context)
+                                .headlineMedium
+                                ?.copyWith(
+                                  color: AppColor.primary,
+                                ),
+                          );
+                        }),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "+225 ${controller.currentUser.value!.contact}",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isUpdated = true;
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 3),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                border:
+                                    Border.all(color: AppColor.blue, width: 1)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Modifier",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      color: AppColor.blue),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Icon(
+                                  Icons.edit,
+                                  color: AppColor.blue,
+                                  size: 13,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Visibility(
-                      visible: !isUpdated,
+                  ),
+                  Visibility(
+                    visible: isUpdated,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Obx(() {
-                            return Text(
-                              controller.currentUser.value!.fullname ?? "",
-                              style: Helper.getTheme(context)
-                                  .headlineMedium
-                                  ?.copyWith(
-                                    color: AppColor.primary,
-                                  ),
-                            );
-                          }),
+                          Text("Ton nom en entier"),
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.grey, width: 1.5),
+                                borderRadius: BorderRadius.circular(25)),
+                            child: CustomTextInput(
+                              controller: myNameController,
+                              myFocusNode: focusNode2,
+                              onChanged: (myNameController) {},
+                              hintText: "Ton nom",
+                              textAlign: TextAlign.center,
+                              keyboard: TextInputType.name,
+                              onEditingComplete: () {
+                                myFocusNode.nextFocus();
+                              },
+                            ),
+                          ),
                           SizedBox(
                             height: 20,
                           ),
-                          Text(
-                            "+225 ${controller.currentUser.value!.contact}",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                          Text("Ton numéro de téléphone"),
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                border:
+                                    Border.all(color: Colors.grey, width: 2)),
+                            child: CustomTextInput(
+                              controller: myNumeroController,
+                              myFocusNode: myFocusNode,
+                              textAlign: TextAlign.center,
+                              onChanged: (myNumeroController) {
+                                if (myNumeroController!.toString().length ==
+                                    14) {
+                                  _checkNumero();
+                                }
+                              },
+                              keyboard: TextInputType.number,
+                              hintText: "07 01 02 03 04",
+                              onEditingComplete: () {
+                                myFocusNode.unfocus();
+                              },
+                            ),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: 40,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isUpdated = true;
-                              });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 3),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  border: Border.all(
-                                      color: AppColor.blue, width: 1)),
+                          SizedBox(
+                            height: 50,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                controller.updateUser(
+                                    name: myNameController.text,
+                                    contact: myNumeroController.text);
+                              },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(
-                                    "Modifier",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        color: AppColor.blue),
+                                  Icon(
+                                    Icons.check,
+                                    color: Colors.white,
                                   ),
                                   SizedBox(
                                     width: 5,
                                   ),
-                                  Icon(
-                                    Icons.edit,
-                                    color: AppColor.blue,
-                                    size: 13,
-                                  )
+                                  Text("Enregistrer les modifications"),
                                 ],
                               ),
                             ),
@@ -254,97 +312,11 @@ class ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     ),
-                    Visibility(
-                      visible: isUpdated,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Ton nom en entier"),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.grey, width: 1.5),
-                                  borderRadius: BorderRadius.circular(25)),
-                              child: CustomTextInput(
-                                controller: myNameController,
-                                myFocusNode: focusNode2,
-                                onChanged: (myNameController) {},
-                                hintText: "Ton nom",
-                                textAlign: TextAlign.center,
-                                keyboard: TextInputType.name,
-                                onEditingComplete: () {
-                                  myFocusNode.nextFocus();
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text("Ton numéro de téléphone"),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  border:
-                                      Border.all(color: Colors.grey, width: 2)),
-                              child: CustomTextInput(
-                                controller: myNumeroController,
-                                myFocusNode: myFocusNode,
-                                textAlign: TextAlign.center,
-                                onChanged: (myNumeroController) {
-                                  if (myNumeroController!.toString().length ==
-                                      14) {
-                                    _checkNumero();
-                                  }
-                                },
-                                keyboard: TextInputType.number,
-                                hintText: "07 01 02 03 04",
-                                onEditingComplete: () {
-                                  myFocusNode.unfocus();
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            SizedBox(
-                              height: 50,
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  controller.updateUser(
-                                      name: myNameController.text,
-                                      contact: myNumeroController.text);
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text("Enregistrer les modifications"),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                  Spacer(),
+                  Spacer(),
+                  Spacer(),
+                ],
               ),
             ),
           ),
@@ -388,13 +360,14 @@ class ProfileScreenState extends State<ProfileScreen> {
                         child: Container(
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white, width: 1),
+                              border:
+                                  Border.all(color: AppColor.blue, width: 1),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100))),
                           child: Icon(
                             Icons.arrow_back_ios_rounded,
                             size: 20,
-                            color: Colors.white,
+                            color: AppColor.blue,
                           ),
                         ),
                       ),

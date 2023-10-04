@@ -16,7 +16,7 @@ class ReponseController extends GetxController {
 
   void onInit() async {
     getData();
-    Timer.periodic(Duration(minutes: 20), (Timer timer) {
+    Timer.periodic(Duration(seconds: 10), (Timer timer) {
       getData();
     });
     super.onInit();

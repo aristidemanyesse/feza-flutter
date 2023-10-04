@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -8,6 +6,7 @@ import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/provider/UtilisateurProvider.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/introScreen.dart';
+import 'package:ipi/screens/sentOTPScreen.dart';
 
 import '../utils/helper.dart';
 
@@ -29,17 +28,25 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    super.initState();
     String? id = box.read("userId");
     String? imei = box.read("imei");
-
     Future.delayed(Duration(seconds: 1)).then((value) {
       if (_controller.currentUser.value != null) {
-        Get.to(HomeScreen());
+        if (_controller.currentUser.value!.isValide != true) {
+          Get.to(SendOTPScreen());
+        } else {
+          Get.to(HomeScreen());
+        }
       } else if (id != null) {
         UtilisateurProvider.all({"id": id, "imei": imei}).then((users) {
           if (users.length > 0) {
             _controller.currentUser.value = users[0];
-            Get.to(HomeScreen());
+            if (_controller.currentUser.value!.isValide != true) {
+              Get.to(SendOTPScreen());
+            } else {
+              Get.to(HomeScreen());
+            }
           } else {
             newSection();
           }
@@ -48,7 +55,6 @@ class _SplashScreenState extends State<SplashScreen> {
         newSection();
       }
     });
-    super.initState();
   }
 
   @override

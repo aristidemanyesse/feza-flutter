@@ -46,13 +46,17 @@ class ProduitsSection extends StatelessWidget {
             height: 10,
           ),
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text("2 - Que recherchez-vous ?",
-                  textAlign: TextAlign.center,
-                  style: Helper.getTheme(context).headlineLarge?.copyWith(
+              Text(
+                "2 - Que recherchez-vous ?",
+                textAlign: TextAlign.center,
+                style: Helper.getTheme(context).headlineLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
-                      color: Color.fromARGB(255, 21, 67, 111))),
+                      color: Color.fromARGB(255, 21, 67, 111),
+                    ),
+              ),
               SizedBox(
                 height: 15,
               ),

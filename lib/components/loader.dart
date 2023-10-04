@@ -60,14 +60,17 @@ class _LoaderScreenState extends State<LoaderScreen>
                 children: [
                   Lottie.asset("assets/lotties/search2.json",
                       width: Helper.getScreenWidth(context) * 0.7),
-                  Text(
-                    widget.title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 16,
-                        height: 2,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      widget.title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 16,
+                          height: 2,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87),
+                    ),
                   )
                 ],
               ),

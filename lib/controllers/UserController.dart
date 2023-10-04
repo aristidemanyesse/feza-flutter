@@ -52,7 +52,10 @@ class UtilisateurController extends GetxController {
   }
 
   void updateUser(
-      {String name = "", String contact = "", redirect = true}) async {
+      {String name = "",
+      String contact = "",
+      redirect = true,
+      isValide}) async {
     Get.dialog(PleaseWait(), barrierDismissible: false);
 
     Map<String, dynamic> datas = {};
@@ -61,6 +64,7 @@ class UtilisateurController extends GetxController {
     datas["id"] = currentUser.value?.id;
     datas["imei"] = currentUser.value?.imei;
     datas["circonscription"] = currentUser.value?.circonscription?.id ?? "";
+    datas["isValide"] = isValide ?? currentUser.value?.isValide;
     ResponseModel response = await UtilisateurProvider.update(datas);
     if (response.ok) {
       var test = currentUser.value?.contact;

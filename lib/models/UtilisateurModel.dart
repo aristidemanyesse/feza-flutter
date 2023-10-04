@@ -7,7 +7,7 @@ class UtilisateurModel {
     this.contact,
     this.otp,
     this.imei,
-    this.isValide,
+    this.isValide = false,
     this.geometryJson,
     this.circonscription,
     this.image,
@@ -22,7 +22,7 @@ class UtilisateurModel {
   String? contact;
   String? otp;
   String? imei;
-  bool? isValide;
+  bool isValide = false;
   String? geometryJson;
   CirconscriptionModel? circonscription;
   String? image;

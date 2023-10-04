@@ -51,57 +51,60 @@ class ProduitsListeState extends State<ProduitsListe> {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: Obx(() {
-              return Column(
-                children: controller.produitsSelected.map((produit) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            controller.removeProduitSelected(produit);
-                          },
-                          child: Icon(
-                            Icons.delete_forever_outlined,
-                            color: Colors.red,
-                            size: 25,
+            child: SingleChildScrollView(
+              child: Obx(() {
+                return Column(
+                  children: controller.produitsSelected.map((produit) {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              controller.removeProduitSelected(produit);
+                            },
+                            child: Icon(
+                              Icons.delete_forever_outlined,
+                              color: Colors.red,
+                              size: 25,
+                            ),
                           ),
-                        ),
-                        Expanded(child: SuggestionItemCard(produit: produit)),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Get.dialog(ConfirmQuantite(produit));
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                border:
-                                    Border.all(width: 1, color: AppColor.blue),
-                                borderRadius: BorderRadius.circular(100)),
-                            child: Center(
-                              child: Text(
-                                "x${controller.quantiteProduitsSelected[produit]}",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                          Expanded(child: SuggestionItemCard(produit: produit)),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Get.dialog(ConfirmQuantite(produit));
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(
+                                      width: 1, color: AppColor.blue),
+                                  borderRadius: BorderRadius.circular(100)),
+                              child: Center(
+                                child: Text(
+                                  "x${controller.quantiteProduitsSelected[produit]}",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-              );
-            }),
+                          SizedBox(
+                            width: 5,
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                );
+              }),
+            ),
           ),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

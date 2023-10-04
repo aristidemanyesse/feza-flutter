@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/components/ReponseCard.dart';
@@ -11,7 +10,6 @@ import 'package:ipi/provider/ReponseProvider.dart';
 import 'package:ipi/utils/helper.dart';
 import "package:intl/intl.dart";
 import 'package:lottie/lottie.dart';
-
 
 class DetailDemande extends StatefulWidget {
   late List<LigneDemandeModel> produits = [];
@@ -68,7 +66,7 @@ class DetailDemandeState extends State<DetailDemande> {
             height: 5,
           ),
           Text(
-            "Reponse des pharmacies ",
+            "Réponse des pharmacies ",
             textAlign: TextAlign.center,
             style: Helper.getTheme(context).headlineLarge?.copyWith(
                 fontWeight: FontWeight.bold,
@@ -90,17 +88,17 @@ class DetailDemandeState extends State<DetailDemande> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "${widget.produits.length} médicaments",
+                "${widget.produits.length} médicament${widget.produits.length > 1 ? 's' : ''}",
                 style: TextStyle(fontSize: 12, color: Colors.black),
                 overflow: TextOverflow.ellipsis,
               ),
-              Text(
-                " - ",
-                style: TextStyle(fontSize: 12, color: Colors.black),
-                overflow: TextOverflow.ellipsis,
+              SizedBox(
+                width: 5,
               ),
               Text(
-                widget.demande.base64 != "" ? "1 ordonnance" : "",
+                (widget.demande.base64 != "" && widget.demande.base64 != null)
+                    ? "1 ordonnance"
+                    : "",
                 style: TextStyle(fontSize: 12, color: Colors.black),
                 overflow: TextOverflow.ellipsis,
               ),

@@ -14,11 +14,10 @@ class OTPInput extends StatelessWidget {
     return Container(
       width: 60,
       height: 60,
-      decoration: ShapeDecoration(
+      decoration: BoxDecoration(
         color: AppColor.placeholderBg,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
         keyboardType: TextInputType.number,
@@ -35,7 +34,7 @@ class OTPInput extends StatelessWidget {
             fontSize: 30,
             color: AppColor.placeholder,
           ),
-          contentPadding: EdgeInsets.only(top: 15, left: 4),
+          contentPadding: EdgeInsets.only(top: 10, left: 4),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,17 +52,22 @@ class DemandeController extends GetxController {
   }
 
   void checkReponse() async {
+    int aaa = 0;
+    int bbb = 0;
     Map<String, int> tab = {};
     for (var dem in demandes) {
-      tab[dem.id!] = await newReponseForDemande(dem);
+      int t = await newReponseForDemande(dem);
+      aaa += t;
+      tab[dem.id!] = t;
     }
-    if (repondesDemandes.length > 0) {
-      if (!mapEquals(tab, repondesDemandes) &&
-          tab.length == repondesDemandes.length) {
-        NotificationService().showNotification(
-            title: 'Nouvelle réponse',
-            body: 'Une pharmacie a répondu à votre demande');
-      }
+    for (int a in repondesDemandes.values) {
+      bbb += a;
+    }
+
+    if (aaa > bbb) {
+      NotificationService().showNotification(
+          title: 'Nouvelle réponse',
+          body: 'Une pharmacie a répondu à votre demande');
     }
     repondesDemandes.value = tab;
   }
@@ -116,7 +122,6 @@ class DemandeController extends GetxController {
           produitController.produitsSelected.value = [];
           produitController.quantiteProduitsSelected.value = {};
           officineController.officines.value = [];
-          appController.searchByAround.value = false;
 
           onInit();
           Get.back();
@@ -176,7 +181,6 @@ class DemandeController extends GetxController {
   }
 
   void satisfiedDemande(DemandeModel demande) async {
-    Get.dialog(PleaseWait());
     ResponseModel response = await DemandeProvider.update({
       "id": demande.id,
       "utilisateur": demande.utilisateur?.id,
@@ -185,7 +189,6 @@ class DemandeController extends GetxController {
     });
     if (response.ok) {
       getData();
-      Get.back();
     }
   }
 }

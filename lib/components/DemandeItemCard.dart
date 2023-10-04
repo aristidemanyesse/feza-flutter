@@ -10,7 +10,7 @@ import 'package:ipi/provider/ReponseProvider.dart';
 import 'package:ipi/screens/detailDemande.dart';
 import "package:intl/intl.dart";
 import 'package:ipi/widgets/confirmDialog.dart';
-
+import 'package:intl/date_symbol_data_local.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
@@ -26,7 +26,8 @@ class DemandeItemCard extends StatefulWidget {
 class DemandeItemCardState extends State<DemandeItemCard> {
   DemandeController demandeController = Get.find();
 
-  final f = DateFormat("dd/MM/yyyy à HH:mm");
+  DateFormat? dateFormat;
+  DateFormat? timeFormat;
 
   late List<LigneDemandeModel> produits = [];
   late List<OfficineDemandeModel> officines = [];
@@ -36,6 +37,9 @@ class DemandeItemCardState extends State<DemandeItemCard> {
   @override
   void initState() {
     super.initState();
+    initializeDateFormatting();
+    dateFormat = new DateFormat.yMMMMd('fr');
+    timeFormat = new DateFormat.Hm('fr');
     getData();
   }
 
@@ -99,8 +103,7 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                             width: 5,
                           ),
                           Text(
-                            f.format(
-                                DateTime.parse(widget.demande.createdAt ?? "")),
+                            "${dateFormat!.format(DateTime.parse(widget.demande.createdAt ?? ""))} ${timeFormat!.format(DateTime.parse(widget.demande.createdAt ?? ""))}",
                             style: Helper.getTheme(context)
                                 .headlineMedium
                                 ?.copyWith(
@@ -124,13 +127,14 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  " - ",
+                                  "  ",
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.black),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  widget.demande.base64 != ""
+                                  widget.demande.base64 != "" &&
+                                          widget.demande.base64 != null
                                       ? "1 ordonnance"
                                       : "",
                                   style: TextStyle(
@@ -177,6 +181,7 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                           testCancel: "Non",
                           functionOk: () {
                             demandeController.deleteDemande(widget.demande);
+                            Get.back();
                           },
                           functionCancel: () {
                             Get.back();

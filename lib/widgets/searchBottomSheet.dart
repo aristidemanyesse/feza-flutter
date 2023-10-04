@@ -17,13 +17,12 @@ class SearchBottomSheet extends StatefulWidget {
   State<SearchBottomSheet> createState() => SearchBottomSheetState();
 }
 
-class SearchBottomSheetState extends State<SearchBottomSheet>
-    with SingleTickerProviderStateMixin {
+class SearchBottomSheetState extends State<SearchBottomSheet> {
   SearchBottomSheetState();
 
   SearchBottomSheetController controller = Get.find();
   AppController appController = Get.find();
-  double taille = 0.37;
+  double taille = 0.38;
 
   var _controller = new PageController();
   final List<Widget> _pages = [
@@ -54,32 +53,26 @@ class SearchBottomSheetState extends State<SearchBottomSheet>
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: taille,
-      maxChildSize: taille,
-      minChildSize: taille,
+      initialChildSize: (868 * 0.3) / Get.size.height,
+      minChildSize: (868 * 0.3) / Get.size.height,
       builder: (context, scrollController) {
-        return Column(
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40)),
-                child: Container(
-                  color: Color.fromARGB(255, 245, 239, 235),
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  child: PageView(
-                    // physics: NeverScrollableScrollPhysics(),
-                    controller: _controller,
-                    children: _pages,
-                    onPageChanged: (value) {
-                      controller.page.value = value;
-                    },
-                  ),
-                ),
+        return Center(
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+            child: Container(
+              color: Color.fromARGB(255, 245, 239, 235),
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              child: PageView(
+                // physics: NeverScrollableScrollPhysics(),
+                controller: _controller,
+                children: _pages,
+                onPageChanged: (value) {
+                  controller.page.value = value;
+                },
               ),
-            )
-          ],
+            ),
+          ),
         );
       },
     );

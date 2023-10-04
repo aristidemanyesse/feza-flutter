@@ -311,6 +311,7 @@ class ReponseSchema {
             days
             read
             validedDate
+            createdAt
             ligne {
                id
             status

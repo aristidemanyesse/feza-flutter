@@ -3,7 +3,7 @@ import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/schemas/OfficineSchema.dart';
 import 'package:ipi/webservice/apiservice.dart';
 
-class OfficineProvider extends ChangeNotifier {
+class OfficineProvider {
   late List<OfficineModel> officines;
 
   static Future<List<OfficineModel>> all(Map<String, dynamic> variables) async {
@@ -17,7 +17,7 @@ class OfficineProvider extends ChangeNotifier {
     return officines;
   }
 
-  static Future<List<OfficineModel>> officineDistance(
+  static Future<Map<String, dynamic>> officineDistance(
       Map<String, dynamic> variables) async {
     dynamic datas =
         await ApiService.request(OfficineSchema.OFFICINE_DISTANCE, variables);

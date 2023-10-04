@@ -8,7 +8,6 @@ import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'package:latlong2/latlong.dart';
 
 class ListePharmaciesSection extends StatelessWidget {
@@ -20,7 +19,6 @@ class ListePharmaciesSection extends StatelessWidget {
   UtilisateurController utilisateurController = Get.find();
   AppController appController = Get.find();
   MapWidgetController mpController = Get.find();
-  SearchBottomSheetController controller = Get.find();
 
   void targetMarker(String? id) {
     var officine =

@@ -38,7 +38,8 @@ class TakeImageState extends State<TakeImage> {
   late Future<XFile?> pickedFile = Future.value(null);
 
   Future<void> _captureImageFromCamera() async {
-    pickedFile = picker.pickImage(source: ImageSource.camera);
+    pickedFile = picker.pickImage(
+        source: ImageSource.camera, maxHeight: 1000, maxWidth: 500);
 
     pickedFile.then((value) {
       var file = File(value!.path);
@@ -54,8 +55,7 @@ class TakeImageState extends State<TakeImage> {
 
   Future<void> _pickImageFromGallery() async {
     pickedFile = picker.pickImage(
-      source: ImageSource.gallery,
-    );
+        source: ImageSource.gallery, maxHeight: 1000, maxWidth: 500);
     pickedFile.then((value) {
       var file = File(value!.path);
       controller.file.value = file;
@@ -73,7 +73,7 @@ class TakeImageState extends State<TakeImage> {
     return Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.white.withOpacity(0.85)),
@@ -86,49 +86,53 @@ class TakeImageState extends State<TakeImage> {
                   onTap: () {
                     _captureImageFromCamera();
                   },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.camera,
-                        size: 35,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Prendre une photo avec la camera",
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.camera,
+                          size: 35,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Prendre une photo avec la camera",
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 15),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 5),
                   height: 1.5,
                   color: Colors.grey,
                 ),
-                const SizedBox(height: 15),
                 GestureDetector(
                   onTap: () {
                     _pickImageFromGallery();
                   },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.image_search_outlined,
-                        size: 35,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Choisir une photo dans ma gallerie",
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.image_search_outlined,
+                          size: 35,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Choisir une photo dans ma gallerie",
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],

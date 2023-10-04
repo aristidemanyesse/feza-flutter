@@ -58,9 +58,9 @@ class UtilisateurSchema {
   """;
 
   static const String UPDATE = r"""
-    mutation ($id:UUID!, $contact: String!, $fullname: String!, $imei: String!, $circonscription: ID!) {
+    mutation ($id:UUID!, $contact: String!, $fullname: String!, $imei: String!, $circonscription: ID!, $isValide: Boolean) {
       updateUtilisateur(
-        newUtilisateur: {id:$id, fullname:$fullname, contact: $contact, imei: $imei, circonscription: $circonscription}
+        newUtilisateur: {id:$id, fullname:$fullname, contact: $contact, imei: $imei, circonscription: $circonscription, isValide : $isValide}
       ) {
         ok
         errors {
@@ -71,6 +71,8 @@ class UtilisateurSchema {
           id
           contact
           imei
+          isValide
+          otp
           circonscription {
             id
             name

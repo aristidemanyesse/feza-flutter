@@ -81,8 +81,7 @@ class _FelicitationScreenState extends State<FelicitationScreen> {
                           border: Border.all(width: 1, color: AppColor.blue)),
                       child: TextButton(
                         onPressed: () {
-                          Get.back();
-                          Get.to(HomeScreen());
+                          Get.off(HomeScreen());
                         },
                         child: Text(
                           "OK, j'ai compris",

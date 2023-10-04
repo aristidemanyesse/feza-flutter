@@ -84,6 +84,7 @@ class ConfirmNumberDialog extends StatelessWidget {
                     ),
                     child: TextButton(
                       onPressed: () {
+                        Get.back();
                         userRegistration(context, number);
                       },
                       child: Text(

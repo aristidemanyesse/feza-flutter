@@ -1,6 +1,6 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:csshadow/csshadow.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ipi/components/myLogo.dart';
@@ -8,7 +8,6 @@ import 'package:ipi/components/optInput.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/provider/CommunicateProvider.dart';
 import 'package:ipi/screens/homeScreen.dart';
-import 'package:ipi/screens/landingScreen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../const/colors.dart';
 import '../utils/helper.dart';
@@ -98,7 +97,8 @@ class _SendOTPScreen extends State<SendOTPScreen> {
       controller.updateUser(
           contact: controller.currentUser.value?.contact ?? "",
           name: controller.currentUser.value?.fullname ?? "",
-          redirect: false);
+          redirect: false,
+          isValide: true);
       Get.off(HomeScreen());
     } else {
       setState(() {
@@ -131,202 +131,233 @@ class _SendOTPScreen extends State<SendOTPScreen> {
   Widget build(BuildContext context) {
     final minutes = strDigits(myDuration.inMinutes.remainder(60));
     final seconds = strDigits(myDuration.inSeconds.remainder(60));
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 245, 239, 235),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: CsShadow(
-                  clipper: CustomClipperAppBar(),
-                  shadow: BoxShadow(
-                      color: AppColor.placeholder,
-                      offset: Offset(0, 15),
-                      blurRadius: 5.0,
-                      spreadRadius: 4),
-                  child: Container(
-                      width: double.infinity,
-                      height: Helper.getScreenHeight(context) * 0.2,
-                      decoration: ShapeDecoration(
-                        color: AppColor.orange,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Image.asset(
-                        Helper.getAssetName("login_bg.png", "bg"),
-                        fit: BoxFit.cover,
-                      )),
+    return WillPopScope(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                child: Image.asset(
+                  Helper.getAssetName("landing.jpg", "bg"),
+                  fit: BoxFit.scaleDown,
+                  repeat: ImageRepeat.repeatY,
                 ),
               ),
               Container(
-                height: Helper.getScreenHeight(context) * 0.17,
-                child: Center(
-                  child: Align(
+                height: double.infinity,
+                width: double.infinity,
+                color: Color.fromARGB(255, 245, 239, 235).withOpacity(0.90),
+              ),
+              SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Spacer(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Vérification OTP",
+                      style: Helper.getTheme(context).headlineLarge?.copyWith(
+                          fontWeight: FontWeight.bold, color: AppColor.orange),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Spacer(),
+                    Container(
                       alignment: Alignment.center,
-                      child: Text(
-                        "Validation OTP",
-                        style: Helper.getTheme(context)
-                            .headlineLarge
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      )),
-                ),
-              )
-            ]),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              alignment: Alignment.center,
-              child: MyLogo(height: 80, width: 80),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "On vérifie que c'est vous!",
-                    style: Helper.getTheme(context)
-                        .titleLarge!
-                        .copyWith(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Text("Nous venons de vous envoyer un code SMS sur le "),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    "+225 ${controller.currentUser.value?.contact}",
-                    style: TextStyle(
-                      color: AppColor.blue,
-                      fontWeight: FontWeight.bold,
+                      child: MyLogo(height: 80, width: 80),
                     ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      OTPInput(
-                        controller: myController1,
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            FocusScope.of(context).nextFocus();
-                          }
-                        },
-                      ),
-                      OTPInput(
-                        controller: myController2,
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            FocusScope.of(context).nextFocus();
-                          } else {
-                            FocusScope.of(context).previousFocus();
-                          }
-                        },
-                      ),
-                      OTPInput(
-                        controller: myController3,
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            FocusScope.of(context).nextFocus();
-                          } else {
-                            FocusScope.of(context).previousFocus();
-                          }
-                        },
-                      ),
-                      OTPInput(
-                        controller: myController4,
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            FocusScope.of(context).unfocus();
-                          } else {
-                            FocusScope.of(context).previousFocus();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  SizedBox(
-                    height: 50,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: checkOTP() ? validation : null,
-                      child: Text("Continuer"),
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  minutes == "00" && seconds == "00"
-                      ? GestureDetector(
-                          onTap: () {
-                            sendOTP();
-                          },
-                          child: Row(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "On vérifie que c'est vous!",
+                            style: Helper.getTheme(context)
+                                .titleLarge!
+                                .copyWith(fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                              "Nous venons de vous envoyer un code SMS sur le "),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Je n'ai pas reçu de code. "),
-                              Container(
-                                  margin: EdgeInsets.only(left: 7),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 3),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    border: Border.all(color: AppColor.blue),
-                                  ),
-                                  child: Text(
-                                    "Renvoyez-le !",
-                                    style: TextStyle(
-                                      color: AppColor.blue,
-                                      fontWeight: FontWeight.bold,
+                              Text(
+                                "+225 ${controller.currentUser.value?.contact}",
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Get.back();
+                                },
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        child: Text(
+                                      "Changer",
+                                      style: TextStyle(
+                                        color: AppColor.blue,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )),
+                                    Icon(
+                                      Icons.edit,
+                                      size: 16,
+                                      color: Colors.grey,
                                     ),
-                                  )),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("patienter ..."),
-                            Container(
-                                margin: EdgeInsets.only(left: 7),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 3),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  border: Border.all(color: AppColor.blue),
-                                ),
-                                child: Text(
-                                  "$minutes:$seconds",
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.bold,
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              OTPInput(
+                                controller: myController1,
+                                onChanged: (value) {
+                                  if (value.length == 1) {
+                                    FocusScope.of(context).nextFocus();
+                                  }
+                                },
+                              ),
+                              OTPInput(
+                                controller: myController2,
+                                onChanged: (value) {
+                                  if (value.length == 1) {
+                                    FocusScope.of(context).nextFocus();
+                                  } else {
+                                    FocusScope.of(context).previousFocus();
+                                  }
+                                },
+                              ),
+                              OTPInput(
+                                controller: myController3,
+                                onChanged: (value) {
+                                  if (value.length == 1) {
+                                    FocusScope.of(context).nextFocus();
+                                  } else {
+                                    FocusScope.of(context).previousFocus();
+                                  }
+                                },
+                              ),
+                              OTPInput(
+                                controller: myController4,
+                                onChanged: (value) {
+                                  if (value.length == 1) {
+                                    FocusScope.of(context).unfocus();
+                                  } else {
+                                    FocusScope.of(context).previousFocus();
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          SizedBox(
+                            height: 50,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: checkOTP() ? validation : null,
+                              child: Text("Continuer"),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          minutes == "00" && seconds == "00"
+                              ? GestureDetector(
+                                  onTap: () {
+                                    sendOTP();
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("Je n'ai pas reçu de code. "),
+                                      Container(
+                                          margin: EdgeInsets.only(left: 7),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 3),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            border: Border.all(
+                                                color: AppColor.blue),
+                                          ),
+                                          child: Text(
+                                            "Renvoyez-le !",
+                                            style: TextStyle(
+                                              color: AppColor.blue,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )),
+                                    ],
                                   ),
-                                )),
-                          ],
-                        )
-                ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("patienter ..."),
+                                    Container(
+                                        margin: EdgeInsets.only(left: 7),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 3),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          border:
+                                              Border.all(color: AppColor.blue),
+                                        ),
+                                        child: Text(
+                                          "$minutes:$seconds",
+                                          style: TextStyle(
+                                            color: AppColor.blue,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )),
+                                  ],
+                                )
+                        ],
+                      ),
+                    ),
+                    Spacer(),
+                    Spacer(),
+                    Spacer(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+        onWillPop: () {
+          return Future.value(false);
+        });
   }
 }

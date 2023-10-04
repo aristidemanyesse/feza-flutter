@@ -9,9 +9,11 @@ import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/ReponseController.dart';
 import 'package:ipi/models/LigneReponseModel.dart';
 import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/models/RdvLigneReponseModel.dart';
 import 'package:ipi/models/ReponseModel.dart';
 import 'package:ipi/models/SubsLigneReponseModel.dart';
 import 'package:ipi/provider/ReponseProvider.dart';
+import 'package:ipi/screens/meToOfficineScreen.dart';
 import 'package:ipi/widgets/felicitation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
@@ -122,7 +124,11 @@ class ReponseCardState extends State<ReponseCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Ligne(ligneReponse: ligne),
+                    Ligne(
+                        ligneReponse: ligne,
+                        rdv: reponseController.rdvs.firstWhere(
+                            (element) => element.ligne?.id == ligne.id,
+                            orElse: () => RdvLigneReponseModel())),
                     Column(
                       children: subsLignes[ligne]!.map((sub) {
                         return LigneSub(sub: sub);
@@ -138,27 +144,29 @@ class ReponseCardState extends State<ReponseCard> {
               }).toList(),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(right: 20, top: 5, bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  "Total = ",
-                  style: TextStyle(fontSize: 16),
-                ),
-                Text(
-                  "${reponse.price} Fcfa",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: AppColor.blue,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
+          reponse.price! > 0
+              ? Container(
+                  margin: EdgeInsets.only(right: 20, top: 5, bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Total = ",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        "${reponse.price} Fcfa",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: AppColor.blue,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                )
+              : Container(),
           Container(
             height: 2,
             color: Colors.grey,
@@ -236,25 +244,6 @@ class ReponseCardState extends State<ReponseCard> {
               Container(
                 child: InkWell(
                   onTap: () {
-                    copy(officine);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: AppColor.blue, width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(100))),
-                    child: Icon(
-                      Icons.copy_all_outlined,
-                      size: 24,
-                      color: AppColor.blue,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                child: InkWell(
-                  onTap: () {
                     sharePosition(officine);
                   },
                   child: Container(
@@ -273,7 +262,9 @@ class ReponseCardState extends State<ReponseCard> {
               ),
               Container(
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(MeToOfficine(officine: officine));
+                  },
                   child: Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -288,16 +279,16 @@ class ReponseCardState extends State<ReponseCard> {
                   ),
                 ),
               ),
-              (reponse.demande!.demande!.isSatisfied ?? false)
+              !(reponse.demande!.demande!.isSatisfied ?? false)
                   ? Container(
                       child: InkWell(
                         onTap: () {
-                          demandeController
-                              .satisfiedDemande(reponse.demande!.demande!);
                           Get.dialog(FelicitationScreen(
                             text:
                                 "Merci d'avoir utiliser iPi pour votre recherche. \n Nous vous souhaitons prompt rétablissement et à très bientôt !!!",
                           ));
+                          demandeController
+                              .satisfiedDemande(reponse.demande!.demande!);
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(
