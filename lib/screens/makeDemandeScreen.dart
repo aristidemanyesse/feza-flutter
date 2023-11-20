@@ -8,9 +8,11 @@ import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/components/MapWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
+import 'package:ipi/controllers/ProduitController.dart';
 import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'dart:io';
 
+import 'package:ipi/widgets/takeImage.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({
@@ -25,6 +27,8 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
   MapWidgetController mapController = Get.find();
   OfficineController officineController = Get.find();
   DemandeController demandeController = Get.find();
+  ProduitController produitController = Get.find();
+  TakeImageController imageCcontroller = Get.find();
 
   double taille = 0.8;
 
@@ -39,6 +43,13 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    controller.onInit();
+    appController.onInit();
+    mapController.onInit();
+    produitController.onInit();
+    officineController.onInit();
+    imageCcontroller.onInit();
+
     officineController.garde.value = false;
     super.initState();
   }

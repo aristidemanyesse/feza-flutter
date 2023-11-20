@@ -81,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Container(
           width: Helper.getScreenWidth(context),
           height: Helper.getScreenHeight(context),
-          color: Colors.white.withOpacity(0.8),
+          color: Color.fromARGB(255, 235, 226, 219).withOpacity(0.8),
         ),
         MyLogo(),
         Positioned(

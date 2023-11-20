@@ -56,8 +56,13 @@ class _RdvItemCardState extends State<RdvItemCard> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(
-                ApiService.BASE_URL + widget.rdv.ligne!.produit!.image!,
+              // Image.network(
+              //   ApiService.BASE_URL + widget.rdv.ligne!.produit!.image!,
+              //   width: 30,
+              //   height: 30,
+              // ),
+              Image.asset(
+                "assets/images/icons/med.jpg",
                 width: 30,
                 height: 30,
               ),

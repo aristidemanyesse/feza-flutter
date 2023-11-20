@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/const/colors.dart';
+import 'package:ipi/controllers/AppController.dart';
+import 'package:ipi/controllers/MapWidgetController.dart';
+import 'package:ipi/controllers/OfficineController.dart';
+import 'package:ipi/controllers/ProduitController.dart';
+import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/utils/helper.dart';
+import 'package:ipi/widgets/pleaseWait.dart';
+import 'package:ipi/widgets/takeImage.dart';
 import 'package:lottie/lottie.dart';
 
 class FelicitationScreen extends StatefulWidget {
@@ -15,6 +22,13 @@ class FelicitationScreen extends StatefulWidget {
 }
 
 class _FelicitationScreenState extends State<FelicitationScreen> {
+  UtilisateurController controller = Get.find();
+  AppController appController = Get.find();
+  MapWidgetController mapController = Get.find();
+  ProduitController produitController = Get.find();
+  OfficineController officineController = Get.find();
+  TakeImageController imageCcontroller = Get.find();
+
   @override
   void initState() {
     super.initState();
@@ -22,6 +36,12 @@ class _FelicitationScreenState extends State<FelicitationScreen> {
 
   @override
   void dispose() {
+    controller.onInit();
+    appController.onInit();
+    mapController.onInit();
+    produitController.onInit();
+    officineController.onInit();
+    imageCcontroller.onInit();
     super.dispose();
   }
 
@@ -81,6 +101,7 @@ class _FelicitationScreenState extends State<FelicitationScreen> {
                           border: Border.all(width: 1, color: AppColor.blue)),
                       child: TextButton(
                         onPressed: () {
+                          Get.to(PleaseWait());
                           Get.off(HomeScreen());
                         },
                         child: Text(

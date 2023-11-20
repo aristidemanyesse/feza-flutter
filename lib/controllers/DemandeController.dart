@@ -23,6 +23,7 @@ import 'package:ipi/utils/local_notifications.dart';
 import 'package:ipi/widgets/felicitation.dart';
 import 'package:ipi/widgets/pleaseWait.dart';
 import 'package:ipi/widgets/takeImage.dart';
+import 'package:intl/intl.dart';
 
 class DemandeController extends GetxController {
   final box = GetStorage();
@@ -39,8 +40,9 @@ class DemandeController extends GetxController {
 
   void onInit() async {
     getData();
-    Timer.periodic(Duration(seconds: 10), (Timer timer) {
-      checkReponse();
+    Timer.periodic(Duration(seconds: 7), (Timer timer) {
+      updateListReponse();
+      checkNewReponse();
     });
     super.onInit();
   }
@@ -48,26 +50,29 @@ class DemandeController extends GetxController {
   void getData() async {
     demandes.value =
         await DemandeProvider.all({"user": controller.currentUser.value?.id});
-    checkReponse();
+    updateListReponse();
+    checkNewReponse();
   }
 
-  void checkReponse() async {
-    int aaa = 0;
-    int bbb = 0;
-    Map<String, int> tab = {};
+  void checkNewReponse() async {
+    int total = 0;
     for (var dem in demandes) {
-      int t = await newReponseForDemande(dem);
-      aaa += t;
-      tab[dem.id!] = t;
+      total += await newReponseForDemande(dem);
     }
-    for (int a in repondesDemandes.values) {
-      bbb += a;
-    }
-
-    if (aaa > bbb) {
+    if (total > 0) {
       NotificationService().showNotification(
           title: 'Nouvelle réponse',
           body: 'Une pharmacie a répondu à votre demande');
+      Get.snackbar(
+          'Nouvelle réponse', 'Une pharmacie a répondu à votre demande');
+    }
+  }
+
+  void updateListReponse() async {
+    Map<String, int> tab = {};
+    for (var dem in demandes) {
+      int total = await notReadReponseDemande(dem);
+      tab[dem.id!] = total;
     }
     repondesDemandes.value = tab;
   }
@@ -156,6 +161,24 @@ class DemandeController extends GetxController {
   }
 
   Future<int> newReponseForDemande(DemandeModel demande) async {
+    DateTime now = DateTime.now();
+
+    String created = box.read('reponseDateSearched') ??
+        DateFormat("yyyy-MM-ddTHH:mm:ss").format(now);
+    int news = 0;
+    var reponses =
+        await ReponseProvider.all({"demande": demande.id, "created": created});
+    for (ReponseModel rep in reponses) {
+      if (!rep.read!) {
+        news++;
+      }
+    }
+    box.write(
+        'reponseDateSearched', DateFormat("yyyy-MM-ddTHH:mm:ss").format(now));
+    return news;
+  }
+
+  Future<int> notReadReponseDemande(DemandeModel demande) async {
     int news = 0;
     var reponses = await ReponseProvider.all({"demande": demande.id});
     for (ReponseModel rep in reponses) {

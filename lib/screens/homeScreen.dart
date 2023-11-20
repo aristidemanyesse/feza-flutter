@@ -273,7 +273,7 @@ class HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           SizedBox(
-                            width: 20,
+                            width: 15,
                           ),
                           Expanded(
                             child: ElevatedButton(

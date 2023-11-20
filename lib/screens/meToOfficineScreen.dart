@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:ui';
 
+import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
@@ -9,6 +11,8 @@ import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/provider/OfficineProvider.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/const/colors.dart';
+import 'package:ipi/widgets/pleaseWait.dart';
+import 'package:latlong2/latlong.dart';
 
 class MeToOfficine extends StatefulWidget {
   final OfficineModel officine;
@@ -25,6 +29,7 @@ class MeToOfficine extends StatefulWidget {
 class MeToOfficineState extends State<MeToOfficine> {
   MapWidgetController mapController = Get.find();
   OfficineController controller = Get.find();
+  String distance = "";
 
   @override
   void initState() {
@@ -39,6 +44,28 @@ class MeToOfficineState extends State<MeToOfficine> {
       "latitude": mapController.currentPosition.value.latitude
     });
     print(datas);
+
+    var dist = datas["distance"];
+
+    var geojson = jsonDecode(datas["route"]);
+    List<LatLng> points = [];
+    for (var element in jsonDecode(geojson)["geometry"]["coordinates"]) {
+      points.add(LatLng(element[1], element[0]));
+    }
+
+    setState(() {
+      distance =
+          dist < 1000 ? "$dist m" : "${(dist / 1000).toStringAsFixed(2)} km";
+      controller.routeCoordinates.value = Polyline(
+        points: points,
+        isDotted: true,
+        color: Colors.white,
+        borderColor: Colors.black,
+        borderStrokeWidth: 3,
+        strokeWidth: 3,
+        useStrokeWidthInMeter: true,
+      );
+    });
   }
 
   @override
@@ -67,9 +94,17 @@ class MeToOfficineState extends State<MeToOfficine> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          child: Image.asset(
-                            Helper.getAssetName("pharma.png", "icons"),
-                            width: 65,
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                Helper.getAssetName("pharma.png", "icons"),
+                                width: 60,
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text("${distance}")
+                            ],
                           ),
                         ),
                         Expanded(

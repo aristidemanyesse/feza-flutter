@@ -279,8 +279,9 @@ class ReponseCardState extends State<ReponseCard> {
                   ),
                 ),
               ),
-              !(reponse.demande!.demande!.isSatisfied ?? false)
-                  ? Container(
+              (reponse.demande!.demande!.isSatisfied ?? false)
+                  ? Container()
+                  : Container(
                       child: InkWell(
                         onTap: () {
                           Get.dialog(FelicitationScreen(
@@ -308,8 +309,7 @@ class ReponseCardState extends State<ReponseCard> {
                           ),
                         ),
                       ),
-                    )
-                  : Container(),
+                    ),
             ],
           ),
           SizedBox(

@@ -9,6 +9,7 @@ import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:lottie/lottie.dart' as Lotties;
 
 import '../utils/utilities.dart';
 
@@ -109,6 +110,14 @@ class MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    controller.onInit();
+    appController.onInit();
+    officineController.onInit();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Obx(() {
       var markers = controller.markers;
@@ -120,7 +129,7 @@ class MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
         mapController: controller.mapController.value,
         options: MapOptions(
           center: controller.currentPosition.value,
-          zoom: 16,
+          zoom: 14,
           minZoom: 6,
           maxZoom: 20,
           scrollWheelVelocity: 2.0,
@@ -129,9 +138,9 @@ class MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
         ),
         children: [
           TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'dev.fleaflet.flutter_map.example',
-          ),
+              urlTemplate: 'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+              userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+              subdomains: ['mt0', 'mt1', 'mt2', 'mt3']),
           Obx(() {
             return CircleLayer(
               circles: [
@@ -191,6 +200,14 @@ class MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
                     height: 35,
                     builder: (context) => MyPinInMap(),
                     anchorPos: AnchorPos.align(AnchorAlign.top),
+                  ),
+                  Marker(
+                    point: controller.currentPosition.value,
+                    width: officineController.wait.value ? 250 : 0,
+                    height: officineController.wait.value ? 250 : 0,
+                    builder: (context) =>
+                        Lotties.Lottie.asset("assets/lotties/search.json"),
+                    anchorPos: AnchorPos.align(AnchorAlign.center),
                   ),
                 ],
                 popupDisplayOptions: PopupDisplayOptions(

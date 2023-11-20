@@ -40,11 +40,16 @@ class _LigneState extends State<Ligne> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            child: Image.network(
-              ApiService.BASE_URL + widget.ligneReponse.produit!.image!,
-              width: 20,
-              height: 20,
+            child: Image.asset(
+              "assets/images/icons/med.jpg",
+              width: 30,
+              height: 30,
             ),
+            // Image.network(
+            //   ApiService.BASE_URL + widget.ligneReponse.produit!.image!,
+            //   width: 20,
+            //   height: 20,
+            // ),
           ),
           SizedBox(
             width: 5,

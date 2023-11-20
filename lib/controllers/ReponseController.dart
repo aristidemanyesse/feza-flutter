@@ -39,7 +39,8 @@ class ReponseController extends GetxController {
       "read": true,
     });
     if (response.ok) {
-      demandeController.checkReponse();
+      demandeController.updateListReponse();
+      demandeController.checkNewReponse();
     }
   }
 }

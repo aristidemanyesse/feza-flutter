@@ -22,10 +22,15 @@ class SuggestionItemCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(
-                this.image,
-                width: 60,
-                height: 35,
+              // Image.network(
+              //   this.image,
+              //   width: 60,
+              //   height: 35,
+              // ),
+              Image.asset(
+                "assets/images/icons/med.jpg",
+                width: 30,
+                height: 30,
               ),
               SizedBox(
                 width: 5,

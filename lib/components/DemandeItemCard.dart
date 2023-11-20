@@ -120,27 +120,22 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                           children: [
                             Row(
                               children: [
-                                Text(
-                                  "${produits.length} médicaments",
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.black),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  "  ",
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.black),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  widget.demande.base64 != "" &&
-                                          widget.demande.base64 != null
-                                      ? "1 ordonnance"
-                                      : "",
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.black),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                produits.length > 0
+                                    ? Text(
+                                        "${produits.length} médicament${produits.length > 1 ? 's' : ''}     ",
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    : Container(),
+                                widget.demande.ordonnance != ""
+                                    ? Text(
+                                        "1 image",
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    : Container()
                               ],
                             ),
                             SizedBox(

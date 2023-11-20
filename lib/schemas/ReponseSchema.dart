@@ -1,7 +1,7 @@
 class ReponseSchema {
   static const String ALL = r"""
-    query ($demande: UUID, $officine:UUID) {
-      searchReponse(deleted: false, demande_Officine_Id:$officine, demande_Demande_Id: $demande) {
+    query ($demande: UUID, $officine:UUID, $created:CustomDateTime) {
+      searchReponse(deleted: false, demande_Officine_Id:$officine, demande_Demande_Id: $demande, createdAt_Gte: $created) {
         results {
           id
           commentaire
@@ -14,6 +14,7 @@ class ReponseSchema {
               status
               ordonnance
               commentaire
+              isSatisfied
               utilisateur {
                 id
                 fullname
@@ -76,6 +77,7 @@ class ReponseSchema {
               status
               ordonnance
               commentaire
+              isSatisfied
               utilisateur {
                 id
                 fullname
@@ -138,6 +140,7 @@ class ReponseSchema {
                   status
                   ordonnance
                   commentaire
+                  isSatisfied
                   utilisateur {
                     id
                     fullname

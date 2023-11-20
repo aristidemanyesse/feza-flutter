@@ -9,6 +9,7 @@ import 'package:ipi/models/ReponseModel.dart';
 import 'package:ipi/provider/ReponseProvider.dart';
 import 'package:ipi/utils/helper.dart';
 import "package:intl/intl.dart";
+import 'package:ipi/widgets/pleaseWait.dart';
 import 'package:lottie/lottie.dart';
 
 class DetailDemande extends StatefulWidget {
@@ -88,7 +89,7 @@ class DetailDemandeState extends State<DetailDemande> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "${widget.produits.length} médicament${widget.produits.length > 1 ? 's' : ''}",
+                "${widget.produits.length} médicament${widget.produits.length > 1 ? 's' : ''}     ",
                 style: TextStyle(fontSize: 12, color: Colors.black),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -96,9 +97,7 @@ class DetailDemandeState extends State<DetailDemande> {
                 width: 5,
               ),
               Text(
-                (widget.demande.base64 != "" && widget.demande.base64 != null)
-                    ? "1 ordonnance"
-                    : "",
+                widget.demande.ordonnance != "" ? "1 image" : "",
                 style: TextStyle(fontSize: 12, color: Colors.black),
                 overflow: TextOverflow.ellipsis,
               ),
