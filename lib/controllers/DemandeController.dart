@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -11,14 +10,12 @@ import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/controllers/ProduitController.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/models/DemandeModel.dart';
-import 'package:ipi/models/OfficineModel.dart';
-import 'package:ipi/models/ProduitModel.dart';
-import 'package:ipi/models/ReponseModel.dart';
-import 'package:ipi/models/ResponseModel.dart';
-import 'package:ipi/models/UtilisateurModel.dart';
-import 'package:ipi/provider/DemandeProvider.dart';
-import 'package:ipi/provider/ReponseProvider.dart';
+import 'package:ipi/models/coreApp/ResponseModel.dart';
+import 'package:ipi/models/demandeApp/Demande.dart';
+import 'package:ipi/models/demandeApp/Reponse.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
+import 'package:ipi/models/produitApp/Produit.dart';
+import 'package:ipi/models/userApp/Utilisateur.dart';
 import 'package:ipi/utils/local_notifications.dart';
 import 'package:ipi/widgets/felicitation.dart';
 import 'package:ipi/widgets/pleaseWait.dart';
@@ -27,7 +24,7 @@ import 'package:intl/intl.dart';
 
 class DemandeController extends GetxController {
   final box = GetStorage();
-  RxList<DemandeModel> demandes = RxList<DemandeModel>([]);
+  RxList<Demande> demandes = RxList<Demande>([]);
   RxMap<String, int> repondesDemandes = RxMap<String, int>({});
   RxBool wait = false.obs;
 
@@ -49,7 +46,7 @@ class DemandeController extends GetxController {
 
   void getData() async {
     demandes.value =
-        await DemandeProvider.all({"user": controller.currentUser.value?.id});
+        await Demande.all({"user": controller.currentUser.value?.id});
     updateListReponse();
     checkNewReponse();
   }
@@ -72,7 +69,7 @@ class DemandeController extends GetxController {
     Map<String, int> tab = {};
     for (var dem in demandes) {
       int total = await notReadReponseDemande(dem);
-      tab[dem.id!] = total;
+      tab[dem.id] = total;
     }
     repondesDemandes.value = tab;
   }
@@ -81,13 +78,13 @@ class DemandeController extends GetxController {
     Get.dialog(LoaderScreen(
       title: "iPi envoie votre demande aux pharmacies sélectionnées...",
     ));
-    List<OfficineModel> officines = officineController.officines;
-    List<ProduitModel> produits = produitController.produitsSelected;
-    UtilisateurModel? user = controller.currentUser.value;
+    List<Officine> officines = officineController.officines;
+    List<Produit> produits = produitController.produitsSelected;
+    Utilisateur? user = controller.currentUser.value;
 
     if (officines.length > 0 || officineController.wait.value) {
       if (produits.length > 0 || imageCcontroller.isOrdonnance.value) {
-        ResponseModel response = await DemandeProvider.createDemande({
+        ResponseModel response = await Demande.createDemande({
           "utilisateur": user?.id,
           "commentaire": "",
           "lon": mapController.currentPosition.value.longitude,
@@ -95,10 +92,10 @@ class DemandeController extends GetxController {
           "base64": imageCcontroller.base64.value,
         });
         if (response.ok) {
-          DemandeModel demande = response.data;
+          Demande demande = response.data;
 
-          for (ProduitModel produit in produits) {
-            ResponseModel response = await DemandeProvider.createLigneDemande({
+          for (Produit produit in produits) {
+            ResponseModel response = await Demande.createLigneDemande({
               "produit": produit.id,
               "quantite": produitController.quantiteProduitsSelected[produit],
               "demande": demande.id
@@ -113,9 +110,8 @@ class DemandeController extends GetxController {
           }
 
           for (var officine in officines) {
-            ResponseModel response =
-                await DemandeProvider.createOfficineDemande(
-                    {"officine": officine.id, "demande": demande.id});
+            ResponseModel response = await Demande.createOfficineDemande(
+                {"officine": officine.id, "demande": demande.id});
             if (!response.ok) {
               Fluttertoast.showToast(
                 msg: response.message ??
@@ -160,16 +156,16 @@ class DemandeController extends GetxController {
     }
   }
 
-  Future<int> newReponseForDemande(DemandeModel demande) async {
+  Future<int> newReponseForDemande(Demande demande) async {
     DateTime now = DateTime.now();
 
     String created = box.read('reponseDateSearched') ??
         DateFormat("yyyy-MM-ddTHH:mm:ss").format(now);
     int news = 0;
     var reponses =
-        await ReponseProvider.all({"demande": demande.id, "created": created});
-    for (ReponseModel rep in reponses) {
-      if (!rep.read!) {
+        await Reponse.all({"demande": demande.id, "created": created});
+    for (Reponse rep in reponses) {
+      if (!rep.read) {
         news++;
       }
     }
@@ -178,20 +174,20 @@ class DemandeController extends GetxController {
     return news;
   }
 
-  Future<int> notReadReponseDemande(DemandeModel demande) async {
+  Future<int> notReadReponseDemande(Demande demande) async {
     int news = 0;
-    var reponses = await ReponseProvider.all({"demande": demande.id});
-    for (ReponseModel rep in reponses) {
-      if (!rep.read!) {
+    var reponses = await Reponse.all({"demande": demande.id});
+    for (Reponse rep in reponses) {
+      if (!rep.read) {
         news++;
       }
     }
     return news;
   }
 
-  void deleteDemande(DemandeModel demande) async {
+  void deleteDemande(Demande demande) async {
     Get.dialog(PleaseWait());
-    ResponseModel response = await DemandeProvider.update({
+    ResponseModel response = await Demande.update({
       "id": demande.id,
       "utilisateur": demande.utilisateur?.id,
       "status": demande.isFinished,
@@ -203,8 +199,8 @@ class DemandeController extends GetxController {
     }
   }
 
-  void satisfiedDemande(DemandeModel demande) async {
-    ResponseModel response = await DemandeProvider.update({
+  void satisfiedDemande(Demande demande) async {
+    ResponseModel response = await Demande.update({
       "id": demande.id,
       "utilisateur": demande.utilisateur?.id,
       "status": demande.isFinished,

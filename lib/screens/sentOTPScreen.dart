@@ -6,7 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:ipi/components/myLogo.dart';
 import 'package:ipi/components/optInput.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/provider/CommunicateProvider.dart';
+import 'package:ipi/models/communicateApp/SMS.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../const/colors.dart';
@@ -93,7 +93,8 @@ class _SendOTPScreen extends State<SendOTPScreen> {
 
   Future<void> validation() async {
     if (controller.currentUser.value?.otp.toString() == code) {
-      controller.currentUser.value?.imei = box.read('imei');
+      controller.currentUser.value =
+          controller.currentUser.value?.copyWith(imei: box.read('imei'));
       controller.updateUser(
           contact: controller.currentUser.value?.contact ?? "",
           name: controller.currentUser.value?.fullname ?? "",
@@ -118,7 +119,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
   }
 
   void sendOTP() {
-    CommunicateProvider.send_SMS({
+    SMS.send_SMS({
       "number": controller.currentUser.value?.contact,
       "message":
           "iPi vérification - Bonjour votre code OTP est ${controller.currentUser.value?.otp} . Bonne santé !"

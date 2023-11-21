@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:ipi/models/OfficineModel.dart';
-import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
+import 'package:ipi/models/produitApp/Produit.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class PharmacieItemCard extends StatelessWidget {
-  final OfficineModel officine;
-  final List<ProduitModel> initialProduits;
-  final List<ProduitModel> produits;
+  final Officine officine;
+  final List<Produit> initialProduits;
+  final List<Produit> produits;
   final String distance;
   final String ratio;
 
@@ -40,7 +40,7 @@ class PharmacieItemCard extends StatelessWidget {
                       width: 5,
                     ),
                     Text(
-                      officine.name!,
+                      officine.name,
                       style: Helper.getTheme(context)
                           .headlineMedium
                           ?.copyWith(color: AppColor.primary, fontSize: 14),

@@ -5,7 +5,7 @@ import 'package:ipi/components/DemandeItemCard.dart';
 import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/controllers/ReponseController.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/models/DemandeModel.dart';
+import 'package:ipi/models/demandeApp/Demande.dart';
 import 'package:ipi/screens/ListeRdv.dart';
 import 'package:ipi/screens/menuScreen.dart';
 import 'package:ipi/screens/makeDemandeScreen.dart';
@@ -57,7 +57,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      List<DemandeModel>? demandes = demandeController.demandes;
+      List<Demande>? demandes = demandeController.demandes;
       Map<String, int>? repondesDemandes = demandeController.repondesDemandes;
 
       return WillPopScope(
@@ -117,9 +117,8 @@ class HomeScreenState extends State<HomeScreen> {
                                         },
                                         child: Obx(() {
                                           return Text(
-                                            userController.currentUser.value!
-                                                    .fullname ??
-                                                "",
+                                            userController
+                                                .currentUser.value!.fullname,
                                             style: Helper.getTheme(context)
                                                 .headlineSmall
                                                 ?.copyWith(

@@ -5,8 +5,8 @@ import 'package:ipi/components/myLogo.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/GardeController.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/models/GardeModel.dart';
-import 'package:ipi/models/UtilisateurModel.dart';
+import 'package:ipi/models/officineApp/Garde.dart';
+import 'package:ipi/models/userApp/Utilisateur.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/pharmaciesGarde.dart';
 import 'package:ipi/screens/profileScreen.dart';
@@ -41,8 +41,8 @@ class _MenuScreen extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      UtilisateurModel? user = userController.currentUser.value;
-      GardeModel? garde = gardeController.currentGarde.value;
+      Utilisateur? user = userController.currentUser.value;
+      Garde? garde = gardeController.currentGarde.value;
 
       return Scaffold(
         body: Stack(
@@ -136,7 +136,7 @@ class _MenuScreen extends State<MenuScreen> {
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  "${f.format(DateTime.parse(garde.debut ?? ""))}",
+                                                  "${f.format(DateTime.parse(garde.debut))}",
                                                   style: TextStyle(
                                                       color: AppColor.green,
                                                       fontWeight:
@@ -150,7 +150,7 @@ class _MenuScreen extends State<MenuScreen> {
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  "${f.format(DateTime.parse(garde.fin ?? ""))}",
+                                                  "${f.format(DateTime.parse(garde.fin))}",
                                                   style: TextStyle(
                                                       color: AppColor.green,
                                                       fontWeight:

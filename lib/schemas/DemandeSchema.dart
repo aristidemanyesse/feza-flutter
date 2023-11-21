@@ -1,52 +1,31 @@
+import 'package:ipi/models/demandeApp/Demande.dart';
+import 'package:ipi/models/demandeApp/LigneDemande.dart';
+import 'package:ipi/models/demandeApp/OfficineDemande.dart';
+import 'package:ipi/models/officineApp/Circonscription.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
+import 'package:ipi/models/officineApp/TypeOfficine.dart';
+import 'package:ipi/models/produitApp/Produit.dart';
+import 'package:ipi/models/produitApp/TypeProduit.dart';
+import 'package:ipi/models/userApp/Utilisateur.dart';
+
 class DemandeSchema {
   static const String ALL = r"""
-      query($user:UUID, $isFinished:Boolean){
-        searchDemande(deleted: false, isFinished:$isFinished, utilisateur_Id:$user){
-          results{
-            id
-            propagating
-            isFinished
-            ordonnance
-            base64
-            lon
-            lat
-            commentaire
-            createdAt
-            utilisateur{
-              id
-              fullname
-              contact
-              imei
-              createdAt
-              image
-              isValide
-              otp
-              geometryJson
-              circonscription {
-                id
-                name
-              }
-            }
-          }
+    query ($user:UUID, $isFinished:Boolean) {
+      searchDemande(deleted: false, isFinished:$isFinished, utilisateur_Id:$user) {
+        results {
+          ...DemandeFragment
         }
       }
-  """;
+    }
+  """ +
+      Demande.DemandeFragment +
+      Utilisateur.UtilisateurFragment +
+      Circonscription.CirconscriptionFragment;
 
   static const String CREATE_DEMANDE = r"""
-      mutation(
-        $utilisateur:ID!,
-        $commentaire:String,
-        $lon:Float,
-        $lat:Float,
-        $base64:String){
+      mutation( $utilisateur:ID!, $commentaire:String, $lon:Float, $lat:Float, $base64:String){
         createDemande(
-          newDemande:{
-            commentaire:$commentaire,
-            base64: $base64,
-            lon: $lon,
-            lat: $lat,
-            utilisateur: $utilisateur
-          }
+          newDemande:{ commentaire:$commentaire, base64: $base64, lon: $lon, lat: $lat, utilisateur: $utilisateur }
         ){
           ok
           errors{
@@ -54,34 +33,14 @@ class DemandeSchema {
             messages
           }
           demande{
-            id
-            propagating
-            isFinished
-            base64
-            lon
-            lat
-            ordonnance
-            commentaire
-            createdAt
-            utilisateur{
-              id
-              fullname
-              contact
-              imei
-              createdAt
-              image
-              isValide
-              otp
-              geometryJson
-              circonscription {
-                id
-                name
-              }
-            }
+            ...DemandeFragment
           }
         }
       }
-  """;
+  """ +
+      Demande.DemandeFragment +
+      Utilisateur.UtilisateurFragment +
+      Circonscription.CirconscriptionFragment;
 
   static const String UPDATE_DEMANDE = r"""
       mutation ($id: UUID, $utilisateur:ID, $isFinished: Boolean, $deleted: Boolean) {
@@ -92,89 +51,30 @@ class DemandeSchema {
             messages
           }
           demande {
-            id
-            propagating
-            isFinished
-            base64
-            lon
-            lat
-            ordonnance
-            commentaire
-            createdAt
-            utilisateur {
-              id
-              fullname
-              contact
-              imei
-              createdAt
-              image
-              isValide
-              otp
-              geometryJson
-              circonscription {
-                id
-                name
-              }
-            }
+            ...DemandeFragment
           }
         }
       }
-  """;
+  """ +
+      Demande.DemandeFragment +
+      Utilisateur.UtilisateurFragment +
+      Circonscription.CirconscriptionFragment;
 
   static const String LIGNE_DEMANDE = r"""
       query($demande:UUID){
         searchLigneDemande(deleted: false, demande_Id:$demande){
           results{
-            id
-            status
-            quantite
-            demande{
-              id
-              propagating
-              isFinished
-              base64
-              lon
-              lat
-              ordonnance
-              commentaire
-              createdAt
-              utilisateur{
-                id
-                fullname
-                contact
-                imei
-                createdAt
-                image
-                isValide
-                otp
-                geometryJson
-                circonscription {
-                  id
-                  name
-                }
-              }
-            }
-            produit{
-              id
-              name
-              price
-              description
-              codebarre
-              onlyOrdonnance
-              cis
-              forme
-              voies
-              image
-              type {
-                id
-                name
-                etiquette
-              }
-            }
+            ...LigneDemandeFragment
           }
         }
       }
-  """;
+  """ +
+      Demande.DemandeFragment +
+      LigneDemande.LigneDemandeFragment +
+      Produit.ProduitFragment +
+      TypeProduit.TypeProduitFragment +
+      Utilisateur.UtilisateurFragment +
+      Circonscription.CirconscriptionFragment;
 
   static const String CREATE_LIGNE_DEMANDE = r"""
       mutation(
@@ -195,57 +95,15 @@ class DemandeSchema {
             messages
           }
           lignedemande{
-            id
-            status
-            quantite
-            demande{
-              id
-              status
-              propagating
-              isFinished
-              ordonnance
-              commentaire
-              lon
-              lat
-              createdAt
-              base64
-              utilisateur{
-                id
-                fullname
-                contact
-                imei
-                createdAt
-                image
-                isValide
-                otp
-                geometryJson
-                circonscription {
-                  id
-                  name
-                }
-              }
-            }
-            produit{
-              id
-              name
-              price
-              description
-              codebarre
-              onlyOrdonnance
-              cis
-              forme
-              voies
-              image
-              type {
-                id
-                name
-                etiquette
-              }
-            }
+            ...LigneDemandeFragment
           }
         }
       }
-  """;
+  """ +
+      Demande.DemandeFragment +
+      LigneDemande.LigneDemandeFragment +
+      Utilisateur.UtilisateurFragment +
+      Circonscription.CirconscriptionFragment;
 
   static const String OFFICINE_DEMANDE = r"""
       query ($demande: UUID, $officine: UUID) {
@@ -255,58 +113,17 @@ class DemandeSchema {
           officine_Id: $officine
         ) {
           results {
-            id
-            isValided
-            propagated
-            demande {
-              id
-              propagating
-              isFinished
-              ordonnance
-              base64
-              commentaire
-              utilisateur {
-                id
-                fullname
-                contact
-                imei
-                createdAt
-                image
-                isValide
-                otp
-                geometryJson
-                circonscription {
-                  id
-                  name
-                }
-              }
-            }
-            officine {
-              id
-              name
-              contact
-              contact2
-              localisation
-              geometryJson
-              lat
-              lon
-              type {
-                id
-                name
-                etiquette
-              }
-              image
-              image2
-              image3
-              circonscription {
-                id
-                name
-              }
-            }
+            ...OfficineDemandeFragment
           }
         }
       }
-  """;
+  """ +
+      OfficineDemande.OfficineDemandeFragment +
+      Demande.DemandeFragment +
+      Officine.OfficineFragment +
+      TypeOfficine.TypeOfficineFragment +
+      Utilisateur.UtilisateurFragment +
+      Circonscription.CirconscriptionFragment;
 
   static const String CREATE_OFFICINE_DEMANDE = r"""
       mutation ($demande: ID!, $officine: ID!) {
@@ -319,57 +136,15 @@ class DemandeSchema {
             messages
           }
           officinedemande {
-            id
-            isValided
-            propagated
-            demande {
-              id
-              propagating
-              isFinished
-              base64
-              ordonnance
-              commentaire
-              utilisateur {
-                id
-                fullname
-                contact
-                imei
-                createdAt
-                image
-                isValide
-                otp
-                geometryJson
-                circonscription {
-                  id
-                  name
-                }
-              }
-            }
-            officine {
-              id
-              name
-              contact
-              contact2
-              localisation
-              geometryJson
-              lat
-              lon
-              type {
-                id
-                name
-                etiquette
-              }
-              image
-              image2
-              image3
-              circonscription {
-                id
-                name
-              }
-            }
+            ...OfficineDemandeFragment
           }
         }
       }
-
-  """;
+  """ +
+      OfficineDemande.OfficineDemandeFragment +
+      Demande.DemandeFragment +
+      Officine.OfficineFragment +
+      TypeOfficine.TypeOfficineFragment +
+      Utilisateur.UtilisateurFragment +
+      Circonscription.CirconscriptionFragment;
 }

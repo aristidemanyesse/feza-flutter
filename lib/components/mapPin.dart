@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:ipi/models/OfficineModel.dart';
 import 'package:ipi/utils/helper.dart';
 
 class CustomMyMarker {
   final LatLng point;
-  final OfficineModel officine;
+  final Officine officine;
 
   CustomMyMarker(this.point, this.officine);
 }

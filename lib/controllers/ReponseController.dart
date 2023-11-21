@@ -3,13 +3,12 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/models/RdvLigneReponseModel.dart';
-import 'package:ipi/models/ReponseModel.dart';
-import 'package:ipi/models/ResponseModel.dart';
-import 'package:ipi/provider/ReponseProvider.dart';
+import 'package:ipi/models/coreApp/ResponseModel.dart';
+import 'package:ipi/models/demandeApp/RdvLigneReponse.dart';
+import 'package:ipi/models/demandeApp/Reponse.dart';
 
 class ReponseController extends GetxController {
-  RxList<RdvLigneReponseModel> rdvs = RxList<RdvLigneReponseModel>([]);
+  RxList<RdvLigneReponse> rdvs = RxList<RdvLigneReponse>([]);
   RxInt news = RxInt(0);
   DemandeController demandeController = Get.find();
   UtilisateurController userController = Get.find();
@@ -23,17 +22,17 @@ class ReponseController extends GetxController {
   }
 
   void getData() async {
-    rdvs.value = await ReponseProvider.rdvLigneReponse(
+    rdvs.value = await Reponse.rdvLigneReponse(
         {"user_id": userController.currentUser.value?.id});
     for (var item in rdvs) {
-      if (item.valide! && item.read!) {
+      if (item.valide && item.read) {
         news.value++;
       }
     }
   }
 
-  void updateReponse(ReponseModel reponse) async {
-    ResponseModel response = await ReponseProvider.update({
+  void updateReponse(Reponse reponse) async {
+    ResponseModel response = await Reponse.update({
       "id": reponse.id,
       "demande": reponse.demande?.id,
       "read": true,

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:ipi/components/mapPin.dart';
 import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
-import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapWidgetController extends GetxController {
@@ -47,10 +47,10 @@ class MapWidgetController extends GetxController {
       if (datas.length > 0) {
         markers.value = [];
         markersLatLng.value = [];
-        for (OfficineModel officine in datas) {
+        for (Officine officine in datas) {
           markers.add(
-              CustomMyMarker(LatLng(officine.lon!, officine.lat!), officine));
-          markersLatLng.add(LatLng(officine.lon!, officine.lat!));
+              CustomMyMarker(LatLng(officine.lon, officine.lat), officine));
+          markersLatLng.add(LatLng(officine.lon, officine.lat));
           bounds.value = LatLngBounds.fromPoints(markersLatLng);
         }
       }
@@ -80,8 +80,8 @@ class MapWidgetController extends GetxController {
         currentPosition.value, -appController.radius.value * 1000 * 2, 0.0);
 
     markersLatLng.value = [currentPosition.value, p1, p2];
-    for (OfficineModel officine in officineController.officines) {
-      markersLatLng.add(LatLng(officine.lon!, officine.lat!));
+    for (Officine officine in officineController.officines) {
+      markersLatLng.add(LatLng(officine.lon, officine.lat));
     }
     bounds.value = LatLngBounds.fromPoints(markersLatLng);
   }

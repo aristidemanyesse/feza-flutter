@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/models/CirconscriptionModel.dart';
+import 'package:ipi/models/officineApp/Circonscription.dart';
 import 'package:ipi/widgets/zoneChoicesDialog.dart';
 
 class SelectCirconscriptionBloc extends StatefulWidget {
@@ -19,7 +19,7 @@ class _SelectCirconscriptionBlocState extends State<SelectCirconscriptionBloc> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      CirconscriptionModel? circonscription =
+      Circonscription? circonscription =
           controller.currentUser.value?.circonscription;
       return GestureDetector(
         onTap: () {

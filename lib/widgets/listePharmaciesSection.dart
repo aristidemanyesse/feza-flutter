@@ -24,7 +24,7 @@ class ListePharmaciesSection extends StatelessWidget {
     var officine =
         officineController.officines.firstWhere((element) => element.id == id);
     mpController.bounds.value =
-        LatLngBounds.fromPoints([LatLng(officine.lon!, officine.lat!)]);
+        LatLngBounds.fromPoints([LatLng(officine.lon, officine.lat)]);
   }
 
   @override

@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import "package:intl/intl.dart";
 import 'package:get/get.dart';
 import 'package:ipi/controllers/ReponseController.dart';
-import 'package:ipi/models/LigneReponseModel.dart';
-import 'package:ipi/models/RdvLigneReponseModel.dart';
-import 'package:ipi/models/SubsLigneReponseModel.dart';
-import 'package:ipi/webservice/apiservice.dart';
+import 'package:ipi/models/demandeApp/LigneReponse.dart';
+import 'package:ipi/models/demandeApp/RdvLigneReponse.dart';
+import 'package:ipi/models/demandeApp/SubsLigneReponse.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class Ligne extends StatefulWidget {
-  final LigneReponseModel ligneReponse;
-  final RdvLigneReponseModel rdv;
+  final LigneReponse ligneReponse;
+  final RdvLigneReponse rdv;
   Ligne({required this.ligneReponse, required this.rdv});
 
   @override
@@ -79,11 +78,11 @@ class _LigneState extends State<Ligne> {
                             child: Text(
                               widget.ligneReponse.produit!.name,
                               style: TextStyle(
-                                fontWeight: widget.ligneReponse.status ?? false
+                                fontWeight: widget.ligneReponse.status
                                     ? FontWeight.w600
                                     : FontWeight.normal,
                                 fontSize: 12,
-                                color: widget.ligneReponse.status ?? false
+                                color: widget.ligneReponse.status
                                     ? Colors.black
                                     : Colors.grey,
                               ),
@@ -93,19 +92,18 @@ class _LigneState extends State<Ligne> {
                             height: 4,
                           ),
                           Text(
-                            widget.ligneReponse.produit!.forme ?? "",
+                            widget.ligneReponse.produit!.forme,
                             style: TextStyle(
                               fontSize: 11,
                               fontStyle: FontStyle.italic,
-                              color: widget.ligneReponse.status ?? false
+                              color: widget.ligneReponse.status
                                   ? Colors.black
                                   : Colors.grey,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
                           widget.ligneReponse.status != true &&
-                                  !(widget.rdv.id != null &&
-                                      widget.rdv.days! > 0)
+                                  !(widget.rdv.days > 0)
                               ? Column(
                                   children: [
                                     SizedBox(
@@ -136,12 +134,12 @@ class _LigneState extends State<Ligne> {
                 SizedBox(
                   height: 5,
                 ),
-                widget.rdv.id != null && widget.rdv.days! > 0
+                widget.rdv.days> 0
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            "sera disponible le ${dateFormat!.format(DateTime.parse(widget.rdv.createdAt ?? "").add(Duration(days: widget.rdv.days ?? 0)))}",
+                            "sera disponible le ${dateFormat!.format(DateTime.parse(widget.rdv.createdAt).add(Duration(days: widget.rdv.days ?? 0)))}",
                             style: TextStyle(
                                 fontSize: 12,
                                 fontStyle: FontStyle.italic,
@@ -178,7 +176,7 @@ class _LigneState extends State<Ligne> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              "${widget.ligneReponse.price! * widget.ligneReponse.quantite!.toInt()} Fcfa",
+                              "${widget.ligneReponse.price * widget.ligneReponse.quantite.toInt()} Fcfa",
                               style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.black,
@@ -200,7 +198,7 @@ class _LigneState extends State<Ligne> {
 }
 
 class LigneSub extends StatelessWidget {
-  final SubsLigneReponseModel sub;
+  final SubsLigneReponse sub;
   LigneSub({required this.sub});
 
   @override
@@ -289,7 +287,7 @@ class LigneSub extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        "${sub.price! * sub.quantite!.toInt()} Fcfa",
+                        "${sub.price * sub.quantite.toInt()} Fcfa",
                         style: TextStyle(
                             fontSize: 12,
                             color: Colors.black,

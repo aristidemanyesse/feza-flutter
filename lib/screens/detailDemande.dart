@@ -3,18 +3,16 @@ import 'package:get/get.dart';
 import 'package:ipi/components/ReponseCard.dart';
 import 'package:ipi/components/indicator.dart';
 import 'package:ipi/controllers/ReponseController.dart';
-import 'package:ipi/models/DemandeModel.dart';
-import 'package:ipi/models/LigneDemandeModel.dart';
-import 'package:ipi/models/ReponseModel.dart';
-import 'package:ipi/provider/ReponseProvider.dart';
+import 'package:ipi/models/demandeApp/Demande.dart';
+import 'package:ipi/models/demandeApp/LigneDemande.dart';
+import 'package:ipi/models/demandeApp/Reponse.dart';
 import 'package:ipi/utils/helper.dart';
 import "package:intl/intl.dart";
-import 'package:ipi/widgets/pleaseWait.dart';
 import 'package:lottie/lottie.dart';
 
 class DetailDemande extends StatefulWidget {
-  late List<LigneDemandeModel> produits = [];
-  late DemandeModel demande;
+  late List<LigneDemande> produits = [];
+  late Demande demande;
   late bool news = false;
 
   DetailDemande({Key? key, required this.demande, required this.produits})
@@ -25,7 +23,7 @@ class DetailDemande extends StatefulWidget {
 
 class DetailDemandeState extends State<DetailDemande> {
   ReponseController reponseController = Get.find();
-  late List<ReponseModel> reponses = [];
+  late List<Reponse> reponses = [];
 
   final f = DateFormat("dd/MM/yyyy à HH:mm");
 
@@ -41,7 +39,7 @@ class DetailDemandeState extends State<DetailDemande> {
   }
 
   Future<void> getData() async {
-    reponses = await ReponseProvider.all({"demande": widget.demande.id});
+    reponses = await Reponse.all({"demande": widget.demande.id});
     setState(() {});
   }
 
@@ -78,7 +76,7 @@ class DetailDemandeState extends State<DetailDemande> {
             height: 5,
           ),
           Text(
-              "demande effectuée le ${f.format(DateTime.parse(widget.demande.createdAt ?? ""))}",
+              "demande effectuée le ${f.format(DateTime.parse(widget.demande.createdAt))}",
               textAlign: TextAlign.center,
               style: Helper.getTheme(context).headlineLarge?.copyWith(
                     fontWeight: FontWeight.w500,

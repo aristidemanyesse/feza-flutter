@@ -1,14 +1,13 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:ipi/models/GardeModel.dart';
-import 'package:ipi/provider/GardeProvider.dart';
+import 'package:ipi/models/officineApp/Garde.dart';
 
 class GardeController extends GetxController {
   final box = GetStorage();
-  Rx<GardeModel?> currentGarde = Rx<GardeModel?>(null);
+  Rx<Garde?> currentGarde = Rx<Garde?>(null);
 
   void onInit() {
-    GardeProvider.all({}).then((datas) {
+    Garde.all({}).then((datas) {
       if (datas.length > 0) {
         currentGarde.value = datas[0];
       }

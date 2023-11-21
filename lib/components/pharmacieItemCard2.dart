@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class PharmacieItemCard2 extends StatelessWidget {
-  final OfficineModel officine;
+  final Officine officine;
   final String distance;
 
   PharmacieItemCard2({

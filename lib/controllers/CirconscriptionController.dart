@@ -1,18 +1,15 @@
 import 'package:get/get.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/models/CirconscriptionModel.dart';
-import 'package:ipi/provider/CirconscriptionProvider.dart';
+import 'package:ipi/models/officineApp/Circonscription.dart';
 
 class CirconscriptionController extends GetxController {
-  Rx<List<CirconscriptionModel>> circonscriptions =
-      Rx<List<CirconscriptionModel>>([]);
-  Rx<CirconscriptionModel?> currentCirconscription =
-      Rx<CirconscriptionModel?>(null);
+  Rx<List<Circonscription>> circonscriptions = Rx<List<Circonscription>>([]);
+  Rx<Circonscription?> currentCirconscription = Rx<Circonscription?>(null);
 
   UtilisateurController controller = Get.find();
 
   void onInit() {
-    CirconscriptionProvider.all({}).then((datas) {
+    Circonscription.all({}).then((datas) {
       circonscriptions.value = datas;
     });
     currentCirconscription.value =

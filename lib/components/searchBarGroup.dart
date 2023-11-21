@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:ipi/components/SuggestionItemCard.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/ProduitController.dart';
-import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/models/produitApp/Produit.dart';
 
 class SearchBarGroup extends StatefulWidget {
   late bool scan = true;
@@ -23,7 +23,7 @@ class SearchBarGroupState extends State<SearchBarGroup> {
   final FocusNode _focusNode = FocusNode();
 
   List<String> nomsProduits = [];
-  List<ProduitModel> produits = [];
+  List<Produit> produits = [];
   @override
   void initState() {
     nomsProduits = controller.nomsProduits;
@@ -40,7 +40,7 @@ class SearchBarGroupState extends State<SearchBarGroup> {
       focusNode: _focusNode,
       controller: _textFieldController,
       itemBuilder: (context, item) {
-        ProduitModel produitTrouve =
+        Produit produitTrouve =
             produits.firstWhere((produit) => produit.name == item);
         return SuggestionItemCard(produit: produitTrouve);
       },
@@ -76,7 +76,7 @@ class SearchBarGroupState extends State<SearchBarGroup> {
         ),
       ),
       itemSubmitted: (value) async {
-        ProduitModel produitTrouve =
+        Produit produitTrouve =
             produits.firstWhere((produit) => produit.name == value);
         controller.addProduitSelected(produitTrouve);
         FocusScope.of(context).requestFocus(_focusNode);

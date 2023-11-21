@@ -6,9 +6,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/models/OfficineModel.dart';
-import 'package:ipi/models/UtilisateurModel.dart';
-import 'package:ipi/provider/OfficineProvider.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
+import 'package:ipi/models/userApp/Utilisateur.dart';
 import 'package:ipi/widgets/noPharmacieAvialable.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -18,9 +17,8 @@ class OfficineController extends GetxController {
   UtilisateurController userController = Get.find();
   AppController appController = Get.find();
 
-  RxList<OfficineModel> officines = RxList<OfficineModel>([]);
-  RxMap<OfficineModel, String> distanceTableaux =
-      RxMap<OfficineModel, String>({});
+  RxList<Officine> officines = RxList<Officine>([]);
+  RxMap<Officine, String> distanceTableaux = RxMap<Officine, String>({});
   RxMap<String, dynamic> routesOfficines = <String, dynamic>{}.obs;
   Rx<Polyline> routeCoordinates = Rx<Polyline>(Polyline(points: []));
   RxBool garde = false.obs;
@@ -30,7 +28,7 @@ class OfficineController extends GetxController {
     super.onInit();
   }
 
-  bool containsOfficine(List<OfficineModel> officines, OfficineModel officine) {
+  bool containsOfficine(List<Officine> officines, Officine officine) {
     return officines.any((element) => element.id == officine.id);
   }
 
@@ -43,7 +41,7 @@ class OfficineController extends GetxController {
       routesOfficines.value = {};
       officines.value = [];
 
-      UtilisateurModel? user = userController.currentUser.value;
+      Utilisateur? user = userController.currentUser.value;
       if (user == null) {
         wait.value = false;
         return;
@@ -51,7 +49,7 @@ class OfficineController extends GetxController {
 
       List<dynamic> datas = [];
       if (garde.value) {
-        datas = await OfficineProvider.garde_avialable({
+        datas = await Officine.garde_avialable({
           "circonscription": (user.circonscription == null &&
                   !appController.searchByAround.value)
               ? ""
@@ -64,7 +62,7 @@ class OfficineController extends GetxController {
           "latitude": center.latitude
         });
       } else {
-        datas = await OfficineProvider.avialable({
+        datas = await Officine.avialable({
           "circonscription": (user.circonscription == null &&
                   !appController.searchByAround.value)
               ? ""
@@ -80,8 +78,8 @@ class OfficineController extends GetxController {
 
       if (datas.length > 0) {
         for (var element in datas) {
-          var offs = await OfficineProvider.all({"id": element["officine"]});
-          OfficineModel officine = offs[0];
+          var offs = await Officine.all({"id": element["officine"]});
+          Officine officine = offs[0];
           if (!containsOfficine(officines, officine)) {
             officines.add(officine);
           }
@@ -91,7 +89,7 @@ class OfficineController extends GetxController {
               ? "$ladistance m"
               : "${(ladistance / 1000).toStringAsFixed(2)} km";
 
-          routesOfficines[officine.id!] = jsonDecode(element["route"]);
+          routesOfficines[officine.id] = jsonDecode(element["route"]);
         }
       } else {
         Get.dialog(NoPharmacieAvialable());
@@ -100,7 +98,7 @@ class OfficineController extends GetxController {
     }
   }
 
-  void routeOfOfficine(OfficineModel officine) async {
+  void routeOfOfficine(Officine officine) async {
     var geojson = routesOfficines[officine.id];
     List<LatLng> points = [];
     for (var element in jsonDecode(geojson)["geometry"]["coordinates"]) {

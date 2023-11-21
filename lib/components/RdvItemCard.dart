@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ipi/models/RdvLigneReponseModel.dart';
-import 'package:ipi/webservice/apiservice.dart';
+import 'package:ipi/models/demandeApp/RdvLigneReponse.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 import "package:intl/intl.dart";
 import '../const/colors.dart';
@@ -8,7 +7,7 @@ import '../utils/helper.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class RdvItemCard extends StatefulWidget {
-  final RdvLigneReponseModel rdv;
+  final RdvLigneReponse rdv;
   RdvItemCard({required this.rdv});
 
   @override

@@ -1,3 +1,7 @@
+import 'package:ipi/models/officineApp/Circonscription.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
+import 'package:ipi/models/officineApp/TypeOfficine.dart';
+
 class OfficineSchema {
   static const String ALL = r"""
     query ($id: UUID, $circonscription: UUID, $type: String, $name: String, $ic_name: String) {
@@ -10,30 +14,14 @@ class OfficineSchema {
         type_Etiquette: $type
       ) {
         results {
-          id
-          name
-          contact
-          contact2
-          localisation
-          geometryJson
-          lat
-          lon
-          type {
-            id
-            name
-            etiquette
-          }
-          image
-          image2
-          image3
-          circonscription {
-            id
-            name
-          }
+          ...OfficineFragment
         }
       }
     }
-  """;
+  """ +
+      Officine.OfficineFragment +
+      TypeOfficine.TypeOfficineFragment +
+      Circonscription.CirconscriptionFragment;
 
   static const String OFFICINE_DISTANCE = r"""
     query ($id: String, $longitude: Float, $latitude: Float) {

@@ -1,12 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ipi/components/customTextInput.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/models/UtilisateurModel.dart';
-import 'package:ipi/provider/UtilisateurProvider.dart';
+import 'package:ipi/models/coreApp/Tools.dart';
+import 'package:ipi/models/userApp/Utilisateur.dart';
 import 'package:ipi/screens/spashScreen.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/widgets/confirmDialog.dart';
@@ -30,7 +29,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   String errorText = "";
   int numeroLength = 0;
   final myFocusNode = FocusNode();
-  late UtilisateurModel user = UtilisateurModel();
+  late Utilisateur user = Utilisateur();
   bool isUpdated = false;
 
   final box = GetStorage();
@@ -39,7 +38,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     Get.dialog(PleaseWait());
     controller.currentUser.value = null;
     box.erase();
-    UtilisateurProvider.getUniqID().then((value) => box.write("imei", value));
+    Tools.getUniqID().then((value) => box.write("imei", value));
     controller.updateUser(
         contact: controller.currentUser.value?.contact ?? "",
         name: controller.currentUser.value?.fullname ?? "",
@@ -75,8 +74,8 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    myNameController.text = controller.currentUser.value!.fullname ?? "";
-    myNumeroController.text = controller.currentUser.value!.contact ?? "";
+    myNameController.text = controller.currentUser.value!.fullname;
+    myNumeroController.text = controller.currentUser.value!.contact;
     super.initState();
   }
 
@@ -166,7 +165,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Obx(() {
                           return Text(
-                            controller.currentUser.value!.fullname ?? "",
+                            controller.currentUser.value!.fullname,
                             style: Helper.getTheme(context)
                                 .headlineMedium
                                 ?.copyWith(

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/controllers/DemandeController.dart';
-import 'package:ipi/models/DemandeModel.dart';
-import 'package:ipi/models/LigneDemandeModel.dart';
-import 'package:ipi/models/OfficineDemandeModel.dart';
-import 'package:ipi/models/ReponseModel.dart';
-import 'package:ipi/provider/DemandeProvider.dart';
-import 'package:ipi/provider/ReponseProvider.dart';
+import 'package:ipi/models/demandeApp/Demande.dart';
+import 'package:ipi/models/demandeApp/LigneDemande.dart';
+import 'package:ipi/models/demandeApp/OfficineDemande.dart';
+import 'package:ipi/models/demandeApp/Reponse.dart';
 import 'package:ipi/screens/detailDemande.dart';
 import "package:intl/intl.dart";
 import 'package:ipi/widgets/confirmDialog.dart';
@@ -15,7 +13,7 @@ import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class DemandeItemCard extends StatefulWidget {
-  final DemandeModel demande;
+  final Demande demande;
   final int news;
   DemandeItemCard(this.demande, this.news);
 
@@ -29,9 +27,9 @@ class DemandeItemCardState extends State<DemandeItemCard> {
   DateFormat? dateFormat;
   DateFormat? timeFormat;
 
-  late List<LigneDemandeModel> produits = [];
-  late List<OfficineDemandeModel> officines = [];
-  late List<ReponseModel> reponses = [];
+  late List<LigneDemande> produits = [];
+  late List<OfficineDemande> officines = [];
+  late List<Reponse> reponses = [];
   late bool news = false;
 
   @override
@@ -49,13 +47,12 @@ class DemandeItemCardState extends State<DemandeItemCard> {
   }
 
   Future<void> getData() async {
-    produits =
-        await DemandeProvider.allLignesDemande({"demande": widget.demande.id});
-    officines = await DemandeProvider.allOfficinesDemande(
-        {"demande": widget.demande.id});
-    reponses = await ReponseProvider.all({"demande": widget.demande.id});
-    for (ReponseModel rep in reponses) {
-      if (!rep.read!) {
+    produits = await Demande.allLignesDemande({"demande": widget.demande.id});
+    officines =
+        await Demande.allOfficinesDemande({"demande": widget.demande.id});
+    reponses = await Reponse.all({"demande": widget.demande.id});
+    for (Reponse rep in reponses) {
+      if (!rep.read) {
         news = true;
         break;
       }
@@ -103,7 +100,7 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                             width: 5,
                           ),
                           Text(
-                            "${dateFormat!.format(DateTime.parse(widget.demande.createdAt ?? ""))} ${timeFormat!.format(DateTime.parse(widget.demande.createdAt ?? ""))}",
+                            "${dateFormat!.format(DateTime.parse(widget.demande.createdAt ?? ""))} ${timeFormat!.format(DateTime.parse(widget.demande.createdAt))}",
                             style: Helper.getTheme(context)
                                 .headlineMedium
                                 ?.copyWith(

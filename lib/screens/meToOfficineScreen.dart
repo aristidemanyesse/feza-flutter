@@ -7,15 +7,13 @@ import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/components/MapWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:ipi/models/OfficineModel.dart';
-import 'package:ipi/provider/OfficineProvider.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/const/colors.dart';
-import 'package:ipi/widgets/pleaseWait.dart';
 import 'package:latlong2/latlong.dart';
 
 class MeToOfficine extends StatefulWidget {
-  final OfficineModel officine;
+  final Officine officine;
 
   MeToOfficine({
     Key? key,
@@ -38,7 +36,7 @@ class MeToOfficineState extends State<MeToOfficine> {
   }
 
   void getData() async {
-    var datas = await OfficineProvider.officineDistance({
+    var datas = await Officine.officineDistance({
       "id": widget.officine.id,
       "longitude": mapController.currentPosition.value.longitude,
       "latitude": mapController.currentPosition.value.latitude
@@ -103,7 +101,7 @@ class MeToOfficineState extends State<MeToOfficine> {
                               SizedBox(
                                 height: 8,
                               ),
-                              Text("${distance}")
+                              Text("$distance")
                             ],
                           ),
                         ),

@@ -7,19 +7,18 @@ import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/ReponseController.dart';
-import 'package:ipi/models/LigneReponseModel.dart';
-import 'package:ipi/models/OfficineModel.dart';
-import 'package:ipi/models/RdvLigneReponseModel.dart';
-import 'package:ipi/models/ReponseModel.dart';
-import 'package:ipi/models/SubsLigneReponseModel.dart';
-import 'package:ipi/provider/ReponseProvider.dart';
+import 'package:ipi/models/demandeApp/LigneReponse.dart';
+import 'package:ipi/models/demandeApp/RdvLigneReponse.dart';
+import 'package:ipi/models/demandeApp/Reponse.dart';
+import 'package:ipi/models/demandeApp/SubsLigneReponse.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
 import 'package:ipi/screens/meToOfficineScreen.dart';
 import 'package:ipi/widgets/felicitation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class ReponseCard extends StatefulWidget {
-  final ReponseModel reponse;
+  final Reponse reponse;
   late bool news = false;
 
   ReponseCard({Key? key, required this.reponse}) : super(key: key);
@@ -32,8 +31,8 @@ class ReponseCardState extends State<ReponseCard> {
   ReponseController reponseController = Get.find();
   DemandeController demandeController = Get.find();
 
-  late List<LigneReponseModel> lignes = [];
-  late Map<LigneReponseModel, List<SubsLigneReponseModel>> subsLignes = {};
+  late List<LigneReponse> lignes = [];
+  late Map<LigneReponse, List<SubsLigneReponse>> subsLignes = {};
 
   @override
   void initState() {
@@ -42,21 +41,20 @@ class ReponseCardState extends State<ReponseCard> {
   }
 
   Future<void> getData() async {
-    lignes =
-        await ReponseProvider.allLignesReponse({"reponse": widget.reponse.id});
+    lignes = await Reponse.allLignesReponse({"reponse": widget.reponse.id});
     for (var ligne in lignes) {
       subsLignes[ligne] =
-          await ReponseProvider.subsLigneReponse({"ligne_id": ligne.id});
+          await Reponse.subsLigneReponse({"ligne_id": ligne.id});
     }
     setState(() {});
   }
 
-  void sharePosition(OfficineModel officine) {
+  void sharePosition(Officine officine) {
     Share.share(mpController.currentPosition.value.toString(),
         subject: 'Partage de la position de ${officine.name}');
   }
 
-  void copy(OfficineModel officine) {
+  void copy(Officine officine) {
     FlutterClipboard.copy(mpController.currentPosition.value.toString())
         .then((value) => Fluttertoast.showToast(
               msg: "Localisation copiéé!",
@@ -66,8 +64,8 @@ class ReponseCardState extends State<ReponseCard> {
 
   @override
   Widget build(BuildContext context) {
-    ReponseModel reponse = widget.reponse;
-    OfficineModel officine = reponse.demande!.officine!;
+    Reponse reponse = widget.reponse;
+    Officine officine = reponse.demande!.officine!;
 
     return Container(
       margin: EdgeInsets.only(bottom: 15),
@@ -76,14 +74,13 @@ class ReponseCardState extends State<ReponseCard> {
           "assets/images/icons/pharma.png",
           height: 30,
         ),
-        trailing: reponse.read!
-            ? null
+        trailing: reponse.read? null
             : Icon(
                 Icons.chat_rounded,
                 color: Colors.green,
               ),
         onExpansionChanged: (value) {
-          if (value && !reponse.read!) {
+          if (value && !reponse.read) {
             reponseController.updateReponse(reponse);
           }
         },
@@ -97,8 +94,7 @@ class ReponseCardState extends State<ReponseCard> {
               officine.name ?? "",
               style: TextStyle(
                   fontSize: 15,
-                  color: reponse.read!
-                      ? Colors.grey
+                  color: reponse.read? Colors.grey
                       : Color.fromARGB(255, 6, 114, 49),
                   fontWeight: FontWeight.bold),
             ),
@@ -128,7 +124,7 @@ class ReponseCardState extends State<ReponseCard> {
                         ligneReponse: ligne,
                         rdv: reponseController.rdvs.firstWhere(
                             (element) => element.ligne?.id == ligne.id,
-                            orElse: () => RdvLigneReponseModel())),
+                            orElse: () => RdvLigneReponse())),
                     Column(
                       children: subsLignes[ligne]!.map((sub) {
                         return LigneSub(sub: sub);
@@ -144,7 +140,7 @@ class ReponseCardState extends State<ReponseCard> {
               }).toList(),
             ),
           ),
-          reponse.price! > 0
+          reponse.price> 0
               ? Container(
                   margin: EdgeInsets.only(right: 20, top: 5, bottom: 10),
                   child: Row(

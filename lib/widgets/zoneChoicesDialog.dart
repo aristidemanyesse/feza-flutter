@@ -6,13 +6,12 @@ import 'package:ipi/controllers/CirconscriptionController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/controllers/UserController.dart';
+import 'package:ipi/models/coreApp/ResponseModel.dart';
+import 'package:ipi/models/officineApp/Circonscription.dart';
+import 'package:ipi/models/userApp/Utilisateur.dart';
 import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 import 'package:ipi/const/colors.dart';
-import 'package:ipi/models/CirconscriptionModel.dart';
-import 'package:ipi/models/ResponseModel.dart';
-import 'package:ipi/models/UtilisateurModel.dart';
-import 'package:ipi/provider/UtilisateurProvider.dart';
 import '../utils/helper.dart';
 
 class CirconscriptionChoicesDialog extends StatefulWidget {
@@ -28,8 +27,8 @@ class _CirconscriptionChoicesDialogState
   CirconscriptionController controller = Get.find();
   SearchBottomSheetController scontroller = Get.find();
 
-  late List<CirconscriptionModel> circonscriptions = [];
-  late List<CirconscriptionModel> _circonscriptions = [];
+  late List<Circonscription> circonscriptions = [];
+  late List<Circonscription> _circonscriptions = [];
 
   _CirconscriptionChoicesDialogState();
 
@@ -173,7 +172,7 @@ class _CirconscriptionChoicesDialogState
 }
 
 class Ligne extends StatelessWidget {
-  final CirconscriptionModel circonscription;
+  final Circonscription circonscription;
   UtilisateurController userController = Get.find();
   OfficineController officineController = Get.find();
   MapWidgetController mpController = Get.find();
@@ -182,11 +181,11 @@ class Ligne extends StatelessWidget {
 
   Ligne({required this.circonscription});
 
-  void changeCirconscription(CirconscriptionModel circonscription) async {
-    UtilisateurModel? user = userController.currentUser.value;
+  void changeCirconscription(Circonscription circonscription) async {
+    Utilisateur? user = userController.currentUser.value;
     Map<String, dynamic> variables = user!.toJson();
     variables["circonscription"] = circonscription.id;
-    ResponseModel response = await UtilisateurProvider.update(variables);
+    ResponseModel response = await Utilisateur.update(variables);
     Get.back();
     if (response.ok) {
       userController.currentUser.value = response.data;

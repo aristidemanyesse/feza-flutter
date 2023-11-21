@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/models/produitApp/Produit.dart';
 import 'package:ipi/webservice/apiservice.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 
@@ -7,11 +7,11 @@ import '../const/colors.dart';
 import '../utils/helper.dart';
 
 class SuggestionItemCard extends StatelessWidget {
-  final ProduitModel produit;
+  final Produit produit;
   final String image;
 
   SuggestionItemCard({required this.produit})
-      : image = ApiService.BASE_URL + produit.image!;
+      : image = ApiService.BASE_URL + produit.image;
 
   @override
   Widget build(BuildContext context) {

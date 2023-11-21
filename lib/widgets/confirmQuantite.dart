@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/ProduitController.dart';
-import 'package:ipi/models/ProduitModel.dart';
+import 'package:ipi/models/produitApp/Produit.dart';
 
 class ConfirmQuantite extends StatelessWidget {
-  final ProduitModel produit;
+  final Produit produit;
 
   ConfirmQuantite(this.produit);
 
@@ -50,7 +50,7 @@ class ConfirmQuantite extends StatelessWidget {
                           color: Colors.black),
                     ),
                     Text(
-                      produit.forme ?? "",
+                      produit.forme,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 13,

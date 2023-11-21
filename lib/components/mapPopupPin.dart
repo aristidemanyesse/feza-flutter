@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:ipi/models/OfficineModel.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 
 class MapMinPharmaciePopup extends StatelessWidget {
   final Marker marker;
-  final OfficineModel officine;
+  final Officine officine;
   final String ratio;
   final String distance;
   final Function ittineraireFunction;
@@ -61,7 +61,7 @@ class MapMinPharmaciePopup extends StatelessWidget {
                     children: [
                       Marquee(
                         child: Text(
-                          officine.name!,
+                          officine.name,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16.0,

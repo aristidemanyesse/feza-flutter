@@ -1,3 +1,5 @@
+import 'package:ipi/models/officineApp/Circonscription.dart';
+
 class CirconscriptionSchema {
   static const String ALL = r"""
     query ($id: UUID, $name: String) {
@@ -7,19 +9,10 @@ class CirconscriptionSchema {
         name: $name
       ) {
         results {
-          id
-          name
-          geometryJson
+          ...CirconscriptionFragment
         }
       }
     }
-  """;
-
-  static const String GET_ONE = """
-    query{
-      countries(filter:{currency:{eq:"EGP"}}){
-        name
-      }
-    }
-  """;
+  """ +
+      Circonscription.CirconscriptionFragment;
 }

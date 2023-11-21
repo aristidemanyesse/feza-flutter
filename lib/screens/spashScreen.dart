@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ipi/components/myLogo.dart';
 import 'package:ipi/controllers/UserController.dart';
-import 'package:ipi/provider/UtilisateurProvider.dart';
+import 'package:ipi/models/coreApp/Tools.dart';
+import 'package:ipi/models/userApp/Utilisateur.dart';
 import 'package:ipi/screens/homeScreen.dart';
 import 'package:ipi/screens/introScreen.dart';
 import 'package:ipi/screens/sentOTPScreen.dart';
@@ -22,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void newSection() {
     box.erase();
     _controller.onInit();
-    UtilisateurProvider.getUniqID().then((value) => box.write("imei", value));
+    Tools.getUniqID().then((value) => box.write("imei", value));
     Get.to(IntroScreen());
   }
 
@@ -39,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
           Get.to(HomeScreen());
         }
       } else if (id != null) {
-        UtilisateurProvider.all({"id": id, "imei": imei}).then((users) {
+        Utilisateur.all({"id": id, "imei": imei}).then((users) {
           if (users.length > 0) {
             _controller.currentUser.value = users[0];
             if (_controller.currentUser.value!.isValide != true) {
