@@ -9,6 +9,7 @@ import 'package:ipi/components/MapWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/ProduitController.dart';
+import 'package:ipi/widgets/pleaseWait.dart';
 import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'dart:io';
 
@@ -71,48 +72,11 @@ class SearchPageState extends State<SearchPage> with WidgetsBindingObserver {
               return Container(
                 margin: EdgeInsets.symmetric(horizontal: 20),
                 child: Visibility(
-                  visible: officineController.wait.value,
-                  child: Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Recherche des pharmacies en cours",
-                                style: TextStyle(
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                "Commencez à renseigner vos besoins ...",
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 30),
-                                child: LinearProgressIndicator(),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                    visible: officineController.wait.value,
+                    child: PleaseWait(
+                      title: "Recherche des pharmacies en cours",
+                      message: "Commencez à renseigner vos besoins ...",
+                    )),
               );
             }),
             Positioned(

@@ -57,19 +57,31 @@ class SearchBottomSheetState extends State<SearchBottomSheet> {
       minChildSize: (868 * 0.3) / Get.size.height,
       builder: (context, scrollController) {
         return Center(
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-            child: Container(
-              color: Color.fromARGB(255, 245, 239, 235),
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              child: PageView(
-                // physics: NeverScrollableScrollPhysics(),
-                controller: _controller,
-                children: _pages,
-                onPageChanged: (value) {
-                  controller.page.value = value;
-                },
+          child: Container(
+            padding: EdgeInsets.only(top: 10),
+            decoration: new BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade400.withOpacity(0.5),
+                  blurRadius: 5.0,
+                )
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+              child: Container(
+                color: Color.fromARGB(255, 245, 239, 235),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                child: PageView(
+                  controller: _controller,
+                  children: _pages,
+                  onPageChanged: (value) {
+                    controller.page.value = value;
+                  },
+                ),
               ),
             ),
           ),

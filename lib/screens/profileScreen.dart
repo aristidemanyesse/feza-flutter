@@ -35,7 +35,10 @@ class ProfileScreenState extends State<ProfileScreen> {
   final box = GetStorage();
 
   void deconnexion() async {
-    Get.dialog(PleaseWait());
+    Get.dialog(PleaseWait(
+      title: "Veuillez patienter",
+      message: " ...",
+    ));
     controller.currentUser.value = null;
     box.erase();
     Tools.getUniqID().then((value) => box.write("imei", value));

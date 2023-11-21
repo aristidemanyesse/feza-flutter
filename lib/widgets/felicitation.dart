@@ -101,7 +101,10 @@ class _FelicitationScreenState extends State<FelicitationScreen> {
                           border: Border.all(width: 1, color: AppColor.blue)),
                       child: TextButton(
                         onPressed: () {
-                          Get.to(PleaseWait());
+                          Get.to(PleaseWait(
+                            title: "Veuillez patienter",
+                            message: "...",
+                          ));
                           Get.off(HomeScreen());
                         },
                         child: Text(

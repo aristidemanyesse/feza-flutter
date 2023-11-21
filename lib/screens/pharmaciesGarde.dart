@@ -7,6 +7,7 @@ import 'package:ipi/components/MapWidget.dart';
 import 'package:ipi/components/loader.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/widgets/listePharmaciesSection.dart';
+import 'package:ipi/widgets/pleaseWait.dart';
 import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'package:ipi/widgets/zoneSection.dart';
 
@@ -61,36 +62,43 @@ class PharmaciesGardeState extends State<PharmaciesGarde> {
           Stack(
             children: [
               Container(height: Get.size.height * 0.75, child: MapWidget()),
-              Obx(() {
-                return DraggableScrollableSheet(
-                  initialChildSize: 0.35,
-                  minChildSize: 0.35,
-                  maxChildSize: controller.page.value == 1 ? 0.5 : 0.35,
-                  builder: (context, scrollController) {
-                    return Column(
-                      children: [
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(40),
-                                topRight: Radius.circular(40)),
-                            child: Container(
-                              color: Color.fromARGB(255, 245, 239, 235),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 20),
-                              child: PageView(
-                                physics: NeverScrollableScrollPhysics(),
-                                controller: _controller,
-                                children: _pages,
-                              ),
-                            ),
+              DraggableScrollableSheet(
+                initialChildSize: (868 * 0.3) / Get.size.height,
+                minChildSize: (868 * 0.3) / Get.size.height,
+                builder: (context, scrollController) {
+                  return Center(
+                    child: Container(
+                      padding: EdgeInsets.only(top: 10),
+                      decoration: new BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                            topRight: Radius.circular(40)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade400.withOpacity(0.5),
+                            blurRadius: 5.0,
+                          )
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                            topRight: Radius.circular(40)),
+                        child: Container(
+                          color: Color.fromARGB(255, 245, 239, 235),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 20),
+                          child: PageView(
+                            physics: NeverScrollableScrollPhysics(),
+                            controller: _controller,
+                            children: _pages,
                           ),
-                        )
-                      ],
-                    );
-                  },
-                );
-              }),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
               Positioned(
                 bottom: Get.size.height * 0.5,
                 right: 5,
@@ -114,8 +122,10 @@ class PharmaciesGardeState extends State<PharmaciesGarde> {
               ),
               Obx(() {
                 return Visibility(
-                  child: LoaderScreen(
-                      title: "iPi recherche les pharmacies de garde ..."),
+                  child: PleaseWait(
+                    title: "Recherche des pharmacies de garde",
+                    message: "Veuillez patienter ...",
+                  ),
                   visible: officineController.wait.value,
                 );
               }),

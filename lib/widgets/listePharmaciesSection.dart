@@ -8,7 +8,9 @@ import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/controllers/UserController.dart';
+import 'package:ipi/widgets/searchBottomSheet.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:lottie/lottie.dart';
 
 class ListePharmaciesSection extends StatelessWidget {
   ListePharmaciesSection({
@@ -19,6 +21,7 @@ class ListePharmaciesSection extends StatelessWidget {
   UtilisateurController utilisateurController = Get.find();
   AppController appController = Get.find();
   MapWidgetController mpController = Get.find();
+  SearchBottomSheetController controller = Get.find();
 
   void targetMarker(String? id) {
     var officine =
@@ -64,34 +67,89 @@ class ListePharmaciesSection extends StatelessWidget {
                         var officines = officineController.officines;
                         var distanceTableaux =
                             officineController.distanceTableaux;
-                        return Column(
-                          children: officines.map((officine) {
-                            return GestureDetector(
-                              onTap: () {
-                                targetMarker(officine.id);
-                              },
-                              child: Container(
-                                color: Colors.transparent,
-                                child: Column(
-                                  children: [
-                                    PharmacieItemCard2(
-                                      officine: officine,
-                                      distance:
-                                          distanceTableaux[officine] ?? "",
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.symmetric(vertical: 3),
-                                      child: Divider(
-                                        color: AppColor.placeholder,
-                                        thickness: 1.5,
+                        return officines.length > 0
+                            ? Column(
+                                children: officines.map((officine) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      targetMarker(officine.id);
+                                    },
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      child: Column(
+                                        children: [
+                                          PharmacieItemCard2(
+                                            officine: officine,
+                                            distance:
+                                                distanceTableaux[officine] ??
+                                                    "",
+                                          ),
+                                          Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 3),
+                                            child: Divider(
+                                              color: AppColor.placeholder,
+                                              thickness: 1.5,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        );
+                                  );
+                                }).toList(),
+                              )
+                            : Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Lottie.asset("assets/lotties/empty.json",
+                                      height: 50),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "Nous n'avons trouvé aucune \n pharmacie de garde pour cette zone !",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      controller.page.value = 0;
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 5),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        border:
+                                            Border.all(color: AppColor.blue),
+                                        color: AppColor.blue,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.arrow_left,
+                                            color: Colors.white,
+                                            size: 27,
+                                          ),
+                                          Text(
+                                            "Retour",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
                       }),
                     ),
                     SizedBox(

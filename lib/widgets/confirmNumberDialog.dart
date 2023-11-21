@@ -15,7 +15,12 @@ class ConfirmNumberDialog extends StatelessWidget {
 
   Future<void> userRegistration(BuildContext context, String number) async {
     String contact = number.replaceAll(" ", "");
-    Get.dialog(PleaseWait(), barrierDismissible: false);
+    Get.dialog(
+        PleaseWait(
+          title: "Inscription",
+          message: "veuillez patienter ...",
+        ),
+        barrierDismissible: false);
 
     controller.createUser(name, contact);
   }

@@ -54,7 +54,12 @@ class UtilisateurController extends GetxController {
       String contact = "",
       redirect = true,
       isValide}) async {
-    Get.dialog(PleaseWait(), barrierDismissible: false);
+    Get.dialog(
+        PleaseWait(
+          title: "Mise à jour des informations",
+          message: "veuillez patienter ...",
+        ),
+        barrierDismissible: false);
 
     Map<String, dynamic> datas = {};
     datas["fullname"] = name;

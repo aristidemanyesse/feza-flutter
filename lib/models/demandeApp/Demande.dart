@@ -75,7 +75,10 @@ class Demande with _$Demande {
   }
 
   void deleteDemande() async {
-    Get.dialog(PleaseWait());
+    Get.dialog(PleaseWait(
+      title: "Suppression en cours",
+      message: "veuillez patienter ...",
+    ));
     ResponseModel response = await Demande.update({
       "id": this.id,
       "utilisateur": this.utilisateur?.id,
