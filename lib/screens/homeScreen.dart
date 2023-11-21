@@ -31,7 +31,6 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    demandeController.onInit();
     if (userController.currentUser.value!.isValide != true) {
       Get.off(SplashScreen());
     }

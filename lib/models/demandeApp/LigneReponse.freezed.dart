@@ -28,7 +28,8 @@ mixin _$LigneReponse {
   int get quantite => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
   Produit? get produit => throw _privateConstructorUsedError;
-  Reponse? get reponse => throw _privateConstructorUsedError;
+  List<SubsLigneReponse> get lignesSub => throw _privateConstructorUsedError;
+  List<RdvLigneReponse> get rdvLigne => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -51,10 +52,10 @@ abstract class $LigneReponseCopyWith<$Res> {
       int quantite,
       int price,
       Produit? produit,
-      Reponse? reponse});
+      List<SubsLigneReponse> lignesSub,
+      List<RdvLigneReponse> rdvLigne});
 
   $ProduitCopyWith<$Res>? get produit;
-  $ReponseCopyWith<$Res>? get reponse;
 }
 
 /// @nodoc
@@ -78,7 +79,8 @@ class _$LigneReponseCopyWithImpl<$Res, $Val extends LigneReponse>
     Object? quantite = null,
     Object? price = null,
     Object? produit = freezed,
-    Object? reponse = freezed,
+    Object? lignesSub = null,
+    Object? rdvLigne = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -113,10 +115,14 @@ class _$LigneReponseCopyWithImpl<$Res, $Val extends LigneReponse>
           ? _value.produit
           : produit // ignore: cast_nullable_to_non_nullable
               as Produit?,
-      reponse: freezed == reponse
-          ? _value.reponse
-          : reponse // ignore: cast_nullable_to_non_nullable
-              as Reponse?,
+      lignesSub: null == lignesSub
+          ? _value.lignesSub
+          : lignesSub // ignore: cast_nullable_to_non_nullable
+              as List<SubsLigneReponse>,
+      rdvLigne: null == rdvLigne
+          ? _value.rdvLigne
+          : rdvLigne // ignore: cast_nullable_to_non_nullable
+              as List<RdvLigneReponse>,
     ) as $Val);
   }
 
@@ -129,18 +135,6 @@ class _$LigneReponseCopyWithImpl<$Res, $Val extends LigneReponse>
 
     return $ProduitCopyWith<$Res>(_value.produit!, (value) {
       return _then(_value.copyWith(produit: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ReponseCopyWith<$Res>? get reponse {
-    if (_value.reponse == null) {
-      return null;
-    }
-
-    return $ReponseCopyWith<$Res>(_value.reponse!, (value) {
-      return _then(_value.copyWith(reponse: value) as $Val);
     });
   }
 }
@@ -162,12 +156,11 @@ abstract class _$$LigneReponseImplCopyWith<$Res>
       int quantite,
       int price,
       Produit? produit,
-      Reponse? reponse});
+      List<SubsLigneReponse> lignesSub,
+      List<RdvLigneReponse> rdvLigne});
 
   @override
   $ProduitCopyWith<$Res>? get produit;
-  @override
-  $ReponseCopyWith<$Res>? get reponse;
 }
 
 /// @nodoc
@@ -189,7 +182,8 @@ class __$$LigneReponseImplCopyWithImpl<$Res>
     Object? quantite = null,
     Object? price = null,
     Object? produit = freezed,
-    Object? reponse = freezed,
+    Object? lignesSub = null,
+    Object? rdvLigne = null,
   }) {
     return _then(_$LigneReponseImpl(
       id: null == id
@@ -224,10 +218,14 @@ class __$$LigneReponseImplCopyWithImpl<$Res>
           ? _value.produit
           : produit // ignore: cast_nullable_to_non_nullable
               as Produit?,
-      reponse: freezed == reponse
-          ? _value.reponse
-          : reponse // ignore: cast_nullable_to_non_nullable
-              as Reponse?,
+      lignesSub: null == lignesSub
+          ? _value._lignesSub
+          : lignesSub // ignore: cast_nullable_to_non_nullable
+              as List<SubsLigneReponse>,
+      rdvLigne: null == rdvLigne
+          ? _value._rdvLigne
+          : rdvLigne // ignore: cast_nullable_to_non_nullable
+              as List<RdvLigneReponse>,
     ));
   }
 }
@@ -244,7 +242,10 @@ class _$LigneReponseImpl with DiagnosticableTreeMixin implements _LigneReponse {
       this.quantite = 0,
       this.price = 0,
       this.produit,
-      this.reponse});
+      final List<SubsLigneReponse> lignesSub = const [],
+      final List<RdvLigneReponse> rdvLigne = const []})
+      : _lignesSub = lignesSub,
+        _rdvLigne = rdvLigne;
 
   factory _$LigneReponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$LigneReponseImplFromJson(json);
@@ -272,12 +273,27 @@ class _$LigneReponseImpl with DiagnosticableTreeMixin implements _LigneReponse {
   final int price;
   @override
   final Produit? produit;
+  final List<SubsLigneReponse> _lignesSub;
   @override
-  final Reponse? reponse;
+  @JsonKey()
+  List<SubsLigneReponse> get lignesSub {
+    if (_lignesSub is EqualUnmodifiableListView) return _lignesSub;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_lignesSub);
+  }
+
+  final List<RdvLigneReponse> _rdvLigne;
+  @override
+  @JsonKey()
+  List<RdvLigneReponse> get rdvLigne {
+    if (_rdvLigne is EqualUnmodifiableListView) return _rdvLigne;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_rdvLigne);
+  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'LigneReponse(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, status: $status, quantite: $quantite, price: $price, produit: $produit, reponse: $reponse)';
+    return 'LigneReponse(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, status: $status, quantite: $quantite, price: $price, produit: $produit, lignesSub: $lignesSub, rdvLigne: $rdvLigne)';
   }
 
   @override
@@ -293,7 +309,8 @@ class _$LigneReponseImpl with DiagnosticableTreeMixin implements _LigneReponse {
       ..add(DiagnosticsProperty('quantite', quantite))
       ..add(DiagnosticsProperty('price', price))
       ..add(DiagnosticsProperty('produit', produit))
-      ..add(DiagnosticsProperty('reponse', reponse));
+      ..add(DiagnosticsProperty('lignesSub', lignesSub))
+      ..add(DiagnosticsProperty('rdvLigne', rdvLigne));
   }
 
   @override
@@ -312,13 +329,25 @@ class _$LigneReponseImpl with DiagnosticableTreeMixin implements _LigneReponse {
                 other.quantite == quantite) &&
             (identical(other.price, price) || other.price == price) &&
             (identical(other.produit, produit) || other.produit == produit) &&
-            (identical(other.reponse, reponse) || other.reponse == reponse));
+            const DeepCollectionEquality()
+                .equals(other._lignesSub, _lignesSub) &&
+            const DeepCollectionEquality().equals(other._rdvLigne, _rdvLigne));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, updateAt, deleted,
-      status, quantite, price, produit, reponse);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      createdAt,
+      updateAt,
+      deleted,
+      status,
+      quantite,
+      price,
+      produit,
+      const DeepCollectionEquality().hash(_lignesSub),
+      const DeepCollectionEquality().hash(_rdvLigne));
 
   @JsonKey(ignore: true)
   @override
@@ -344,7 +373,8 @@ abstract class _LigneReponse implements LigneReponse {
       final int quantite,
       final int price,
       final Produit? produit,
-      final Reponse? reponse}) = _$LigneReponseImpl;
+      final List<SubsLigneReponse> lignesSub,
+      final List<RdvLigneReponse> rdvLigne}) = _$LigneReponseImpl;
 
   factory _LigneReponse.fromJson(Map<String, dynamic> json) =
       _$LigneReponseImpl.fromJson;
@@ -366,7 +396,9 @@ abstract class _LigneReponse implements LigneReponse {
   @override
   Produit? get produit;
   @override
-  Reponse? get reponse;
+  List<SubsLigneReponse> get lignesSub;
+  @override
+  List<RdvLigneReponse> get rdvLigne;
   @override
   @JsonKey(ignore: true)
   _$$LigneReponseImplCopyWith<_$LigneReponseImpl> get copyWith =>

@@ -4,43 +4,32 @@ import 'package:ipi/components/ReponseCard.dart';
 import 'package:ipi/components/indicator.dart';
 import 'package:ipi/controllers/ReponseController.dart';
 import 'package:ipi/models/demandeApp/Demande.dart';
-import 'package:ipi/models/demandeApp/LigneDemande.dart';
-import 'package:ipi/models/demandeApp/Reponse.dart';
 import 'package:ipi/utils/helper.dart';
 import "package:intl/intl.dart";
 import 'package:lottie/lottie.dart';
 
 class DetailDemande extends StatefulWidget {
-  late List<LigneDemande> produits = [];
   late Demande demande;
   late bool news = false;
 
-  DetailDemande({Key? key, required this.demande, required this.produits})
-      : super(key: key);
+  DetailDemande({Key? key, required this.demande}) : super(key: key);
   @override
   State<DetailDemande> createState() => DetailDemandeState();
 }
 
 class DetailDemandeState extends State<DetailDemande> {
   ReponseController reponseController = Get.find();
-  late List<Reponse> reponses = [];
 
   final f = DateFormat("dd/MM/yyyy à HH:mm");
 
   @override
   void initState() {
     super.initState();
-    getData();
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<void> getData() async {
-    reponses = await Reponse.all({"demande": widget.demande.id});
-    setState(() {});
   }
 
   @override
@@ -87,7 +76,7 @@ class DetailDemandeState extends State<DetailDemande> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "${widget.produits.length} médicament${widget.produits.length > 1 ? 's' : ''}     ",
+                "${widget.demande.demandeLignes.length} médicament${widget.demande.demandeLignes.length > 1 ? 's' : ''} /",
                 style: TextStyle(fontSize: 12, color: Colors.black),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -96,6 +85,14 @@ class DetailDemandeState extends State<DetailDemande> {
               ),
               Text(
                 widget.demande.ordonnance != "" ? "1 image" : "",
+                style: TextStyle(fontSize: 12, color: Colors.black),
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                "    dans ${widget.demande.demandeOfficine.length} pharmacies",
                 style: TextStyle(fontSize: 12, color: Colors.black),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -109,7 +106,7 @@ class DetailDemandeState extends State<DetailDemande> {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: reponses.length == 0
+            child: widget.demande.demandesOfficinesAnswered().length == 0
                 ? Center(
                     child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -128,8 +125,11 @@ class DetailDemandeState extends State<DetailDemande> {
                   ))
                 : SingleChildScrollView(
                     child: Column(
-                      children: reponses.map((reponse) {
-                        return ReponseCard(reponse: reponse);
+                      children: widget.demande
+                          .demandesOfficinesAnswered()
+                          .map((reponse) {
+                        return ReponseCard(
+                            demande: widget.demande, officineDemande: reponse);
                       }).toList(),
                     ),
                   ),

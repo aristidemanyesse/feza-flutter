@@ -27,7 +27,7 @@ class DemandeItemCardState extends State<DemandeItemCard> {
   DateFormat? dateFormat;
   DateFormat? timeFormat;
 
-  late List<LigneDemande> produits = [];
+  late List<LigneDemande> lignes = [];
   late List<OfficineDemande> officines = [];
   late List<Reponse> reponses = [];
   late bool news = false;
@@ -38,25 +38,15 @@ class DemandeItemCardState extends State<DemandeItemCard> {
     initializeDateFormatting();
     dateFormat = new DateFormat.yMMMMd('fr');
     timeFormat = new DateFormat.Hm('fr');
-    getData();
+
+    lignes = widget.demande.demandeLignes;
+    officines = widget.demande.demandeOfficine;
+    reponses = widget.demande.reponsesOfficines();
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<void> getData() async {
-    produits = await Demande.allLignesDemande({"demande": widget.demande.id});
-    officines =
-        await Demande.allOfficinesDemande({"demande": widget.demande.id});
-    reponses = await Reponse.all({"demande": widget.demande.id});
-    for (Reponse rep in reponses) {
-      if (!rep.read) {
-        news = true;
-        break;
-      }
-    }
   }
 
   void showDetail(BuildContext context) {
@@ -65,7 +55,7 @@ class DemandeItemCardState extends State<DemandeItemCard> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return DetailDemande(demande: widget.demande, produits: produits);
+        return DetailDemande(demande: widget.demande);
       },
     );
   }
@@ -100,7 +90,7 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                             width: 5,
                           ),
                           Text(
-                            "${dateFormat!.format(DateTime.parse(widget.demande.createdAt ?? ""))} ${timeFormat!.format(DateTime.parse(widget.demande.createdAt))}",
+                            "${dateFormat!.format(DateTime.parse(widget.demande.createdAt))} ${timeFormat!.format(DateTime.parse(widget.demande.createdAt))}",
                             style: Helper.getTheme(context)
                                 .headlineMedium
                                 ?.copyWith(
@@ -117,9 +107,9 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                           children: [
                             Row(
                               children: [
-                                produits.length > 0
+                                lignes.length > 0
                                     ? Text(
-                                        "${produits.length} médicament${produits.length > 1 ? 's' : ''}     ",
+                                        "${lignes.length} médicament${lignes.length > 1 ? 's' : ''}     ",
                                         style: TextStyle(
                                             fontSize: 12, color: Colors.black),
                                         overflow: TextOverflow.ellipsis,
@@ -172,7 +162,7 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                           testOk: "Oui",
                           testCancel: "Non",
                           functionOk: () {
-                            demandeController.deleteDemande(widget.demande);
+                            widget.demande.deleteDemande();
                             Get.back();
                           },
                           functionCancel: () {
@@ -191,18 +181,18 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                     height: 15,
                   ),
                   Container(
-                    child: widget.news > 0
+                    child: widget.demande.news > 0
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Container(
                               color: Color.fromARGB(255, 69, 180, 110),
-                              height: 25,
-                              width: 25,
+                              height: 20,
+                              width: 20,
                               child: Center(
                                 child: Text(
-                                  widget.news.toString(),
+                                  widget.demande.news.toString(),
                                   style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white),
                                 ),

@@ -24,11 +24,9 @@ mixin _$SubsLigneReponse {
   String get createdAt => throw _privateConstructorUsedError;
   String get updateAt => throw _privateConstructorUsedError;
   bool get deleted => throw _privateConstructorUsedError;
-  bool get status => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
   int get quantite => throw _privateConstructorUsedError;
   Produit? get produit => throw _privateConstructorUsedError;
-  LigneReponse? get demande => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,14 +45,11 @@ abstract class $SubsLigneReponseCopyWith<$Res> {
       String createdAt,
       String updateAt,
       bool deleted,
-      bool status,
       int price,
       int quantite,
-      Produit? produit,
-      LigneReponse? demande});
+      Produit? produit});
 
   $ProduitCopyWith<$Res>? get produit;
-  $LigneReponseCopyWith<$Res>? get demande;
 }
 
 /// @nodoc
@@ -74,11 +69,9 @@ class _$SubsLigneReponseCopyWithImpl<$Res, $Val extends SubsLigneReponse>
     Object? createdAt = null,
     Object? updateAt = null,
     Object? deleted = null,
-    Object? status = null,
     Object? price = null,
     Object? quantite = null,
     Object? produit = freezed,
-    Object? demande = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -97,10 +90,6 @@ class _$SubsLigneReponseCopyWithImpl<$Res, $Val extends SubsLigneReponse>
           ? _value.deleted
           : deleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as bool,
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
@@ -113,10 +102,6 @@ class _$SubsLigneReponseCopyWithImpl<$Res, $Val extends SubsLigneReponse>
           ? _value.produit
           : produit // ignore: cast_nullable_to_non_nullable
               as Produit?,
-      demande: freezed == demande
-          ? _value.demande
-          : demande // ignore: cast_nullable_to_non_nullable
-              as LigneReponse?,
     ) as $Val);
   }
 
@@ -129,18 +114,6 @@ class _$SubsLigneReponseCopyWithImpl<$Res, $Val extends SubsLigneReponse>
 
     return $ProduitCopyWith<$Res>(_value.produit!, (value) {
       return _then(_value.copyWith(produit: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $LigneReponseCopyWith<$Res>? get demande {
-    if (_value.demande == null) {
-      return null;
-    }
-
-    return $LigneReponseCopyWith<$Res>(_value.demande!, (value) {
-      return _then(_value.copyWith(demande: value) as $Val);
     });
   }
 }
@@ -158,16 +131,12 @@ abstract class _$$SubsLigneReponseImplCopyWith<$Res>
       String createdAt,
       String updateAt,
       bool deleted,
-      bool status,
       int price,
       int quantite,
-      Produit? produit,
-      LigneReponse? demande});
+      Produit? produit});
 
   @override
   $ProduitCopyWith<$Res>? get produit;
-  @override
-  $LigneReponseCopyWith<$Res>? get demande;
 }
 
 /// @nodoc
@@ -185,11 +154,9 @@ class __$$SubsLigneReponseImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? updateAt = null,
     Object? deleted = null,
-    Object? status = null,
     Object? price = null,
     Object? quantite = null,
     Object? produit = freezed,
-    Object? demande = freezed,
   }) {
     return _then(_$SubsLigneReponseImpl(
       id: null == id
@@ -208,10 +175,6 @@ class __$$SubsLigneReponseImplCopyWithImpl<$Res>
           ? _value.deleted
           : deleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as bool,
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
@@ -224,10 +187,6 @@ class __$$SubsLigneReponseImplCopyWithImpl<$Res>
           ? _value.produit
           : produit // ignore: cast_nullable_to_non_nullable
               as Produit?,
-      demande: freezed == demande
-          ? _value.demande
-          : demande // ignore: cast_nullable_to_non_nullable
-              as LigneReponse?,
     ));
   }
 }
@@ -242,11 +201,9 @@ class _$SubsLigneReponseImpl
       this.createdAt = "",
       this.updateAt = "",
       this.deleted = false,
-      this.status = false,
       this.price = 0,
       this.quantite = 0,
-      this.produit,
-      this.demande});
+      this.produit});
 
   factory _$SubsLigneReponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$SubsLigneReponseImplFromJson(json);
@@ -265,21 +222,16 @@ class _$SubsLigneReponseImpl
   final bool deleted;
   @override
   @JsonKey()
-  final bool status;
-  @override
-  @JsonKey()
   final int price;
   @override
   @JsonKey()
   final int quantite;
   @override
   final Produit? produit;
-  @override
-  final LigneReponse? demande;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SubsLigneReponse(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, status: $status, price: $price, quantite: $quantite, produit: $produit, demande: $demande)';
+    return 'SubsLigneReponse(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, price: $price, quantite: $quantite, produit: $produit)';
   }
 
   @override
@@ -291,11 +243,9 @@ class _$SubsLigneReponseImpl
       ..add(DiagnosticsProperty('createdAt', createdAt))
       ..add(DiagnosticsProperty('updateAt', updateAt))
       ..add(DiagnosticsProperty('deleted', deleted))
-      ..add(DiagnosticsProperty('status', status))
       ..add(DiagnosticsProperty('price', price))
       ..add(DiagnosticsProperty('quantite', quantite))
-      ..add(DiagnosticsProperty('produit', produit))
-      ..add(DiagnosticsProperty('demande', demande));
+      ..add(DiagnosticsProperty('produit', produit));
   }
 
   @override
@@ -309,18 +259,16 @@ class _$SubsLigneReponseImpl
             (identical(other.updateAt, updateAt) ||
                 other.updateAt == updateAt) &&
             (identical(other.deleted, deleted) || other.deleted == deleted) &&
-            (identical(other.status, status) || other.status == status) &&
             (identical(other.price, price) || other.price == price) &&
             (identical(other.quantite, quantite) ||
                 other.quantite == quantite) &&
-            (identical(other.produit, produit) || other.produit == produit) &&
-            (identical(other.demande, demande) || other.demande == demande));
+            (identical(other.produit, produit) || other.produit == produit));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, updateAt, deleted,
-      status, price, quantite, produit, demande);
+  int get hashCode => Object.hash(
+      runtimeType, id, createdAt, updateAt, deleted, price, quantite, produit);
 
   @JsonKey(ignore: true)
   @override
@@ -343,11 +291,9 @@ abstract class _SubsLigneReponse implements SubsLigneReponse {
       final String createdAt,
       final String updateAt,
       final bool deleted,
-      final bool status,
       final int price,
       final int quantite,
-      final Produit? produit,
-      final LigneReponse? demande}) = _$SubsLigneReponseImpl;
+      final Produit? produit}) = _$SubsLigneReponseImpl;
 
   factory _SubsLigneReponse.fromJson(Map<String, dynamic> json) =
       _$SubsLigneReponseImpl.fromJson;
@@ -361,15 +307,11 @@ abstract class _SubsLigneReponse implements SubsLigneReponse {
   @override
   bool get deleted;
   @override
-  bool get status;
-  @override
   int get price;
   @override
   int get quantite;
   @override
   Produit? get produit;
-  @override
-  LigneReponse? get demande;
   @override
   @JsonKey(ignore: true)
   _$$SubsLigneReponseImplCopyWith<_$SubsLigneReponseImpl> get copyWith =>

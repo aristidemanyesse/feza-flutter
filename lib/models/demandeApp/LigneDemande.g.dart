@@ -18,9 +18,6 @@ _$LigneDemandeImpl _$$LigneDemandeImplFromJson(Map<String, dynamic> json) =>
       produit: json['produit'] == null
           ? null
           : Produit.fromJson(json['produit'] as Map<String, dynamic>),
-      demande: json['demande'] == null
-          ? null
-          : Demande.fromJson(json['demande'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$LigneDemandeImplToJson(_$LigneDemandeImpl instance) =>
@@ -33,5 +30,4 @@ Map<String, dynamic> _$$LigneDemandeImplToJson(_$LigneDemandeImpl instance) =>
       'quantite': instance.quantite,
       'base64': instance.base64,
       'produit': instance.produit,
-      'demande': instance.demande,
     };

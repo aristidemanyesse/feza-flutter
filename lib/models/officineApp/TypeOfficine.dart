@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ipi/models/demandeApp/OfficineDemande.dart';
 import 'package:flutter/foundation.dart';
 part 'TypeOfficine.freezed.dart';
 part 'TypeOfficine.g.dart';

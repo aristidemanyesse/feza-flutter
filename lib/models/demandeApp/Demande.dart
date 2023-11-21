@@ -1,16 +1,24 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:get/get.dart';
+import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/models/coreApp/ResponseModel.dart';
 import 'package:ipi/models/demandeApp/LigneDemande.dart';
+import 'package:ipi/models/demandeApp/LigneReponse.dart';
 import 'package:ipi/models/demandeApp/OfficineDemande.dart';
+import 'package:ipi/models/demandeApp/RdvLigneReponse.dart';
+import 'package:ipi/models/demandeApp/Reponse.dart';
 import 'package:ipi/models/userApp/Utilisateur.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ipi/schemas/DemandeSchema.dart';
 import 'package:ipi/webservice/apiservice.dart';
+import 'package:ipi/widgets/pleaseWait.dart';
 part 'Demande.freezed.dart';
 part 'Demande.g.dart';
 
 @freezed
 class Demande with _$Demande {
+  const Demande._();
+
   const factory Demande({
     @Default("") String id,
     @Default("") String createdAt,
@@ -22,14 +30,77 @@ class Demande with _$Demande {
     @Default("") String commentaire,
     @Default(0.0) double lat,
     @Default(0.0) double lon,
+    @Default(0) int news,
     @Default(false) bool propagating,
     @Default(false) bool isFinished,
     @Default(false) bool isSatisfied,
+    @Default([]) List<LigneDemande> demandeLignes,
+    @Default([]) List<OfficineDemande> demandeOfficine,
     Utilisateur? utilisateur,
   }) = _Demande;
 
   factory Demande.fromJson(Map<String, Object?> json) =>
       _$DemandeFromJson(json);
+
+  int totalDemandesOfficines() {
+    return demandeOfficine.length;
+  }
+
+  List<OfficineDemande> demandesOfficinesAnswered() {
+    List<OfficineDemande> total = [];
+    for (OfficineDemande item in demandeOfficine) {
+      if (item.demandeReponse.length > 0) {
+        total.add(item);
+      }
+    }
+    return total;
+  }
+
+  List<Reponse> reponsesOfficines() {
+    List<Reponse> total = [];
+    for (OfficineDemande item in demandeOfficine) {
+      total.addAll(item.demandeReponse);
+    }
+    return total;
+  }
+
+  List<RdvLigneReponse> ligneReponseWithRdv() {
+    List<RdvLigneReponse> total = [];
+    for (Reponse item in this.reponsesOfficines()) {
+      for (LigneReponse elem in item.reponseLignes) {
+        total.addAll(elem.rdvLigne);
+      }
+    }
+    return total;
+  }
+
+  void deleteDemande() async {
+    Get.dialog(PleaseWait());
+    ResponseModel response = await Demande.update({
+      "id": this.id,
+      "utilisateur": this.utilisateur?.id,
+      "status": this.isFinished,
+      "deleted": true,
+    });
+    if (response.ok) {
+      DemandeController demandeController = Get.find();
+      demandeController.onInit();
+      Get.back();
+    }
+  }
+
+  void satisfiedDemande() async {
+    ResponseModel response = await Demande.update({
+      "id": this.id,
+      "utilisateur": this.utilisateur?.id,
+      "status": this.isFinished,
+      "isSatisfied": true,
+    });
+    if (response.ok) {
+      DemandeController demandeController = Get.find();
+      demandeController.onInit();
+    }
+  }
 
   static const String DemandeFragment = """
   fragment DemandeFragment on DemandeGenericType {
@@ -46,6 +117,12 @@ class Demande with _$Demande {
     propagating
     isFinished
     isSatisfied
+    demandeLignes{
+      ...LigneDemandeFragment
+    }
+    demandeOfficine{
+      ...OfficineDemandeFragment
+    }
     utilisateur{
       ...UtilisateurFragment
     }

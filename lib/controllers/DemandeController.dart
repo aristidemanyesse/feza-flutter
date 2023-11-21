@@ -12,6 +12,7 @@ import 'package:ipi/controllers/ProduitController.dart';
 import 'package:ipi/controllers/UserController.dart';
 import 'package:ipi/models/coreApp/ResponseModel.dart';
 import 'package:ipi/models/demandeApp/Demande.dart';
+import 'package:ipi/models/demandeApp/OfficineDemande.dart';
 import 'package:ipi/models/demandeApp/Reponse.dart';
 import 'package:ipi/models/officineApp/Officine.dart';
 import 'package:ipi/models/produitApp/Produit.dart';
@@ -38,7 +39,9 @@ class DemandeController extends GetxController {
   void onInit() async {
     getData();
     Timer.periodic(Duration(seconds: 7), (Timer timer) {
-      updateListReponse();
+      getData();
+    });
+    ever(demandes, (callback) {
       checkNewReponse();
     });
     super.onInit();
@@ -46,15 +49,27 @@ class DemandeController extends GetxController {
 
   void getData() async {
     demandes.value =
-        await Demande.all({"user": controller.currentUser.value?.id});
-    updateListReponse();
+        await Demande.all({"utilisateur_Id": controller.currentUser.value?.id});
     checkNewReponse();
   }
 
   void checkNewReponse() async {
+    DateTime now = DateTime.now();
+    String created = box.read('reponseDateSearched') ??
+        DateFormat("yyyy-MM-ddTHH:mm:ss").format(now);
     int total = 0;
-    for (var dem in demandes) {
-      total += await newReponseForDemande(dem);
+    for (var demande in demandes) {
+      int news = 0;
+      for (OfficineDemande officineDemande in demande.demandeOfficine) {
+        for (Reponse reponse in officineDemande.demandeReponse) {
+          if (DateTime.parse(reponse.createdAt)
+              .isAfter(DateTime.parse(created))) {
+            news += 1;
+            total += 1;
+          }
+        }
+      }
+      demande = demande.copyWith(news: news);
     }
     if (total > 0) {
       NotificationService().showNotification(
@@ -63,15 +78,6 @@ class DemandeController extends GetxController {
       Get.snackbar(
           'Nouvelle réponse', 'Une pharmacie a répondu à votre demande');
     }
-  }
-
-  void updateListReponse() async {
-    Map<String, int> tab = {};
-    for (var dem in demandes) {
-      int total = await notReadReponseDemande(dem);
-      tab[dem.id] = total;
-    }
-    repondesDemandes.value = tab;
   }
 
   void makeDemande() async {
@@ -183,31 +189,5 @@ class DemandeController extends GetxController {
       }
     }
     return news;
-  }
-
-  void deleteDemande(Demande demande) async {
-    Get.dialog(PleaseWait());
-    ResponseModel response = await Demande.update({
-      "id": demande.id,
-      "utilisateur": demande.utilisateur?.id,
-      "status": demande.isFinished,
-      "deleted": true,
-    });
-    if (response.ok) {
-      getData();
-      Get.back();
-    }
-  }
-
-  void satisfiedDemande(Demande demande) async {
-    ResponseModel response = await Demande.update({
-      "id": demande.id,
-      "utilisateur": demande.utilisateur?.id,
-      "status": demande.isFinished,
-      "isSatisfied": true,
-    });
-    if (response.ok) {
-      getData();
-    }
   }
 }

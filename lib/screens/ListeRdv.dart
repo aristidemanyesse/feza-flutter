@@ -2,25 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ipi/components/RdvItemCard.dart';
 import 'package:ipi/components/indicator.dart';
-import 'package:ipi/controllers/ReponseController.dart';
+import 'package:ipi/controllers/DemandeController.dart';
+import 'package:ipi/models/demandeApp/RdvLigneReponse.dart';
+import 'package:ipi/models/officineApp/Officine.dart';
 import 'package:ipi/utils/helper.dart';
 
-class ListeRdv extends StatefulWidget {
-  ListeRdv({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<ListeRdv> createState() => ListeRdvState();
-}
-
-class ListeRdvState extends State<ListeRdv> {
-  ListeRdvState();
+class ListeRdv extends StatelessWidget {
+  ListeRdv();
   int counter = 1;
-  ReponseController reponseController = Get.find();
+  DemandeController demandeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    Map<RdvLigneReponse, Officine> elements = {};
+    demandeController.demandes.map((demande) {
+      demande.demandeOfficine.map((demandeOfficine) {
+        demandeOfficine.demandeReponse.first.reponseLignes.map((ligne) {
+          ligne.rdvLigne.map((rdv) {
+            elements[rdv] = demandeOfficine.officine!;
+          });
+        });
+      });
+    });
+
     return Container(
       padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
       margin: EdgeInsets.fromLTRB(3, 50, 3, 0),
@@ -66,26 +70,26 @@ class ListeRdvState extends State<ListeRdv> {
           ),
           const SizedBox(height: 15),
           Expanded(
-            child: Obx(() {
-              return SingleChildScrollView(
-                child: Column(
-                  children: reponseController.rdvs.map((rdv) {
-                    return Container(
-                      margin: EdgeInsets.only(bottom: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(child: RdvItemCard(rdv: rdv)),
-                          SizedBox(
-                            width: 5,
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              );
-            }),
+            child: SingleChildScrollView(
+              child: Column(
+                children: elements.keys.map((rdv) {
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                            child: RdvItemCard(
+                                rdv: rdv, officine: elements[rdv]!)),
+                        SizedBox(
+                          width: 5,
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
           const SizedBox(height: 10),
           Row(

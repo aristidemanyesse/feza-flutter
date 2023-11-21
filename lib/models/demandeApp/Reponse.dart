@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ipi/models/demandeApp/LigneReponse.dart';
-import 'package:ipi/models/demandeApp/OfficineDemande.dart';
 import 'package:ipi/models/demandeApp/RdvLigneReponse.dart';
 import 'package:ipi/models/demandeApp/SubsLigneReponse.dart';
 import 'package:flutter/foundation.dart';
@@ -12,6 +11,8 @@ part 'Reponse.g.dart';
 
 @freezed
 class Reponse with _$Reponse {
+  const Reponse._();
+
   const factory Reponse({
     @Default("") String id,
     @Default("") String createdAt,
@@ -20,11 +21,18 @@ class Reponse with _$Reponse {
     @Default(false) bool read,
     @Default(0) int price,
     @Default("") String commentaire,
-    OfficineDemande? demande,
+    @Default([]) List<LigneReponse> reponseLignes,
   }) = _Reponse;
 
   factory Reponse.fromJson(Map<String, Object?> json) =>
       _$ReponseFromJson(json);
+
+  void updateReponse() async {
+    await Reponse.update({
+      "id": this.id,
+      "read": true,
+    });
+  }
 
   static const String ReponseFragment = """
   fragment ReponseFragment on ReponseGenericType {
@@ -35,8 +43,8 @@ class Reponse with _$Reponse {
     read
     price
     commentaire
-    demande{
-      ...OfficineDemandeFragment
+    reponseLignes{
+      ...LigneReponseFragment
     }
   }
   """;

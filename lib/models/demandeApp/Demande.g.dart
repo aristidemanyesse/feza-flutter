@@ -18,9 +18,18 @@ _$DemandeImpl _$$DemandeImplFromJson(Map<String, dynamic> json) =>
       commentaire: json['commentaire'] as String? ?? "",
       lat: (json['lat'] as num?)?.toDouble() ?? 0.0,
       lon: (json['lon'] as num?)?.toDouble() ?? 0.0,
+      news: json['news'] as int? ?? 0,
       propagating: json['propagating'] as bool? ?? false,
       isFinished: json['isFinished'] as bool? ?? false,
       isSatisfied: json['isSatisfied'] as bool? ?? false,
+      demandeLignes: (json['demandeLignes'] as List<dynamic>?)
+              ?.map((e) => LigneDemande.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      demandeOfficine: (json['demandeOfficine'] as List<dynamic>?)
+              ?.map((e) => OfficineDemande.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       utilisateur: json['utilisateur'] == null
           ? null
           : Utilisateur.fromJson(json['utilisateur'] as Map<String, dynamic>),
@@ -38,8 +47,11 @@ Map<String, dynamic> _$$DemandeImplToJson(_$DemandeImpl instance) =>
       'commentaire': instance.commentaire,
       'lat': instance.lat,
       'lon': instance.lon,
+      'news': instance.news,
       'propagating': instance.propagating,
       'isFinished': instance.isFinished,
       'isSatisfied': instance.isSatisfied,
+      'demandeLignes': instance.demandeLignes,
+      'demandeOfficine': instance.demandeOfficine,
       'utilisateur': instance.utilisateur,
     };

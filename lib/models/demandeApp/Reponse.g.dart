@@ -15,9 +15,10 @@ _$ReponseImpl _$$ReponseImplFromJson(Map<String, dynamic> json) =>
       read: json['read'] as bool? ?? false,
       price: json['price'] as int? ?? 0,
       commentaire: json['commentaire'] as String? ?? "",
-      demande: json['demande'] == null
-          ? null
-          : OfficineDemande.fromJson(json['demande'] as Map<String, dynamic>),
+      reponseLignes: (json['reponseLignes'] as List<dynamic>?)
+              ?.map((e) => LigneReponse.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$ReponseImplToJson(_$ReponseImpl instance) =>
@@ -29,5 +30,5 @@ Map<String, dynamic> _$$ReponseImplToJson(_$ReponseImpl instance) =>
       'read': instance.read,
       'price': instance.price,
       'commentaire': instance.commentaire,
-      'demande': instance.demande,
+      'reponseLignes': instance.reponseLignes,
     };

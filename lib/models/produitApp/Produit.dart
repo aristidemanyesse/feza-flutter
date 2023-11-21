@@ -34,6 +34,7 @@ class Produit with _$Produit {
     createdAt
     updateAt
     deleted
+    name
     price
     onlyOrdonnance
     description

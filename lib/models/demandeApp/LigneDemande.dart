@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ipi/models/demandeApp/Demande.dart';
 import 'package:ipi/models/produitApp/Produit.dart';
 import 'package:flutter/foundation.dart';
 part 'LigneDemande.freezed.dart';
@@ -16,7 +15,6 @@ class LigneDemande with _$LigneDemande {
     @Default(0) int quantite,
     @Default("") String base64,
     Produit? produit,
-    Demande? demande,
   }) = _LigneDemande;
 
   factory LigneDemande.fromJson(Map<String, Object?> json) =>
@@ -27,9 +25,6 @@ class LigneDemande with _$LigneDemande {
     id
     status
     quantite
-    demande{
-      ...DemandeFragment
-    }
     produit{
       ...ProduitFragment
     }

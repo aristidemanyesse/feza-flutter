@@ -15,12 +15,13 @@ _$OfficineDemandeImpl _$$OfficineDemandeImplFromJson(
       deleted: json['deleted'] as bool? ?? false,
       propagated: json['propagated'] as bool? ?? false,
       isValided: json['isValided'] as bool? ?? false,
+      demandeReponse: (json['demandeReponse'] as List<dynamic>?)
+              ?.map((e) => Reponse.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       officine: json['officine'] == null
           ? null
           : Officine.fromJson(json['officine'] as Map<String, dynamic>),
-      demande: json['demande'] == null
-          ? null
-          : Demande.fromJson(json['demande'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$OfficineDemandeImplToJson(
@@ -32,6 +33,6 @@ Map<String, dynamic> _$$OfficineDemandeImplToJson(
       'deleted': instance.deleted,
       'propagated': instance.propagated,
       'isValided': instance.isValided,
+      'demandeReponse': instance.demandeReponse,
       'officine': instance.officine,
-      'demande': instance.demande,
     };

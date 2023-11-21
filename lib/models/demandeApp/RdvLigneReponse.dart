@@ -31,9 +31,6 @@ class RdvLigneReponse with _$RdvLigneReponse {
     read
     validedDate
     days
-    ligne{
-      ...LigneReponseFragment
-    }
   }
   """;
 }

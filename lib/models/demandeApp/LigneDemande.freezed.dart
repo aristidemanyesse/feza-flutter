@@ -28,7 +28,6 @@ mixin _$LigneDemande {
   int get quantite => throw _privateConstructorUsedError;
   String get base64 => throw _privateConstructorUsedError;
   Produit? get produit => throw _privateConstructorUsedError;
-  Demande? get demande => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -50,11 +49,9 @@ abstract class $LigneDemandeCopyWith<$Res> {
       bool status,
       int quantite,
       String base64,
-      Produit? produit,
-      Demande? demande});
+      Produit? produit});
 
   $ProduitCopyWith<$Res>? get produit;
-  $DemandeCopyWith<$Res>? get demande;
 }
 
 /// @nodoc
@@ -78,7 +75,6 @@ class _$LigneDemandeCopyWithImpl<$Res, $Val extends LigneDemande>
     Object? quantite = null,
     Object? base64 = null,
     Object? produit = freezed,
-    Object? demande = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -113,10 +109,6 @@ class _$LigneDemandeCopyWithImpl<$Res, $Val extends LigneDemande>
           ? _value.produit
           : produit // ignore: cast_nullable_to_non_nullable
               as Produit?,
-      demande: freezed == demande
-          ? _value.demande
-          : demande // ignore: cast_nullable_to_non_nullable
-              as Demande?,
     ) as $Val);
   }
 
@@ -129,18 +121,6 @@ class _$LigneDemandeCopyWithImpl<$Res, $Val extends LigneDemande>
 
     return $ProduitCopyWith<$Res>(_value.produit!, (value) {
       return _then(_value.copyWith(produit: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $DemandeCopyWith<$Res>? get demande {
-    if (_value.demande == null) {
-      return null;
-    }
-
-    return $DemandeCopyWith<$Res>(_value.demande!, (value) {
-      return _then(_value.copyWith(demande: value) as $Val);
     });
   }
 }
@@ -161,13 +141,10 @@ abstract class _$$LigneDemandeImplCopyWith<$Res>
       bool status,
       int quantite,
       String base64,
-      Produit? produit,
-      Demande? demande});
+      Produit? produit});
 
   @override
   $ProduitCopyWith<$Res>? get produit;
-  @override
-  $DemandeCopyWith<$Res>? get demande;
 }
 
 /// @nodoc
@@ -189,7 +166,6 @@ class __$$LigneDemandeImplCopyWithImpl<$Res>
     Object? quantite = null,
     Object? base64 = null,
     Object? produit = freezed,
-    Object? demande = freezed,
   }) {
     return _then(_$LigneDemandeImpl(
       id: null == id
@@ -224,10 +200,6 @@ class __$$LigneDemandeImplCopyWithImpl<$Res>
           ? _value.produit
           : produit // ignore: cast_nullable_to_non_nullable
               as Produit?,
-      demande: freezed == demande
-          ? _value.demande
-          : demande // ignore: cast_nullable_to_non_nullable
-              as Demande?,
     ));
   }
 }
@@ -243,8 +215,7 @@ class _$LigneDemandeImpl with DiagnosticableTreeMixin implements _LigneDemande {
       this.status = false,
       this.quantite = 0,
       this.base64 = "",
-      this.produit,
-      this.demande});
+      this.produit});
 
   factory _$LigneDemandeImpl.fromJson(Map<String, dynamic> json) =>
       _$$LigneDemandeImplFromJson(json);
@@ -272,12 +243,10 @@ class _$LigneDemandeImpl with DiagnosticableTreeMixin implements _LigneDemande {
   final String base64;
   @override
   final Produit? produit;
-  @override
-  final Demande? demande;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'LigneDemande(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, status: $status, quantite: $quantite, base64: $base64, produit: $produit, demande: $demande)';
+    return 'LigneDemande(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, status: $status, quantite: $quantite, base64: $base64, produit: $produit)';
   }
 
   @override
@@ -292,8 +261,7 @@ class _$LigneDemandeImpl with DiagnosticableTreeMixin implements _LigneDemande {
       ..add(DiagnosticsProperty('status', status))
       ..add(DiagnosticsProperty('quantite', quantite))
       ..add(DiagnosticsProperty('base64', base64))
-      ..add(DiagnosticsProperty('produit', produit))
-      ..add(DiagnosticsProperty('demande', demande));
+      ..add(DiagnosticsProperty('produit', produit));
   }
 
   @override
@@ -311,14 +279,13 @@ class _$LigneDemandeImpl with DiagnosticableTreeMixin implements _LigneDemande {
             (identical(other.quantite, quantite) ||
                 other.quantite == quantite) &&
             (identical(other.base64, base64) || other.base64 == base64) &&
-            (identical(other.produit, produit) || other.produit == produit) &&
-            (identical(other.demande, demande) || other.demande == demande));
+            (identical(other.produit, produit) || other.produit == produit));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, createdAt, updateAt, deleted,
-      status, quantite, base64, produit, demande);
+      status, quantite, base64, produit);
 
   @JsonKey(ignore: true)
   @override
@@ -343,8 +310,7 @@ abstract class _LigneDemande implements LigneDemande {
       final bool status,
       final int quantite,
       final String base64,
-      final Produit? produit,
-      final Demande? demande}) = _$LigneDemandeImpl;
+      final Produit? produit}) = _$LigneDemandeImpl;
 
   factory _LigneDemande.fromJson(Map<String, dynamic> json) =
       _$LigneDemandeImpl.fromJson;
@@ -365,8 +331,6 @@ abstract class _LigneDemande implements LigneDemande {
   String get base64;
   @override
   Produit? get produit;
-  @override
-  Demande? get demande;
   @override
   @JsonKey(ignore: true)
   _$$LigneDemandeImplCopyWith<_$LigneDemandeImpl> get copyWith =>

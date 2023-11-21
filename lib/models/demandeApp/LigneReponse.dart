@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ipi/models/demandeApp/Reponse.dart';
+import 'package:ipi/models/demandeApp/RdvLigneReponse.dart';
+import 'package:ipi/models/demandeApp/SubsLigneReponse.dart';
 import 'package:ipi/models/produitApp/Produit.dart';
 import 'package:flutter/foundation.dart';
 part 'LigneReponse.freezed.dart';
@@ -16,7 +17,8 @@ class LigneReponse with _$LigneReponse {
     @Default(0) int quantite,
     @Default(0) int price,
     Produit? produit,
-    Reponse? reponse,
+    @Default([]) List<SubsLigneReponse> lignesSub,
+    @Default([]) List<RdvLigneReponse> rdvLigne,
   }) = _LigneReponse;
 
   factory LigneReponse.fromJson(Map<String, Object?> json) =>
@@ -31,11 +33,14 @@ class LigneReponse with _$LigneReponse {
     status
     quantite
     price
+    lignesSub{
+      ...SubsLigneReponseFragment
+    }
     produit{
       ...ProduitFragment
     }
-    reponse{
-      ...ReponseFragment
+    rdvLigne{
+      ...RdvLigneReponseFragment
     }
   }
   """;

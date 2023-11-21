@@ -7,10 +7,10 @@ import 'package:ipi/const/colors.dart';
 import 'package:ipi/controllers/DemandeController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/ReponseController.dart';
-import 'package:ipi/models/demandeApp/LigneReponse.dart';
+import 'package:ipi/models/demandeApp/Demande.dart';
+import 'package:ipi/models/demandeApp/OfficineDemande.dart';
 import 'package:ipi/models/demandeApp/RdvLigneReponse.dart';
 import 'package:ipi/models/demandeApp/Reponse.dart';
-import 'package:ipi/models/demandeApp/SubsLigneReponse.dart';
 import 'package:ipi/models/officineApp/Officine.dart';
 import 'package:ipi/screens/meToOfficineScreen.dart';
 import 'package:ipi/widgets/felicitation.dart';
@@ -18,10 +18,12 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class ReponseCard extends StatefulWidget {
-  final Reponse reponse;
+  final Demande demande;
+  final OfficineDemande officineDemande;
   late bool news = false;
 
-  ReponseCard({Key? key, required this.reponse}) : super(key: key);
+  ReponseCard({Key? key, required this.officineDemande, required this.demande})
+      : super(key: key);
   @override
   State<ReponseCard> createState() => ReponseCardState();
 }
@@ -31,22 +33,9 @@ class ReponseCardState extends State<ReponseCard> {
   ReponseController reponseController = Get.find();
   DemandeController demandeController = Get.find();
 
-  late List<LigneReponse> lignes = [];
-  late Map<LigneReponse, List<SubsLigneReponse>> subsLignes = {};
-
   @override
   void initState() {
-    getData();
     super.initState();
-  }
-
-  Future<void> getData() async {
-    lignes = await Reponse.allLignesReponse({"reponse": widget.reponse.id});
-    for (var ligne in lignes) {
-      subsLignes[ligne] =
-          await Reponse.subsLigneReponse({"ligne_id": ligne.id});
-    }
-    setState(() {});
   }
 
   void sharePosition(Officine officine) {
@@ -64,8 +53,8 @@ class ReponseCardState extends State<ReponseCard> {
 
   @override
   Widget build(BuildContext context) {
-    Reponse reponse = widget.reponse;
-    Officine officine = reponse.demande!.officine!;
+    Officine officine = widget.officineDemande.officine!;
+    Reponse reponse = widget.officineDemande.demandeReponse.first;
 
     return Container(
       margin: EdgeInsets.only(bottom: 15),
@@ -74,14 +63,15 @@ class ReponseCardState extends State<ReponseCard> {
           "assets/images/icons/pharma.png",
           height: 30,
         ),
-        trailing: reponse.read? null
+        trailing: reponse.read
+            ? null
             : Icon(
                 Icons.chat_rounded,
                 color: Colors.green,
               ),
         onExpansionChanged: (value) {
           if (value && !reponse.read) {
-            reponseController.updateReponse(reponse);
+            reponse.updateReponse();
           }
         },
         collapsedBackgroundColor: Colors.white.withOpacity(0.8),
@@ -91,16 +81,17 @@ class ReponseCardState extends State<ReponseCard> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              officine.name ?? "",
+              officine.name,
               style: TextStyle(
                   fontSize: 15,
-                  color: reponse.read? Colors.grey
+                  color: reponse.read
+                      ? Colors.grey
                       : Color.fromARGB(255, 6, 114, 49),
                   fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 3),
             Text(
-              "${officine.circonscription!.name} ${officine.localisation ?? ''}",
+              "${officine.circonscription!.name} ${officine.localisation}",
               style: TextStyle(fontSize: 12),
             )
           ],
@@ -114,7 +105,7 @@ class ReponseCardState extends State<ReponseCard> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 15),
             child: Column(
-              children: lignes.map((ligne) {
+              children: reponse.reponseLignes.map((ligne) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +117,7 @@ class ReponseCardState extends State<ReponseCard> {
                             (element) => element.ligne?.id == ligne.id,
                             orElse: () => RdvLigneReponse())),
                     Column(
-                      children: subsLignes[ligne]!.map((sub) {
+                      children: ligne.lignesSub.map((sub) {
                         return LigneSub(sub: sub);
                       }).toList(),
                     ),
@@ -140,7 +131,7 @@ class ReponseCardState extends State<ReponseCard> {
               }).toList(),
             ),
           ),
-          reponse.price> 0
+          reponse.price > 0
               ? Container(
                   margin: EdgeInsets.only(right: 20, top: 5, bottom: 10),
                   child: Row(
@@ -187,7 +178,7 @@ class ReponseCardState extends State<ReponseCard> {
                       ),
                       Expanded(
                         child: Text(
-                          reponse.commentaire ?? "",
+                          reponse.commentaire,
                           style: TextStyle(
                               height: 1.2, fontStyle: FontStyle.italic),
                         ),
@@ -275,7 +266,7 @@ class ReponseCardState extends State<ReponseCard> {
                   ),
                 ),
               ),
-              (reponse.demande!.demande!.isSatisfied ?? false)
+              (widget.demande.isSatisfied)
                   ? Container()
                   : Container(
                       child: InkWell(
@@ -284,8 +275,7 @@ class ReponseCardState extends State<ReponseCard> {
                             text:
                                 "Merci d'avoir utiliser iPi pour votre recherche. \n Nous vous souhaitons prompt rétablissement et à très bientôt !!!",
                           ));
-                          demandeController
-                              .satisfiedDemande(reponse.demande!.demande!);
+                          widget.demande.satisfiedDemande();
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(

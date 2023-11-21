@@ -30,9 +30,13 @@ mixin _$Demande {
   String get commentaire => throw _privateConstructorUsedError;
   double get lat => throw _privateConstructorUsedError;
   double get lon => throw _privateConstructorUsedError;
+  int get news => throw _privateConstructorUsedError;
   bool get propagating => throw _privateConstructorUsedError;
   bool get isFinished => throw _privateConstructorUsedError;
   bool get isSatisfied => throw _privateConstructorUsedError;
+  List<LigneDemande> get demandeLignes => throw _privateConstructorUsedError;
+  List<OfficineDemande> get demandeOfficine =>
+      throw _privateConstructorUsedError;
   Utilisateur? get utilisateur => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -56,9 +60,12 @@ abstract class $DemandeCopyWith<$Res> {
       String commentaire,
       double lat,
       double lon,
+      int news,
       bool propagating,
       bool isFinished,
       bool isSatisfied,
+      List<LigneDemande> demandeLignes,
+      List<OfficineDemande> demandeOfficine,
       Utilisateur? utilisateur});
 
   $UtilisateurCopyWith<$Res>? get utilisateur;
@@ -87,9 +94,12 @@ class _$DemandeCopyWithImpl<$Res, $Val extends Demande>
     Object? commentaire = null,
     Object? lat = null,
     Object? lon = null,
+    Object? news = null,
     Object? propagating = null,
     Object? isFinished = null,
     Object? isSatisfied = null,
+    Object? demandeLignes = null,
+    Object? demandeOfficine = null,
     Object? utilisateur = freezed,
   }) {
     return _then(_value.copyWith(
@@ -133,6 +143,10 @@ class _$DemandeCopyWithImpl<$Res, $Val extends Demande>
           ? _value.lon
           : lon // ignore: cast_nullable_to_non_nullable
               as double,
+      news: null == news
+          ? _value.news
+          : news // ignore: cast_nullable_to_non_nullable
+              as int,
       propagating: null == propagating
           ? _value.propagating
           : propagating // ignore: cast_nullable_to_non_nullable
@@ -145,6 +159,14 @@ class _$DemandeCopyWithImpl<$Res, $Val extends Demande>
           ? _value.isSatisfied
           : isSatisfied // ignore: cast_nullable_to_non_nullable
               as bool,
+      demandeLignes: null == demandeLignes
+          ? _value.demandeLignes
+          : demandeLignes // ignore: cast_nullable_to_non_nullable
+              as List<LigneDemande>,
+      demandeOfficine: null == demandeOfficine
+          ? _value.demandeOfficine
+          : demandeOfficine // ignore: cast_nullable_to_non_nullable
+              as List<OfficineDemande>,
       utilisateur: freezed == utilisateur
           ? _value.utilisateur
           : utilisateur // ignore: cast_nullable_to_non_nullable
@@ -183,9 +205,12 @@ abstract class _$$DemandeImplCopyWith<$Res> implements $DemandeCopyWith<$Res> {
       String commentaire,
       double lat,
       double lon,
+      int news,
       bool propagating,
       bool isFinished,
       bool isSatisfied,
+      List<LigneDemande> demandeLignes,
+      List<OfficineDemande> demandeOfficine,
       Utilisateur? utilisateur});
 
   @override
@@ -213,9 +238,12 @@ class __$$DemandeImplCopyWithImpl<$Res>
     Object? commentaire = null,
     Object? lat = null,
     Object? lon = null,
+    Object? news = null,
     Object? propagating = null,
     Object? isFinished = null,
     Object? isSatisfied = null,
+    Object? demandeLignes = null,
+    Object? demandeOfficine = null,
     Object? utilisateur = freezed,
   }) {
     return _then(_$DemandeImpl(
@@ -259,6 +287,10 @@ class __$$DemandeImplCopyWithImpl<$Res>
           ? _value.lon
           : lon // ignore: cast_nullable_to_non_nullable
               as double,
+      news: null == news
+          ? _value.news
+          : news // ignore: cast_nullable_to_non_nullable
+              as int,
       propagating: null == propagating
           ? _value.propagating
           : propagating // ignore: cast_nullable_to_non_nullable
@@ -271,6 +303,14 @@ class __$$DemandeImplCopyWithImpl<$Res>
           ? _value.isSatisfied
           : isSatisfied // ignore: cast_nullable_to_non_nullable
               as bool,
+      demandeLignes: null == demandeLignes
+          ? _value._demandeLignes
+          : demandeLignes // ignore: cast_nullable_to_non_nullable
+              as List<LigneDemande>,
+      demandeOfficine: null == demandeOfficine
+          ? _value._demandeOfficine
+          : demandeOfficine // ignore: cast_nullable_to_non_nullable
+              as List<OfficineDemande>,
       utilisateur: freezed == utilisateur
           ? _value.utilisateur
           : utilisateur // ignore: cast_nullable_to_non_nullable
@@ -281,7 +321,7 @@ class __$$DemandeImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$DemandeImpl with DiagnosticableTreeMixin implements _Demande {
+class _$DemandeImpl extends _Demande with DiagnosticableTreeMixin {
   const _$DemandeImpl(
       {this.id = "",
       this.createdAt = "",
@@ -293,10 +333,16 @@ class _$DemandeImpl with DiagnosticableTreeMixin implements _Demande {
       this.commentaire = "",
       this.lat = 0.0,
       this.lon = 0.0,
+      this.news = 0,
       this.propagating = false,
       this.isFinished = false,
       this.isSatisfied = false,
-      this.utilisateur});
+      final List<LigneDemande> demandeLignes = const [],
+      final List<OfficineDemande> demandeOfficine = const [],
+      this.utilisateur})
+      : _demandeLignes = demandeLignes,
+        _demandeOfficine = demandeOfficine,
+        super._();
 
   factory _$DemandeImpl.fromJson(Map<String, dynamic> json) =>
       _$$DemandeImplFromJson(json);
@@ -333,6 +379,9 @@ class _$DemandeImpl with DiagnosticableTreeMixin implements _Demande {
   final double lon;
   @override
   @JsonKey()
+  final int news;
+  @override
+  @JsonKey()
   final bool propagating;
   @override
   @JsonKey()
@@ -340,12 +389,30 @@ class _$DemandeImpl with DiagnosticableTreeMixin implements _Demande {
   @override
   @JsonKey()
   final bool isSatisfied;
+  final List<LigneDemande> _demandeLignes;
+  @override
+  @JsonKey()
+  List<LigneDemande> get demandeLignes {
+    if (_demandeLignes is EqualUnmodifiableListView) return _demandeLignes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_demandeLignes);
+  }
+
+  final List<OfficineDemande> _demandeOfficine;
+  @override
+  @JsonKey()
+  List<OfficineDemande> get demandeOfficine {
+    if (_demandeOfficine is EqualUnmodifiableListView) return _demandeOfficine;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_demandeOfficine);
+  }
+
   @override
   final Utilisateur? utilisateur;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Demande(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, status: $status, ordonnance: $ordonnance, base64: $base64, commentaire: $commentaire, lat: $lat, lon: $lon, propagating: $propagating, isFinished: $isFinished, isSatisfied: $isSatisfied, utilisateur: $utilisateur)';
+    return 'Demande(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, status: $status, ordonnance: $ordonnance, base64: $base64, commentaire: $commentaire, lat: $lat, lon: $lon, news: $news, propagating: $propagating, isFinished: $isFinished, isSatisfied: $isSatisfied, demandeLignes: $demandeLignes, demandeOfficine: $demandeOfficine, utilisateur: $utilisateur)';
   }
 
   @override
@@ -363,9 +430,12 @@ class _$DemandeImpl with DiagnosticableTreeMixin implements _Demande {
       ..add(DiagnosticsProperty('commentaire', commentaire))
       ..add(DiagnosticsProperty('lat', lat))
       ..add(DiagnosticsProperty('lon', lon))
+      ..add(DiagnosticsProperty('news', news))
       ..add(DiagnosticsProperty('propagating', propagating))
       ..add(DiagnosticsProperty('isFinished', isFinished))
       ..add(DiagnosticsProperty('isSatisfied', isSatisfied))
+      ..add(DiagnosticsProperty('demandeLignes', demandeLignes))
+      ..add(DiagnosticsProperty('demandeOfficine', demandeOfficine))
       ..add(DiagnosticsProperty('utilisateur', utilisateur));
   }
 
@@ -388,12 +458,17 @@ class _$DemandeImpl with DiagnosticableTreeMixin implements _Demande {
                 other.commentaire == commentaire) &&
             (identical(other.lat, lat) || other.lat == lat) &&
             (identical(other.lon, lon) || other.lon == lon) &&
+            (identical(other.news, news) || other.news == news) &&
             (identical(other.propagating, propagating) ||
                 other.propagating == propagating) &&
             (identical(other.isFinished, isFinished) ||
                 other.isFinished == isFinished) &&
             (identical(other.isSatisfied, isSatisfied) ||
                 other.isSatisfied == isSatisfied) &&
+            const DeepCollectionEquality()
+                .equals(other._demandeLignes, _demandeLignes) &&
+            const DeepCollectionEquality()
+                .equals(other._demandeOfficine, _demandeOfficine) &&
             (identical(other.utilisateur, utilisateur) ||
                 other.utilisateur == utilisateur));
   }
@@ -412,9 +487,12 @@ class _$DemandeImpl with DiagnosticableTreeMixin implements _Demande {
       commentaire,
       lat,
       lon,
+      news,
       propagating,
       isFinished,
       isSatisfied,
+      const DeepCollectionEquality().hash(_demandeLignes),
+      const DeepCollectionEquality().hash(_demandeOfficine),
       utilisateur);
 
   @JsonKey(ignore: true)
@@ -431,7 +509,7 @@ class _$DemandeImpl with DiagnosticableTreeMixin implements _Demande {
   }
 }
 
-abstract class _Demande implements Demande {
+abstract class _Demande extends Demande {
   const factory _Demande(
       {final String id,
       final String createdAt,
@@ -443,10 +521,14 @@ abstract class _Demande implements Demande {
       final String commentaire,
       final double lat,
       final double lon,
+      final int news,
       final bool propagating,
       final bool isFinished,
       final bool isSatisfied,
+      final List<LigneDemande> demandeLignes,
+      final List<OfficineDemande> demandeOfficine,
       final Utilisateur? utilisateur}) = _$DemandeImpl;
+  const _Demande._() : super._();
 
   factory _Demande.fromJson(Map<String, dynamic> json) = _$DemandeImpl.fromJson;
 
@@ -471,11 +553,17 @@ abstract class _Demande implements Demande {
   @override
   double get lon;
   @override
+  int get news;
+  @override
   bool get propagating;
   @override
   bool get isFinished;
   @override
   bool get isSatisfied;
+  @override
+  List<LigneDemande> get demandeLignes;
+  @override
+  List<OfficineDemande> get demandeOfficine;
   @override
   Utilisateur? get utilisateur;
   @override

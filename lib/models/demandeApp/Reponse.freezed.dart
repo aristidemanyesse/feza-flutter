@@ -27,7 +27,7 @@ mixin _$Reponse {
   bool get read => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
   String get commentaire => throw _privateConstructorUsedError;
-  OfficineDemande? get demande => throw _privateConstructorUsedError;
+  List<LigneReponse> get reponseLignes => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,9 +47,7 @@ abstract class $ReponseCopyWith<$Res> {
       bool read,
       int price,
       String commentaire,
-      OfficineDemande? demande});
-
-  $OfficineDemandeCopyWith<$Res>? get demande;
+      List<LigneReponse> reponseLignes});
 }
 
 /// @nodoc
@@ -72,7 +70,7 @@ class _$ReponseCopyWithImpl<$Res, $Val extends Reponse>
     Object? read = null,
     Object? price = null,
     Object? commentaire = null,
-    Object? demande = freezed,
+    Object? reponseLignes = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -103,23 +101,11 @@ class _$ReponseCopyWithImpl<$Res, $Val extends Reponse>
           ? _value.commentaire
           : commentaire // ignore: cast_nullable_to_non_nullable
               as String,
-      demande: freezed == demande
-          ? _value.demande
-          : demande // ignore: cast_nullable_to_non_nullable
-              as OfficineDemande?,
+      reponseLignes: null == reponseLignes
+          ? _value.reponseLignes
+          : reponseLignes // ignore: cast_nullable_to_non_nullable
+              as List<LigneReponse>,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $OfficineDemandeCopyWith<$Res>? get demande {
-    if (_value.demande == null) {
-      return null;
-    }
-
-    return $OfficineDemandeCopyWith<$Res>(_value.demande!, (value) {
-      return _then(_value.copyWith(demande: value) as $Val);
-    });
   }
 }
 
@@ -138,10 +124,7 @@ abstract class _$$ReponseImplCopyWith<$Res> implements $ReponseCopyWith<$Res> {
       bool read,
       int price,
       String commentaire,
-      OfficineDemande? demande});
-
-  @override
-  $OfficineDemandeCopyWith<$Res>? get demande;
+      List<LigneReponse> reponseLignes});
 }
 
 /// @nodoc
@@ -162,7 +145,7 @@ class __$$ReponseImplCopyWithImpl<$Res>
     Object? read = null,
     Object? price = null,
     Object? commentaire = null,
-    Object? demande = freezed,
+    Object? reponseLignes = null,
   }) {
     return _then(_$ReponseImpl(
       id: null == id
@@ -193,17 +176,17 @@ class __$$ReponseImplCopyWithImpl<$Res>
           ? _value.commentaire
           : commentaire // ignore: cast_nullable_to_non_nullable
               as String,
-      demande: freezed == demande
-          ? _value.demande
-          : demande // ignore: cast_nullable_to_non_nullable
-              as OfficineDemande?,
+      reponseLignes: null == reponseLignes
+          ? _value._reponseLignes
+          : reponseLignes // ignore: cast_nullable_to_non_nullable
+              as List<LigneReponse>,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$ReponseImpl with DiagnosticableTreeMixin implements _Reponse {
+class _$ReponseImpl extends _Reponse with DiagnosticableTreeMixin {
   const _$ReponseImpl(
       {this.id = "",
       this.createdAt = "",
@@ -212,7 +195,9 @@ class _$ReponseImpl with DiagnosticableTreeMixin implements _Reponse {
       this.read = false,
       this.price = 0,
       this.commentaire = "",
-      this.demande});
+      final List<LigneReponse> reponseLignes = const []})
+      : _reponseLignes = reponseLignes,
+        super._();
 
   factory _$ReponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$ReponseImplFromJson(json);
@@ -238,12 +223,18 @@ class _$ReponseImpl with DiagnosticableTreeMixin implements _Reponse {
   @override
   @JsonKey()
   final String commentaire;
+  final List<LigneReponse> _reponseLignes;
   @override
-  final OfficineDemande? demande;
+  @JsonKey()
+  List<LigneReponse> get reponseLignes {
+    if (_reponseLignes is EqualUnmodifiableListView) return _reponseLignes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_reponseLignes);
+  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Reponse(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, read: $read, price: $price, commentaire: $commentaire, demande: $demande)';
+    return 'Reponse(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, read: $read, price: $price, commentaire: $commentaire, reponseLignes: $reponseLignes)';
   }
 
   @override
@@ -258,7 +249,7 @@ class _$ReponseImpl with DiagnosticableTreeMixin implements _Reponse {
       ..add(DiagnosticsProperty('read', read))
       ..add(DiagnosticsProperty('price', price))
       ..add(DiagnosticsProperty('commentaire', commentaire))
-      ..add(DiagnosticsProperty('demande', demande));
+      ..add(DiagnosticsProperty('reponseLignes', reponseLignes));
   }
 
   @override
@@ -276,13 +267,22 @@ class _$ReponseImpl with DiagnosticableTreeMixin implements _Reponse {
             (identical(other.price, price) || other.price == price) &&
             (identical(other.commentaire, commentaire) ||
                 other.commentaire == commentaire) &&
-            (identical(other.demande, demande) || other.demande == demande));
+            const DeepCollectionEquality()
+                .equals(other._reponseLignes, _reponseLignes));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, updateAt, deleted,
-      read, price, commentaire, demande);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      createdAt,
+      updateAt,
+      deleted,
+      read,
+      price,
+      commentaire,
+      const DeepCollectionEquality().hash(_reponseLignes));
 
   @JsonKey(ignore: true)
   @override
@@ -298,7 +298,7 @@ class _$ReponseImpl with DiagnosticableTreeMixin implements _Reponse {
   }
 }
 
-abstract class _Reponse implements Reponse {
+abstract class _Reponse extends Reponse {
   const factory _Reponse(
       {final String id,
       final String createdAt,
@@ -307,7 +307,8 @@ abstract class _Reponse implements Reponse {
       final bool read,
       final int price,
       final String commentaire,
-      final OfficineDemande? demande}) = _$ReponseImpl;
+      final List<LigneReponse> reponseLignes}) = _$ReponseImpl;
+  const _Reponse._() : super._();
 
   factory _Reponse.fromJson(Map<String, dynamic> json) = _$ReponseImpl.fromJson;
 
@@ -326,7 +327,7 @@ abstract class _Reponse implements Reponse {
   @override
   String get commentaire;
   @override
-  OfficineDemande? get demande;
+  List<LigneReponse> get reponseLignes;
   @override
   @JsonKey(ignore: true)
   _$$ReponseImplCopyWith<_$ReponseImpl> get copyWith =>

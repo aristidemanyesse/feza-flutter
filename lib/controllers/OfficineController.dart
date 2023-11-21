@@ -99,19 +99,24 @@ class OfficineController extends GetxController {
   }
 
   void routeOfOfficine(Officine officine) async {
-    var geojson = routesOfficines[officine.id];
-    List<LatLng> points = [];
-    for (var element in jsonDecode(geojson)["geometry"]["coordinates"]) {
-      points.add(LatLng(element[1], element[0]));
+    try {
+      var geojson = routesOfficines[officine.id];
+      List<LatLng> points = [];
+      for (var element in jsonDecode(geojson)["geometry"]["coordinates"]) {
+        points.add(LatLng(element[1], element[0]));
+      }
+      routeCoordinates.value = Polyline(
+        points: points,
+        isDotted: true,
+        color: Colors.white,
+        borderColor: Colors.black,
+        borderStrokeWidth: 3,
+        strokeWidth: 3,
+        useStrokeWidthInMeter: true,
+      );
+    } catch (e) {
+      Get.snackbar("Oouups !",
+          "Nous ne pouvons afficher l'ittinéraire pour l'instant, veuillez ressayer plus tard !");
     }
-    routeCoordinates.value = Polyline(
-      points: points,
-      isDotted: true,
-      color: Colors.white,
-      borderColor: Colors.black,
-      borderStrokeWidth: 3,
-      strokeWidth: 3,
-      useStrokeWidthInMeter: true,
-    );
   }
 }

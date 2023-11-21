@@ -1,15 +1,9 @@
-import 'package:ipi/models/demandeApp/Demande.dart';
 import 'package:ipi/models/demandeApp/LigneReponse.dart';
-import 'package:ipi/models/demandeApp/OfficineDemande.dart';
 import 'package:ipi/models/demandeApp/RdvLigneReponse.dart';
 import 'package:ipi/models/demandeApp/Reponse.dart';
 import 'package:ipi/models/demandeApp/SubsLigneReponse.dart';
-import 'package:ipi/models/officineApp/Circonscription.dart';
-import 'package:ipi/models/officineApp/Officine.dart';
-import 'package:ipi/models/officineApp/TypeOfficine.dart';
 import 'package:ipi/models/produitApp/Produit.dart';
 import 'package:ipi/models/produitApp/TypeProduit.dart';
-import 'package:ipi/models/userApp/Utilisateur.dart';
 
 class ReponseSchema {
   static const String ALL = r"""
@@ -22,16 +16,15 @@ class ReponseSchema {
     }
   """ +
       Reponse.ReponseFragment +
-      Demande.DemandeFragment +
-      Utilisateur.UtilisateurFragment +
-      Circonscription.CirconscriptionFragment +
-      Officine.OfficineFragment +
-      OfficineDemande.OfficineDemandeFragment +
-      TypeOfficine.TypeOfficineFragment;
+      SubsLigneReponse.SubsLigneReponseFragment +
+      RdvLigneReponse.RdvLigneReponseFragment +
+      Produit.ProduitFragment +
+      TypeProduit.TypeProduitFragment +
+      LigneReponse.LigneReponseFragment;
 
   static const String UPDATE_REPONSE = r"""
-    mutation($id:UUID, $demande:ID!, $read:Boolean) {
-      updateReponse(newReponse: {id: $id, demande:$demande, read: $read}) {
+    mutation($id:UUID, $read:Boolean) {
+      updateReponse(newReponse: {id: $id, read: $read}) {
         ok
         errors {
           field
@@ -43,13 +36,7 @@ class ReponseSchema {
       }
     }
   """ +
-      Reponse.ReponseFragment +
-      OfficineDemande.OfficineDemandeFragment +
-      Demande.DemandeFragment +
-      Utilisateur.UtilisateurFragment +
-      Circonscription.CirconscriptionFragment +
-      Officine.OfficineFragment +
-      TypeOfficine.TypeOfficineFragment;
+      Reponse.ReponseFragment;
 
   static const String LIGNE_REPONSE = r"""
       query ($reponse: UUID) {
@@ -60,14 +47,8 @@ class ReponseSchema {
         }
       }
   """ +
-      LigneReponse.LigneReponseFragment +
-      Reponse.ReponseFragment +
-      OfficineDemande.OfficineDemandeFragment +
-      Demande.DemandeFragment +
-      Utilisateur.UtilisateurFragment +
-      Circonscription.CirconscriptionFragment +
-      Officine.OfficineFragment +
-      TypeOfficine.TypeOfficineFragment;
+      SubsLigneReponse.SubsLigneReponseFragment +
+      LigneReponse.LigneReponseFragment;
 
   static const String SUBS_LIGNE_REPONSE = r"""
       query ($ligne_id: UUID) {
@@ -79,13 +60,7 @@ class ReponseSchema {
       }
   """ +
       SubsLigneReponse.SubsLigneReponseFragment +
-      Reponse.ReponseFragment +
-      Demande.DemandeFragment +
-      Utilisateur.UtilisateurFragment +
-      Circonscription.CirconscriptionFragment +
-      Officine.OfficineFragment +
-      OfficineDemande.OfficineDemandeFragment +
-      TypeOfficine.TypeOfficineFragment;
+      Reponse.ReponseFragment;
 
   static const String RDV_LIGNE_REPONSE = r"""
       query ($user_id: UUID) {
@@ -96,15 +71,5 @@ class ReponseSchema {
         }
       }
   """ +
-      RdvLigneReponse.RdvLigneReponseFragment +
-      Reponse.ReponseFragment +
-      Officine.OfficineFragment +
-      TypeOfficine.TypeOfficineFragment +
-      OfficineDemande.OfficineDemandeFragment +
-      Demande.DemandeFragment +
-      Utilisateur.UtilisateurFragment +
-      Circonscription.CirconscriptionFragment +
-      Produit.ProduitFragment +
-      TypeProduit.TypeProduitFragment +
-      LigneReponse.LigneReponseFragment;
+      RdvLigneReponse.RdvLigneReponseFragment;
 }

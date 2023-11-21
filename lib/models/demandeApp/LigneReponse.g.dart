@@ -18,9 +18,14 @@ _$LigneReponseImpl _$$LigneReponseImplFromJson(Map<String, dynamic> json) =>
       produit: json['produit'] == null
           ? null
           : Produit.fromJson(json['produit'] as Map<String, dynamic>),
-      reponse: json['reponse'] == null
-          ? null
-          : Reponse.fromJson(json['reponse'] as Map<String, dynamic>),
+      lignesSub: (json['lignesSub'] as List<dynamic>?)
+              ?.map((e) => SubsLigneReponse.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      rdvLigne: (json['rdvLigne'] as List<dynamic>?)
+              ?.map((e) => RdvLigneReponse.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$LigneReponseImplToJson(_$LigneReponseImpl instance) =>
@@ -33,5 +38,6 @@ Map<String, dynamic> _$$LigneReponseImplToJson(_$LigneReponseImpl instance) =>
       'quantite': instance.quantite,
       'price': instance.price,
       'produit': instance.produit,
-      'reponse': instance.reponse,
+      'lignesSub': instance.lignesSub,
+      'rdvLigne': instance.rdvLigne,
     };

@@ -26,8 +26,8 @@ mixin _$OfficineDemande {
   bool get deleted => throw _privateConstructorUsedError;
   bool get propagated => throw _privateConstructorUsedError;
   bool get isValided => throw _privateConstructorUsedError;
+  List<Reponse> get demandeReponse => throw _privateConstructorUsedError;
   Officine? get officine => throw _privateConstructorUsedError;
-  Demande? get demande => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -48,11 +48,10 @@ abstract class $OfficineDemandeCopyWith<$Res> {
       bool deleted,
       bool propagated,
       bool isValided,
-      Officine? officine,
-      Demande? demande});
+      List<Reponse> demandeReponse,
+      Officine? officine});
 
   $OfficineCopyWith<$Res>? get officine;
-  $DemandeCopyWith<$Res>? get demande;
 }
 
 /// @nodoc
@@ -74,8 +73,8 @@ class _$OfficineDemandeCopyWithImpl<$Res, $Val extends OfficineDemande>
     Object? deleted = null,
     Object? propagated = null,
     Object? isValided = null,
+    Object? demandeReponse = null,
     Object? officine = freezed,
-    Object? demande = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -102,14 +101,14 @@ class _$OfficineDemandeCopyWithImpl<$Res, $Val extends OfficineDemande>
           ? _value.isValided
           : isValided // ignore: cast_nullable_to_non_nullable
               as bool,
+      demandeReponse: null == demandeReponse
+          ? _value.demandeReponse
+          : demandeReponse // ignore: cast_nullable_to_non_nullable
+              as List<Reponse>,
       officine: freezed == officine
           ? _value.officine
           : officine // ignore: cast_nullable_to_non_nullable
               as Officine?,
-      demande: freezed == demande
-          ? _value.demande
-          : demande // ignore: cast_nullable_to_non_nullable
-              as Demande?,
     ) as $Val);
   }
 
@@ -122,18 +121,6 @@ class _$OfficineDemandeCopyWithImpl<$Res, $Val extends OfficineDemande>
 
     return $OfficineCopyWith<$Res>(_value.officine!, (value) {
       return _then(_value.copyWith(officine: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $DemandeCopyWith<$Res>? get demande {
-    if (_value.demande == null) {
-      return null;
-    }
-
-    return $DemandeCopyWith<$Res>(_value.demande!, (value) {
-      return _then(_value.copyWith(demande: value) as $Val);
     });
   }
 }
@@ -153,13 +140,11 @@ abstract class _$$OfficineDemandeImplCopyWith<$Res>
       bool deleted,
       bool propagated,
       bool isValided,
-      Officine? officine,
-      Demande? demande});
+      List<Reponse> demandeReponse,
+      Officine? officine});
 
   @override
   $OfficineCopyWith<$Res>? get officine;
-  @override
-  $DemandeCopyWith<$Res>? get demande;
 }
 
 /// @nodoc
@@ -179,8 +164,8 @@ class __$$OfficineDemandeImplCopyWithImpl<$Res>
     Object? deleted = null,
     Object? propagated = null,
     Object? isValided = null,
+    Object? demandeReponse = null,
     Object? officine = freezed,
-    Object? demande = freezed,
   }) {
     return _then(_$OfficineDemandeImpl(
       id: null == id
@@ -207,23 +192,22 @@ class __$$OfficineDemandeImplCopyWithImpl<$Res>
           ? _value.isValided
           : isValided // ignore: cast_nullable_to_non_nullable
               as bool,
+      demandeReponse: null == demandeReponse
+          ? _value._demandeReponse
+          : demandeReponse // ignore: cast_nullable_to_non_nullable
+              as List<Reponse>,
       officine: freezed == officine
           ? _value.officine
           : officine // ignore: cast_nullable_to_non_nullable
               as Officine?,
-      demande: freezed == demande
-          ? _value.demande
-          : demande // ignore: cast_nullable_to_non_nullable
-              as Demande?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$OfficineDemandeImpl
-    with DiagnosticableTreeMixin
-    implements _OfficineDemande {
+class _$OfficineDemandeImpl extends _OfficineDemande
+    with DiagnosticableTreeMixin {
   const _$OfficineDemandeImpl(
       {this.id = "",
       this.createdAt = "",
@@ -231,8 +215,10 @@ class _$OfficineDemandeImpl
       this.deleted = false,
       this.propagated = false,
       this.isValided = false,
-      this.officine,
-      this.demande});
+      final List<Reponse> demandeReponse = const [],
+      this.officine})
+      : _demandeReponse = demandeReponse,
+        super._();
 
   factory _$OfficineDemandeImpl.fromJson(Map<String, dynamic> json) =>
       _$$OfficineDemandeImplFromJson(json);
@@ -255,14 +241,21 @@ class _$OfficineDemandeImpl
   @override
   @JsonKey()
   final bool isValided;
+  final List<Reponse> _demandeReponse;
+  @override
+  @JsonKey()
+  List<Reponse> get demandeReponse {
+    if (_demandeReponse is EqualUnmodifiableListView) return _demandeReponse;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_demandeReponse);
+  }
+
   @override
   final Officine? officine;
-  @override
-  final Demande? demande;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'OfficineDemande(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, propagated: $propagated, isValided: $isValided, officine: $officine, demande: $demande)';
+    return 'OfficineDemande(id: $id, createdAt: $createdAt, updateAt: $updateAt, deleted: $deleted, propagated: $propagated, isValided: $isValided, demandeReponse: $demandeReponse, officine: $officine)';
   }
 
   @override
@@ -276,8 +269,8 @@ class _$OfficineDemandeImpl
       ..add(DiagnosticsProperty('deleted', deleted))
       ..add(DiagnosticsProperty('propagated', propagated))
       ..add(DiagnosticsProperty('isValided', isValided))
-      ..add(DiagnosticsProperty('officine', officine))
-      ..add(DiagnosticsProperty('demande', demande));
+      ..add(DiagnosticsProperty('demandeReponse', demandeReponse))
+      ..add(DiagnosticsProperty('officine', officine));
   }
 
   @override
@@ -295,15 +288,24 @@ class _$OfficineDemandeImpl
                 other.propagated == propagated) &&
             (identical(other.isValided, isValided) ||
                 other.isValided == isValided) &&
+            const DeepCollectionEquality()
+                .equals(other._demandeReponse, _demandeReponse) &&
             (identical(other.officine, officine) ||
-                other.officine == officine) &&
-            (identical(other.demande, demande) || other.demande == demande));
+                other.officine == officine));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, updateAt, deleted,
-      propagated, isValided, officine, demande);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      createdAt,
+      updateAt,
+      deleted,
+      propagated,
+      isValided,
+      const DeepCollectionEquality().hash(_demandeReponse),
+      officine);
 
   @JsonKey(ignore: true)
   @override
@@ -320,7 +322,7 @@ class _$OfficineDemandeImpl
   }
 }
 
-abstract class _OfficineDemande implements OfficineDemande {
+abstract class _OfficineDemande extends OfficineDemande {
   const factory _OfficineDemande(
       {final String id,
       final String createdAt,
@@ -328,8 +330,9 @@ abstract class _OfficineDemande implements OfficineDemande {
       final bool deleted,
       final bool propagated,
       final bool isValided,
-      final Officine? officine,
-      final Demande? demande}) = _$OfficineDemandeImpl;
+      final List<Reponse> demandeReponse,
+      final Officine? officine}) = _$OfficineDemandeImpl;
+  const _OfficineDemande._() : super._();
 
   factory _OfficineDemande.fromJson(Map<String, dynamic> json) =
       _$OfficineDemandeImpl.fromJson;
@@ -347,9 +350,9 @@ abstract class _OfficineDemande implements OfficineDemande {
   @override
   bool get isValided;
   @override
-  Officine? get officine;
+  List<Reponse> get demandeReponse;
   @override
-  Demande? get demande;
+  Officine? get officine;
   @override
   @JsonKey(ignore: true)
   _$$OfficineDemandeImplCopyWith<_$OfficineDemandeImpl> get copyWith =>

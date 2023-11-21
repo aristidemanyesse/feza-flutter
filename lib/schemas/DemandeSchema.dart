@@ -1,6 +1,11 @@
+import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:ipi/models/demandeApp/Demande.dart';
 import 'package:ipi/models/demandeApp/LigneDemande.dart';
+import 'package:ipi/models/demandeApp/LigneReponse.dart';
 import 'package:ipi/models/demandeApp/OfficineDemande.dart';
+import 'package:ipi/models/demandeApp/RdvLigneReponse.dart';
+import 'package:ipi/models/demandeApp/Reponse.dart';
+import 'package:ipi/models/demandeApp/SubsLigneReponse.dart';
 import 'package:ipi/models/officineApp/Circonscription.dart';
 import 'package:ipi/models/officineApp/Officine.dart';
 import 'package:ipi/models/officineApp/TypeOfficine.dart';
@@ -10,8 +15,8 @@ import 'package:ipi/models/userApp/Utilisateur.dart';
 
 class DemandeSchema {
   static const String ALL = r"""
-    query ($user:UUID, $isFinished:Boolean) {
-      searchDemande(deleted: false, isFinished:$isFinished, utilisateur_Id:$user) {
+    query ($utilisateur_Id:UUID, $isFinished:Boolean) {
+      searchDemande(deleted: false, isFinished:$isFinished, utilisateur_Id:$utilisateur_Id) {
         results {
           ...DemandeFragment
         }
@@ -19,7 +24,17 @@ class DemandeSchema {
     }
   """ +
       Demande.DemandeFragment +
+      LigneDemande.LigneDemandeFragment +
+      Reponse.ReponseFragment +
+      TypeOfficine.TypeOfficineFragment +
+      Officine.OfficineFragment +
+      OfficineDemande.OfficineDemandeFragment +
       Utilisateur.UtilisateurFragment +
+      LigneReponse.LigneReponseFragment +
+      SubsLigneReponse.SubsLigneReponseFragment +
+      RdvLigneReponse.RdvLigneReponseFragment +
+      Produit.ProduitFragment +
+      TypeProduit.TypeProduitFragment +
       Circonscription.CirconscriptionFragment;
 
   static const String CREATE_DEMANDE = r"""
@@ -39,7 +54,17 @@ class DemandeSchema {
       }
   """ +
       Demande.DemandeFragment +
+      LigneDemande.LigneDemandeFragment +
+      Reponse.ReponseFragment +
+      TypeOfficine.TypeOfficineFragment +
+      Officine.OfficineFragment +
+      OfficineDemande.OfficineDemandeFragment +
       Utilisateur.UtilisateurFragment +
+      LigneReponse.LigneReponseFragment +
+      SubsLigneReponse.SubsLigneReponseFragment +
+      RdvLigneReponse.RdvLigneReponseFragment +
+      Produit.ProduitFragment +
+      TypeProduit.TypeProduitFragment +
       Circonscription.CirconscriptionFragment;
 
   static const String UPDATE_DEMANDE = r"""
@@ -57,6 +82,16 @@ class DemandeSchema {
       }
   """ +
       Demande.DemandeFragment +
+      Reponse.ReponseFragment +
+      TypeOfficine.TypeOfficineFragment +
+      Produit.ProduitFragment +
+      TypeProduit.TypeProduitFragment +
+      LigneDemande.LigneDemandeFragment +
+      LigneReponse.LigneReponseFragment +
+      SubsLigneReponse.SubsLigneReponseFragment +
+      RdvLigneReponse.RdvLigneReponseFragment +
+      Officine.OfficineFragment +
+      OfficineDemande.OfficineDemandeFragment +
       Utilisateur.UtilisateurFragment +
       Circonscription.CirconscriptionFragment;
 
@@ -69,12 +104,9 @@ class DemandeSchema {
         }
       }
   """ +
-      Demande.DemandeFragment +
       LigneDemande.LigneDemandeFragment +
       Produit.ProduitFragment +
-      TypeProduit.TypeProduitFragment +
-      Utilisateur.UtilisateurFragment +
-      Circonscription.CirconscriptionFragment;
+      TypeProduit.TypeProduitFragment;
 
   static const String CREATE_LIGNE_DEMANDE = r"""
       mutation(
@@ -100,10 +132,9 @@ class DemandeSchema {
         }
       }
   """ +
-      Demande.DemandeFragment +
       LigneDemande.LigneDemandeFragment +
-      Utilisateur.UtilisateurFragment +
-      Circonscription.CirconscriptionFragment;
+      Produit.ProduitFragment +
+      TypeProduit.TypeProduitFragment;
 
   static const String OFFICINE_DEMANDE = r"""
       query ($demande: UUID, $officine: UUID) {
@@ -118,12 +149,16 @@ class DemandeSchema {
         }
       }
   """ +
-      OfficineDemande.OfficineDemandeFragment +
-      Demande.DemandeFragment +
-      Officine.OfficineFragment +
+      Reponse.ReponseFragment +
+      LigneReponse.LigneReponseFragment +
+      SubsLigneReponse.SubsLigneReponseFragment +
+      RdvLigneReponse.RdvLigneReponseFragment +
+      Produit.ProduitFragment +
+      TypeProduit.TypeProduitFragment +
       TypeOfficine.TypeOfficineFragment +
-      Utilisateur.UtilisateurFragment +
-      Circonscription.CirconscriptionFragment;
+      Officine.OfficineFragment +
+      Circonscription.CirconscriptionFragment +
+      OfficineDemande.OfficineDemandeFragment;
 
   static const String CREATE_OFFICINE_DEMANDE = r"""
       mutation ($demande: ID!, $officine: ID!) {
@@ -141,10 +176,14 @@ class DemandeSchema {
         }
       }
   """ +
-      OfficineDemande.OfficineDemandeFragment +
-      Demande.DemandeFragment +
-      Officine.OfficineFragment +
+      Reponse.ReponseFragment +
+      LigneReponse.LigneReponseFragment +
+      SubsLigneReponse.SubsLigneReponseFragment +
+      RdvLigneReponse.RdvLigneReponseFragment +
+      Produit.ProduitFragment +
+      TypeProduit.TypeProduitFragment +
       TypeOfficine.TypeOfficineFragment +
-      Utilisateur.UtilisateurFragment +
-      Circonscription.CirconscriptionFragment;
+      Officine.OfficineFragment +
+      Circonscription.CirconscriptionFragment +
+      OfficineDemande.OfficineDemandeFragment;
 }
