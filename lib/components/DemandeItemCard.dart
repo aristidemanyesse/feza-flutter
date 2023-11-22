@@ -158,7 +158,7 @@ class DemandeItemCardState extends State<DemandeItemCard> {
                         ConfirmDialog(
                           title: "Suppression",
                           message:
-                              "Voulez-vous vraiment suppriimer cette requette aux pharmacies !",
+                              "Voulez-vous vraiment annuler cette demande auprès des pharmacies !",
                           testOk: "Oui",
                           testCancel: "Non",
                           functionOk: () {

@@ -73,6 +73,7 @@ class Utilisateur with _$Utilisateur {
   }
 
   static Future<ResponseModel> update(Map<String, dynamic> variables) async {
+    print(variables);
     ResponseModel response;
     dynamic datas =
         await ApiService.request(UtilisateurSchema.UPDATE, variables);

@@ -63,7 +63,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
   }
 
   Timer? countdownTimer;
-  Duration myDuration = Duration(minutes: 2);
+  Duration myDuration = Duration(minutes: 1);
 
   void startTimer() {
     countdownTimer =
@@ -73,7 +73,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
   // Step 5
   void resetTimer() {
     setState(() => countdownTimer!.cancel());
-    setState(() => myDuration = Duration(minutes: 2));
+    setState(() => myDuration = Duration(minutes: 1));
   }
 
   // Step 6
@@ -124,7 +124,7 @@ class _SendOTPScreen extends State<SendOTPScreen> {
       "message":
           "iPi vérification - Bonjour votre code OTP est ${controller.currentUser.value?.otp} . Bonne santé !"
     });
-    myDuration = Duration(minutes: 2);
+    myDuration = Duration(minutes: 1);
     startTimer();
   }
 

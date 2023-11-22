@@ -60,9 +60,10 @@ class LandingScreenState extends State<LandingScreen> {
                     Text(
                       "iPi",
                       textAlign: TextAlign.center,
-                      style: Helper.getTheme(context)
-                          .headlineLarge
-                          ?.copyWith(fontWeight: FontWeight.bold, fontSize: 27),
+                      style: Helper.getTheme(context).headlineLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 27,
+                          color: AppColor.blue),
                     ),
                     SizedBox(
                       height: 10,
@@ -95,7 +96,7 @@ class LandingScreenState extends State<LandingScreen> {
                           children: [
                             Flexible(
                               child: Text(
-                                "Recherchez parmi plus de 1000 médicaments, produits et services sur toute l'étendue du territoire ivoirien",
+                                "Recherchez parmi plus de 3000 médicaments, produits et services dans 700+ pharmacies sur toute l'étendue du territoire ivoirien.",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     height: 1.5, color: AppColor.primary),
