@@ -19,7 +19,6 @@ import 'package:ipi/models/produitApp/Produit.dart';
 import 'package:ipi/models/userApp/Utilisateur.dart';
 import 'package:ipi/utils/local_notifications.dart';
 import 'package:ipi/widgets/felicitation.dart';
-import 'package:ipi/widgets/pleaseWait.dart';
 import 'package:ipi/widgets/takeImage.dart';
 import 'package:intl/intl.dart';
 

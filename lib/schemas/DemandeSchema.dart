@@ -1,4 +1,3 @@
-import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:ipi/models/demandeApp/Demande.dart';
 import 'package:ipi/models/demandeApp/LigneDemande.dart';
 import 'package:ipi/models/demandeApp/LigneReponse.dart';

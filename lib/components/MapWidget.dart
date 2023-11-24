@@ -138,7 +138,7 @@ class MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
         ),
         children: [
           TileLayer(
-              urlTemplate: 'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'dev.fleaflet.flutter_map.example',
               subdomains: ['mt0', 'mt1', 'mt2', 'mt3']),
           Obx(() {

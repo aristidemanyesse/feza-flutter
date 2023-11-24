@@ -9,7 +9,6 @@ import 'package:ipi/models/userApp/Utilisateur.dart';
 import 'package:ipi/screens/spashScreen.dart';
 import 'package:ipi/utils/helper.dart';
 import 'package:ipi/widgets/confirmDialog.dart';
-import 'package:ipi/widgets/pleaseWait.dart';
 import 'package:ipi/widgets/takeImage.dart';
 
 class ProfileScreen extends StatefulWidget {

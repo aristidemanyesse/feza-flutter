@@ -4,7 +4,6 @@ import 'package:ipi/controllers/AppController.dart';
 import 'package:ipi/controllers/MapWidgetController.dart';
 import 'package:ipi/controllers/OfficineController.dart';
 import 'package:ipi/components/MapWidget.dart';
-import 'package:ipi/components/loader.dart';
 import 'package:ipi/const/colors.dart';
 import 'package:ipi/widgets/listePharmaciesSection.dart';
 import 'package:ipi/widgets/pleaseWait.dart';
